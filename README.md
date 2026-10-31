@@ -72,6 +72,6 @@ Questa parte interessa solo a chi sviluppa il programma.
 
 Per una versione che gli utenti devono notare, si cambia il numero sia in `public/index.html` (`<meta name="scriptoti-version">`) sia in `public/sw.js` (`CACHE`): la pubblicazione si ferma se i due numeri non coincidono.
 
-Il carattere Courier Prime è distribuito con licenza SIL Open Font License (`public/OFL.txt`).
+ScripToti è software libero, distribuito con licenza **GNU GPL versione 3** (file `LICENSE`): puoi usarlo, studiarlo, modificarlo e ridistribuirlo, a patto che anche le versioni modificate restino libere con la stessa licenza. Il carattere Courier Prime è distribuito con licenza SIL Open Font License (`public/OFL.txt`).
 
 Ideato da Salvatore Frisina.
