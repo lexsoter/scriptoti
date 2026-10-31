@@ -1,0 +1,29 @@
+{
+  "id": "./",
+  "name": "ScripToti",
+  "short_name": "ScripToti",
+  "description": "A focused Fountain screenwriting app with automatic pagination and PDF export.",
+  "lang": "en",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#1b1b1b",
+  "icons": [
+    { "src": "./icon-v021-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./icon-v021-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "file_handlers": [
+    {
+      "action": "./?open=fountain",
+      "accept": { "text/plain": [".fountain"] },
+      "icons": [
+        { "src": "./icon-v021-192.png", "sizes": "192x192", "type": "image/png" },
+        { "src": "./icon-v021-512.png", "sizes": "512x512", "type": "image/png" }
+      ],
+      "launch_type": "single-client"
+    }
+  ],
+  "launch_handler": { "client_mode": "focus-existing" }
+}
+

@@ -1,0 +1,39 @@
+# The "Pubblica" button: copies public/ to the Netsons server over FTP.
+# It runs only when started by hand from the Actions tab, never on its own.
+name: Pubblica su Netsons
+
+on:
+  workflow_dispatch:
+
+concurrency: pubblica
+
+jobs:
+  pubblica:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Controlla che la versione sia coerente
+        run: |
+          page=$(grep -o 'name="scriptoti-version" content="[^"]*"' public/index.html | sed 's/.*content="//; s/"$//')
+          worker=$(grep -o "const CACHE = 'scriptoti-[^']*'" public/sw.js | sed "s/.*scriptoti-//; s/'$//")
+          echo "Versione pagina: $page, service worker: $worker"
+          test -n "$page" && test "$page" = "$worker"
+          echo "VERSION=$page" >> "$GITHUB_ENV"
+
+      - name: Carica i file sul server
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: ./public/
+          server-dir: ${{ vars.FTP_DIR || 'public_html/scriptoti/' }}
+
+      - name: Verifica il sito
+        run: |
+          sleep 5
+          curl -fsS "https://scriptoti.salvatorefrisina.com/index.html?v=$(date +%s)" | grep -q "content=\"$VERSION\"" \
+            && echo "Online la versione $VERSION" \
+            || { echo "Il sito non mostra ancora la versione $VERSION"; exit 1; }
