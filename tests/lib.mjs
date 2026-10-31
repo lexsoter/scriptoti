@@ -7,7 +7,16 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const ROOT = process.env.ROOT || fileURLToPath(new URL('../public', import.meta.url));
-const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+// Chrome on the Mac, or on Linux (GitHub runs the tests before publishing).
+export const CHROME = process.env.CHROME || ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium'].find(file => fs.existsSync(file));
+export const CHROME_ARGS = process.platform === 'linux' ? ['--no-sandbox', '--disable-dev-shm-usage'] : [];
+export const PHP = process.env.PHP || ['/opt/homebrew/bin/php', '/usr/local/bin/php', '/usr/bin/php'].find(file => fs.existsSync(file)) || 'php';
+// A failed check or a page error makes the whole script fail, so GitHub stops.
+export function finish(results, errors) {
+  for (const r of results) console.log((r.ok ? 'OK   ' : 'FAIL ') + r.name + (r.ok ? '' : '  ' + r.detail));
+  console.log(`${results.filter(r => r.ok).length}/${results.length} ok; page errors: ${errors.length ? errors.join(' | ') : 'none'}`);
+  if (results.some(r => !r.ok) || errors.length || !results.length) process.exitCode = 1;
+}
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png' };
 
 export async function open({ root = ROOT, width = 1280, height = 900 } = {}) {
@@ -22,7 +31,7 @@ export async function open({ root = ROOT, width = 1280, height = 900 } = {}) {
   await new Promise(done => server.listen(0, '127.0.0.1', done));
   const url = `http://127.0.0.1:${server.address().port}/index.html`;
   const headed = process.env.HEADED === '1';
-  const browser = await chromium.launch({ executablePath: CHROME, headless: !headed, args: headed ? ['--window-position=-2400,-2400', '--window-size=1000,700'] : [], ignoreDefaultArgs: ['--hide-scrollbars'] });
+  const browser = await chromium.launch({ executablePath: CHROME, headless: !headed, args: [...CHROME_ARGS, ...(headed ? ['--window-position=-2400,-2400', '--window-size=1000,700'] : [])], ignoreDefaultArgs: ['--hide-scrollbars'] });
   const context = await browser.newContext({ viewport: { width, height } });
   const page = await context.newPage();
   const errors = [];
@@ -41,10 +50,7 @@ export async function open({ root = ROOT, width = 1280, height = 900 } = {}) {
     async press(key, n = 1) { for (let i = 0; i < n; i++) await page.keyboard.press(key); await page.waitForTimeout(120); },
     async type(text) { await page.keyboard.type(text, { delay: 15 }); await page.waitForTimeout(150); },
     check(name, ok, detail = '') { results.push({ name, ok: !!ok, detail }); },
-    report() {
-      for (const r of results) console.log((r.ok ? 'OK   ' : 'FAIL ') + r.name + (r.ok ? '' : '  ' + r.detail));
-      console.log(`${results.filter(r => r.ok).length}/${results.length} ok; page errors: ${errors.length ? errors.join(' | ') : 'none'}`);
-    },
+    report() { finish(results, errors); },
     async close() { await browser.close(); server.close(); }
   };
   return t;

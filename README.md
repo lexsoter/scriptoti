@@ -67,8 +67,8 @@ Il formato si chiama **Fountain**: un modo semplice e aperto di scrivere scenegg
 Questa parte interessa solo a chi sviluppa il programma.
 
 - `public/` è il sito così com'è online. Tutto il programma sta in `index.html`; `sw.js` gli permette di funzionare senza internet; `sync/` contiene i piccoli script PHP per la condivisione e per le segnalazioni.
-- `tests/` contiene prove automatiche che aprono il programma in Chrome e lo usano come farebbe una persona: `cd tests && npm install && node t1_6.mjs`.
-- `.github/workflows/pubblica.yml` mette online una nuova versione: **Actions → Pubblica su Netsons → Run workflow**. Parte solo a mano.
+- `tests/` contiene prove automatiche che aprono il programma in Chrome e lo usano come farebbe una persona: `cd tests && npm install && node run-all.mjs` (serve anche PHP per le prove di condivisione).
+- `.github/workflows/pubblica.yml` mette online una nuova versione: **Actions → Pubblica su Netsons → Run workflow**. Parte solo a mano e prima esegue tutte le prove: se una fallisce, non carica niente.
 
 Per una versione che gli utenti devono notare, si cambia il numero sia in `public/index.html` (`<meta name="scriptoti-version">`) sia in `public/sw.js` (`CACHE`): la pubblicazione si ferma se i due numeri non coincidono.
 

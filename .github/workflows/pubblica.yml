@@ -1,6 +1,7 @@
 # The "Pubblica" button: copies public/ to the Netsons server over FTP. The FTP
 # account is meant to open straight in public_html/scriptoti (set FTP_DIR otherwise).
-# It runs only when started by hand from the Actions tab, never on its own.
+# It runs only when started by hand from the Actions tab, never on its own,
+# and uploads nothing unless all the tests pass.
 name: Pubblica su Netsons
 
 on:
@@ -21,6 +22,18 @@ jobs:
           echo "Versione pagina: $page, service worker: $worker"
           test -n "$page" && test "$page" = "$worker"
           echo "VERSION=$page" >> "$GITHUB_ENV"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Every editor, save and share test runs on GitHub first (Chrome and PHP
+      # are already on the runner). If one fails, nothing is uploaded.
+      - name: Prove automatiche
+        working-directory: tests
+        run: |
+          npm ci --no-audit --no-fund
+          node run-all.mjs
 
       - name: Carica i file sul server
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5

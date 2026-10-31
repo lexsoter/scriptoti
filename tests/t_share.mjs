@@ -5,15 +5,15 @@ import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { ROOT } from './lib.mjs';
+import { ROOT, CHROME, CHROME_ARGS, PHP, finish } from './lib.mjs';
 
 const DATA = path.join(os.tmpdir(), 'scriptoti-sync-test');
 fs.rmSync(DATA, { recursive: true, force: true }); fs.mkdirSync(DATA, { recursive: true });
 const port = 8900 + Math.floor(Math.random() * 90);
-const php = spawn('/opt/homebrew/bin/php', ['-S', `127.0.0.1:${port}`, '-t', ROOT], { env: { ...process.env, SCRIPTOTI_SYNC_DIR: DATA }, stdio: 'ignore' });
+const php = spawn(PHP, ['-S', `127.0.0.1:${port}`, '-t', ROOT], { env: { ...process.env, SCRIPTOTI_SYNC_DIR: DATA }, stdio: 'ignore' });
 await new Promise(r => setTimeout(r, 800));
 const url = `http://127.0.0.1:${port}/index.html`;
-const browser = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true });
+const browser = await chromium.launch({ executablePath: CHROME, args: CHROME_ARGS, headless: true });
 const results = [], errors = [];
 const check = (name, ok, detail = '') => results.push({ name, ok: !!ok, detail });
 
@@ -85,6 +85,5 @@ await settle(3500);
 a = await src(A); b = await src(B);
 check('simultaneous typing converges', a === b && a.includes('Luca entra. Si siede.') && a.includes('È tardi. Molto tardi.'), JSON.stringify(a) + '\n' + JSON.stringify(b));
 
-for (const r of results) console.log((r.ok ? 'OK   ' : 'FAIL ') + r.name + (r.ok ? '' : '  ' + r.detail));
-console.log(`${results.filter(r => r.ok).length}/${results.length} ok; page errors: ${errors.length ? errors.join(' | ') : 'none'}`);
+finish(results, errors);
 await browser.close(); php.kill();

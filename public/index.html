@@ -86,7 +86,7 @@
     .speech>.lyric { margin-left:72pt; width:252pt; }
     .transition { text-align:right; }
     .centered { text-align:center; }
-    .dual { display:grid; grid-template-columns:1fr 1fr; gap:24pt; }
+    .dual { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24pt; }
     .dual .layout-unit { margin-top:0; }
     .dual .character { width:auto; margin-left:43pt; }
     .dual .dialogue, .dual .lyric { width:auto; margin-left:0; }
@@ -985,8 +985,11 @@ const DraftEngine = (() => {
   const height = lines => lines.reduce((n, line) => n + (line.height || 1), 0);
   function region(part, lines) { return { kind: part.kind, part: part._original || part, lines, placeholder: part.placeholder }; }
   function speechLayout(e, dual = false, columns = 60) {
-    // A cue starts 20 columns in; narrower custom margins shorten it.
-    const cueCols = dual ? 22 : Math.min(40, columns - 20);
+    // A cue starts 20 columns in; narrower custom margins shorten it. In dual
+    // dialogue each side gets half the body minus the 24pt gap (28 columns on a
+    // standard page); the CSS insets the cue by 43pt and parentheticals by 18pt.
+    const side = Math.floor((columns * 7.2 - 24) / 14.4);
+    const cueCols = dual ? Math.max(4, Math.min(22, side - 6)) : Math.min(40, columns - 20);
     const cue = e.cue || { kind: 'character', text: e.speaker, map: null, anchor: e.start || 0 };
     const displayed = e.displaySpeaker ?? e.speaker;
     const cueRegion = region(cue, wrap(cue, cueCols, displayed.slice(e.speaker.length)));
@@ -994,7 +997,7 @@ const DraftEngine = (() => {
     const at = e.end ?? cue.end ?? cue.anchor ?? 0;
     const parts = e.parts.length ? e.parts : e.placeholder ? [] : [{ kind: 'dialogue', text: '', map: [], anchor: at, start: at, end: at, lineStart: at, lineEnd: at, placeholder: true, needsBreak: true, speech: e, lineSpacing: cue.lineSpacing || 1 }];
     for (const part of parts) {
-      const columns = dual ? (part.kind === 'parenthetical' ? 25 : 28) : part.kind === 'parenthetical' ? 25 : 35;
+      const columns = dual ? Math.max(6, part.kind === 'parenthetical' ? Math.min(25, side - 3) : Math.min(28, side)) : part.kind === 'parenthetical' ? 25 : 35;
       const lines = wrap(part, columns);
       lines.forEach((line, index) => rows.push({ part, line, partFirst: index === 0, partLast: index === lines.length - 1 }));
     }
@@ -1082,7 +1085,7 @@ const DraftEngine = (() => {
       }
       if (e.type === 'speech') { placeSpeech(speechLayout(e, false, columns)); continue; }
       if (e.type === 'dual') {
-        let left = e.left ? speechLayout(e.left, true) : null, right = e.right ? speechLayout(e.right, true) : null;
+        let left = e.left ? speechLayout(e.left, true, columns) : null, right = e.right ? speechLayout(e.right, true, columns) : null;
         while (left || right) {
           const spacing = Math.max(left?.e.cue?.lineSpacing || 1, right?.e.cue?.lineSpacing || 1), capacity = maxLines - used - gapFor('dual', undefined, spacing);
           let a = left ? speechPiece(left, capacity) : { item: null, remaining: null };
@@ -3213,13 +3216,19 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
       else options.body = new URLSearchParams(params);
       // A stalled connection must never freeze synchronisation: give up and retry.
       const abort = new AbortController(), timer = setTimeout(() => abort.abort(), 15000);
-      let response;
-      try { response = await this.fetch(url.toString(), { ...options, signal: abort.signal }); }
-      catch (error) { const failure = new Error(abort.signal.aborted ? 'timeout' : error.message || 'network'); failure.code = abort.signal.aborted ? 'timeout' : 'network'; throw failure; }
-      finally { clearTimeout(timer); }
-      // Hosting firewalls answer some networks (often VPNs) with an HTML check page.
-      if (!(response.headers.get('content-type') || '').includes('application/json')) { const error = new Error('firewall'); error.code = 'firewall'; error.status = response.status; throw error; }
-      let data = null; try { data = await response.json(); } catch { data = null; }
+      const stalled = error => { const failure = new Error(abort.signal.aborted ? 'timeout' : error.message || 'network'); failure.code = abort.signal.aborted ? 'timeout' : 'network'; return failure; };
+      let response, data = null;
+      try {
+        try { response = await this.fetch(url.toString(), { ...options, signal: abort.signal }); }
+        catch (error) { throw stalled(error); }
+        // Hosting firewalls answer some networks (often VPNs) with an HTML check page.
+        if (!(response.headers.get('content-type') || '').includes('application/json')) { const error = new Error('firewall'); error.code = 'firewall'; error.status = response.status; throw error; }
+        // The time limit also covers the body: headers can arrive and the rest never.
+        const body = new Promise((resolve, reject) => { abort.signal.addEventListener('abort', () => reject(new Error('timeout')), { once: true }); response.text().then(resolve, reject); });
+        let text;
+        try { text = await body; } catch (error) { if (abort.signal.aborted) throw stalled(error); text = ''; }
+        try { data = JSON.parse(text); } catch { data = null; }
+      } finally { clearTimeout(timer); }
       if (!response.ok || !data?.ok) { const error = new Error(data?.error || 'http-' + response.status); error.code = data?.error || 'http'; error.status = response.status; throw error; }
       return data;
     }
@@ -3724,8 +3733,9 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
     { id: 'p-salvataggio', section: 'problemi', title: 'Il salvataggio chiede il permesso o non riesce',
       keys: 'salvataggio non riesce permesso autorizza premi salva riconnetti file da salvare errore salvataggio',
       q: ['premi salva per autorizzare', 'il file non si salva', 'file da riconnettere', 'salvataggio da riprovare'],
-      short: 'Premi Salva ([[Mod+S]]) e consenti al browser di modificare il file. Dopo un riavvio il file va «riconnesso» allo stesso modo. Il testo intanto è al sicuro nel recupero del browser.',
-      body: ['Per sicurezza il browser chiede il permesso di modificare un file. Quando in alto a destra compare «premi Salva per autorizzare» o «da riconnettere», premi **Salva** ([[Mod+S]]) e consenti.',
+      short: 'Consenti al browser di modificare il file quando te lo chiede, meglio con «Consenti a ogni visita». Alla riapertura il file si ricollega da solo; se serve il permesso, il browser lo chiede al primo tasto o clic. Il testo intanto è al sicuro nel recupero del browser.',
+      body: ['Per sicurezza il browser chiede il permesso di modificare un file. Se nel messaggio di Chrome scegli **Consenti a ogni visita**, alla riapertura di ScripToti i file si ricollegano da soli, senza domande.',
+        'Se il permesso non c\u2019è più, il browser lo chiede al primo tasto o clic nel copione: rispondi **Consenti**. Puoi anche premere **Salva** ([[Mod+S]]) quando in alto a destra compare «premi Salva per autorizzare» o «da riconnettere».',
         'Il testo non si perde: intanto è conservato nel recupero del browser (File → Recupero…).'] },
     { id: 'p-condivisione', section: 'problemi', title: 'La condivisione non si collega',
       keys: 'condivisione non funziona collegamento rosso non in linea non arrivano le modifiche',
@@ -4514,14 +4524,19 @@ async function startUpgrade() {
   function paint() { if (!active.comments || editor.state().composing) return; editor.annotations(active.comments.threads.filter(thread => !thread.resolved && !thread.orphaned)); }
   function applySource(source, presentation = editor.state().document) {
     const oldSource = active.comments.source, oldThreads = JSON.parse(JSON.stringify(active.comments.threads)), oldDocument = active.comments.document, oldShare = active.comments.share;
+    let undoShared = null;
     try {
       active.comments.update(source); active.comments.document = window.DraftDocument.validate(presentation, source);
       Files.validateRaw(active.comments.serialize());
-      if (active.shared) shareLocal(active, oldSource, source, active.comments.document);
+      if (active.shared) undoShared = shareLocal(active, oldSource, source, active.comments.document);
       const raw = active.comments.serialize(); Files.validateRaw(raw);
       if (!active.session.edit(raw)) throw new Error('Modifica non disponibile.');
       emergency(); return true;
-    } catch (error) { active.comments = new Comments.Store(oldSource, oldThreads, oldDocument, oldShare); notify(error); return false; }
+    } catch (error) {
+      // A refused edit must not reach the others: take it back out of the shared text too.
+      try { undoShared?.(); } catch {}
+      active.comments = new Comments.Store(oldSource, oldThreads, oldDocument, oldShare); notify(error); return false;
+    }
   }
 
   // ---- Shared screenplays ---------------------------------------------------
@@ -4631,12 +4646,25 @@ async function startUpgrade() {
     if (project === active) { editor.toast('Questo copione non è più condiviso: il file resta una copia normale.'); refreshSharedRaw(project); }
   }
   // Local edit -> shared document (before serializing, so the file carries any unsent edits).
+  // Returns a function that takes this one edit back out of the shared document,
+  // as a new local change (never the shared undo, which could revert other people).
   function shareLocal(project, oldSource, source, presentation) {
-    const s = project.shared; if (!s?.joined) return;
+    const s = project.shared; if (!s?.joined) return null;
+    const meta = s.doc.getMap('layout'), before = { text: s.doc.getText('source').toString(), layout: meta.get('layout'), paragraphs: meta.get('paragraphs') };
+    const undo = () => {
+      s.inLocal = true;
+      try {
+        const now = s.doc.getText('source').toString();
+        if (now !== before.text) Share.applyLocal(s.doc, now, before.text, DocState.diff, DocState.mapPoint);
+        s.doc.transact(() => { for (const key of ['layout', 'paragraphs']) if (meta.get(key) !== before[key]) before[key] === undefined ? meta.delete(key) : meta.set(key, before[key]); }, Share.LOCAL);
+      } finally { s.inLocal = false; }
+    };
     s.inLocal = true;
     try { Share.applyLocal(s.doc, oldSource, source, DocState.diff, DocState.mapPoint); Share.writeLayout(s.doc, presentation); }
+    catch (error) { s.inLocal = false; undo(); throw error; }
     finally { s.inLocal = false; }
     project.comments.share = s.descriptor;
+    return undo;
   }
   function sharedPresentation(doc, source, local) {
     let next = DocState.clone(local);
@@ -5306,6 +5334,26 @@ async function startUpgrade() {
   if (!projects.length) { if (workspace) displayProject(null); else adopt(initial, 'Untitled.fountain', { baseline: initial, ephemeral: true }); }
   else { captureActive(); displayProject(projects.find(project => project.session.id === workspace?.active) || active); }
   restoring = false;
+  // A reopened file relinks by itself when the browser still grants write
+  // access. Otherwise the first key or click asks for it (browsers only ask
+  // during a gesture), not just Save. Relinking goes through the normal save,
+  // which compares with the disk first and never overwrites outside changes.
+  async function reconnect(owner, ask) {
+    const disk = owner?.disk;
+    if (!disk || !(owner.needsReconnect || owner.permissionNeeded) || owner.reconnecting) return;
+    owner.reconnecting = true;
+    try {
+      let permission = await disk.handle.queryPermission({ mode: 'readwrite' });
+      if (permission !== 'granted' && ask && disk.handle.requestPermission) permission = await disk.handle.requestPermission({ mode: 'readwrite' });
+      disk.permissionState = permission;
+      if (permission !== 'granted') return;
+      owner.needsReconnect = false; owner.permissionNeeded = false; owner.retryAt = 0;
+      if (owner === active) await saveLocal(false);
+    } catch { /* Save (Ctrl/Cmd+S) still reconnects by hand. */ }
+    finally { owner.reconnecting = false; refresh(); scheduleSave(); }
+  }
+  for (const project of projects) void reconnect(project, false);
+  for (const type of ['keydown', 'pointerdown']) document.addEventListener(type, event => { if (event.isTrusted && !dialog.open) void reconnect(active, true); }, true);
   if (startupError) notify(startupError, 'recovery', active, true);
   try { await rememberWorkspace(); } catch (error) { notify(error, 'recovery', active, true); }
   // An invitation link opens (or focuses) the shared screenplay, also when
