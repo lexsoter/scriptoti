@@ -1,5 +1,5 @@
 // Points 9, 11, 12: page number in the bottom bar, spaces in suggestions,
-// "Apparso prima a pag. x scena x" for character names.
+// "Ultima volta a pag. x scena x" for characters away for a while.
 import { open } from './lib.mjs';
 const t = await open();
 const filler = n => Array.from({ length: n }, (_, i) => `Azione numero ${i + 1} che riempie la pagina.`).join('\n\n');
@@ -20,23 +20,35 @@ await t.caret((await t.src()).indexOf('Azione numero 3'), (await t.src()).indexO
 info = await t.page.evaluate(() => ({ page: document.querySelector('#currentPage').textContent, scope: !document.querySelector('#statsScope').hidden }));
 t.check('9 page and "Selezione" are both shown with a selection', /^Pagina \d+ di \d+$/.test(info.page) && info.scope, JSON.stringify(info));
 
-// 12. First appearance hint
+// 12. Last appearance hint: only for characters away for 3+ scenes
 const popup = () => t.page.evaluate(() => { const p = document.querySelector('#completionPopup'); return p && !p.hidden ? Array.from(p.querySelectorAll('[role=option]')).map(b => b.textContent) : []; });
 await t.caret((await t.src()).length);
 await t.type('FA'); await t.page.waitForTimeout(300);
 let items = await popup();
-t.check('12 FABIO hint shows page and scene of its first appearance', items.some(i => /^FABIOApparso prima a pag\. [2-9] scena 2$/.test(i)), JSON.stringify(items));
+t.check('12 FABIO in the current scene: no hint', items.includes('FABIO'), JSON.stringify(items));
 await t.press('Escape');
 await t.load(script); await t.caret((await t.src()).length);
 await t.type('NE'); await t.page.waitForTimeout(300);
 items = await popup();
-t.check('12 NEVIO hint is page 1 scene 1, no description from the action', items.some(i => i === 'NEVIOApparso prima a pag. 1 scena 1'), JSON.stringify(items));
-// the hint follows the current script: add a scene before FABIO's first one
-await t.load(script.replace('EST. BAR - NOTTE', 'INT. AUTO - NOTTE\n\nUn viaggio.\n\nEST. BAR - NOTTE'));
+t.check('12 NEVIO one scene back: no hint', items.includes('NEVIO'), JSON.stringify(items));
+await t.press('Escape');
+const away = script + 'INT. AUTO - NOTTE\n\nUn viaggio.\n\nEST. STRADA - NOTTE\n\nPioggia.\n\nINT. NEGOZIO - GIORNO\n\nSilenzio.\n\n';
+await t.load(away); await t.caret((await t.src()).length);
+await t.type('NE'); await t.page.waitForTimeout(300);
+items = await popup();
+t.check('12 NEVIO away 4 scenes: last seen page 1 scene 1', items.includes('NEVIOUltima volta a pag. 1 scena 1'), JSON.stringify(items));
+await t.press('Escape');
+await t.load(away.replace('Pioggia.', 'Pioggia.\n\nNEVIO\nSono qui.'));
 await t.caret((await t.src()).length);
+await t.type('NE'); await t.page.waitForTimeout(300);
+items = await popup();
+t.check('12 NEVIO back two scenes ago: no hint', items.includes('NEVIO'), JSON.stringify(items));
+await t.press('Escape');
+await t.load(away); await t.caret((await t.src()).length);
 await t.type('FA'); await t.page.waitForTimeout(300);
 items = await popup();
-t.check('12 hint updates after edits (scene 3 now)', items.some(i => / scena 3$/.test(i) && i.startsWith('FABIO')), JSON.stringify(items));
+t.check('12 FABIO away 3 scenes: last seen in scene 2', items.some(i => /^FABIOUltima volta a pag\. [2-9] scena 2$/.test(i)), JSON.stringify(items));
+await t.press('Escape');
 
 // 11. Spaces in heading suggestions
 const pick = async typed => {

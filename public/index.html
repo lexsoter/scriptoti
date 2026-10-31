@@ -3,7 +3,7 @@
 <head>
 <meta name="scriptoti-edition" content="online">
   <meta charset="utf-8">
-  <meta name="scriptoti-version" content="0.28.1">
+  <meta name="scriptoti-version" content="0.29.0">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -112,6 +112,7 @@
     .title-bottom { position:absolute; bottom:54pt; left:50pt; right:50pt; display:grid; grid-template-columns:1fr 1fr; gap:32pt; align-items:end; }
     .title-bottom-left>div+div { margin-top:12pt; }
     .title-bottom-right { text-align:left; }
+    .current-page-stat { cursor:pointer; } .current-page-stat:hover { color:var(--ink, inherit); text-decoration:underline; } .page-jump { width:70px; font:inherit; padding:0 4px; border:1px solid var(--line); border-radius:4px; background:var(--panel); color:inherit; }
     .stats { position:fixed; bottom:0; left:0; z-index:4; display:flex; gap:20px; padding:10px 15px; background:var(--panel); border:1px solid var(--line); border-bottom:0; border-left:0; border-radius:0 7px 0 0; font-size:12px; color:var(--muted); }
     .stats strong { color:var(--ink); }
     .zoom-control { position:fixed; bottom:0; right:0; z-index:4; display:flex; align-items:center; gap:8px; padding:8px 12px; background:var(--panel); border:1px solid var(--line); border-right:0; border-bottom:0; border-radius:7px 0 0 0; color:var(--muted); font-size:12px; }
@@ -725,9 +726,9 @@ const DraftEngine = (() => {
     }).join('');
   }
   const plain = text => richText(text).text;
-  // MONTAGE, MONTAGGIO and ANGLE ON open a heading only when written in capitals,
+  // MONTAGE and MONTAGGIO open a heading only when written in capitals,
   // so ordinary Action that starts with those words stays Action.
-  const shotHeading = text => /^(?:MONTAGE|MONTAGGIO|ANGLE ON)(?=$|[\s.:,–—-])/.test(text) && text === text.toLocaleUpperCase('it');
+  const shotHeading = text => /^(?:MONTAGE|MONTAGGIO)(?=$|[\s.:,–—-])/.test(text) && text === text.toLocaleUpperCase('it');
   const isScene = line => /^\.[\p{L}\p{N}]/u.test(plain(line)) || /^(?:INT\.\/EXT|INT\/EXT|I\/E|INT|EXT|EST)(?=[. ])/i.test(plain(line)) || shotHeading(plain(line).trim());
   const special = line => isScene(line) || /^[!@>~#=]/.test(line);
   function parse(source, options = {}) {
@@ -1201,6 +1202,12 @@ const DraftEditing = (() => {
     const describes = part?.kind === 'character' && /^\p{Ll}/u.test(text) && /\)[ \t]+$/.test(source.slice(source.lastIndexOf('\n', start - 1) + 1, start));
     if (['character', 'scene'].includes(part?.kind) && !describes) text = text.replace(/^[^\n]*/, value => value.toLocaleUpperCase('it'));
     if (part?.literal) return replace(source, start, end, text);
+    // ")" typed just before the closing parenthesis steps over it.
+    if (text === ')' && start === end && part?.kind === 'parenthetical' && source[start] === ')') return replace(source, start, start + 1, ')');
+    // "(" on an empty row of a speech opens a parenthetical already closed.
+    const rowStart = source.lastIndexOf('\n', start - 1) + 1, rowBreak = source.indexOf('\n', start);
+    const closing = text === '(' && start === end && ['dialogue', 'parenthetical'].includes(part?.kind) && (part.placeholder || !source.slice(rowStart, rowBreak < 0 ? source.length : rowBreak).trim());
+    if (closing) text = '()';
     // "!" typed before a forced cue, heading, transition or lyric means
     // "make this Action": it takes the place of the old marker, so neither
     // marker stays visible as text.
@@ -1219,6 +1226,7 @@ const DraftEditing = (() => {
       if (markers[part.kind] && !text.startsWith(markers[part.kind])) prefix += markers[part.kind];
     }
     const change = replace(source, start, end, prefix + text);
+    if (closing) { change.anchor = change.focus = change.focus - 1; change.kind = 'parenthetical'; }
     if (!text || /\n\n$/.test(text)) change.empty = { at: change.focus, kind: 'action' };
     return change;
   }
@@ -1319,6 +1327,13 @@ const DraftEditing = (() => {
       return null;
     }
     const gs = glyphs(part);
+    // Backspace inside an empty "()" removes the whole parenthetical.
+    if (direction < 0 && part.kind === 'parenthetical' && source.slice(part.lineStart, part.lineEnd).trim() === '()' && source.slice(start - 1, start + 1) === '()') {
+      const following = source.indexOf('\n', part.lineEnd) === part.lineEnd && source[part.lineEnd + 1] && source[part.lineEnd + 1] !== '\n';
+      if (following) { const change = replace(source, part.lineStart, part.lineEnd + 1, ''); change.kind = 'dialogue'; return change; }
+      const change = replace(source, part.lineStart, part.lineEnd, '');
+      change.empty = { at: change.focus, kind: 'dialogue' }; change.kind = 'dialogue'; return change;
+    }
     if (!gs.length && part.lineEnd > part.lineStart) {
       // A forced cue/action/transition can be empty after its last letter was
       // deleted. Its hidden type marker must not trap the cursor forever.
@@ -1381,11 +1396,57 @@ const DraftEditing = (() => {
     }
     return direction < 0 ? join(source, adjacent, part) : join(source, part, adjacent);
   }
+  // Lines a screenwriter types in a hurry, put into standard Fountain when
+  // Enter finishes them. Each keeps the file readable by any Fountain app:
+  // transitions get ">" (right), MONTAGGIO gets "." (a heading), shots and
+  // FADE IN stay Action, with "!" only when the line is all capitals and
+  // could otherwise be read as a character.
+  const RIGHT_COLON = ['CUT TO', 'SMASH CUT TO', 'SMASH CUT', 'MATCH CUT TO', 'MATCH CUT', 'JUMP CUT TO', 'JUMP CUT', 'DISSOLVE TO', 'FADE TO', 'TIME CUT', 'STACCO SU', 'STACCO A', 'STACCO NETTO', 'STACCO NETTO SU', 'TAGLIO SU', 'TAGLIO A', 'TAGLIO NETTO', 'DISSOLVENZA A', 'DISSOLVENZA SU', 'DISSOLVENZA INCROCIATA', 'DISSOLVENZA INCROCIATA A', 'DISSOLVENZA INCROCIATA SU'];
+  const RIGHT_DOT = ['FADE OUT', 'FADE TO BLACK', 'CHIUSURA IN NERO', 'DISSOLVENZA IN NERO', 'DISSOLVENZA A NERO', 'DISSOLVENZA IN CHIUSURA'];
+  const LEFT_COLON = ['FADE IN', 'DISSOLVENZA IN APERTURA', 'APERTURA IN DISSOLVENZA', 'DISSOLVENZA DAL NERO'];
+  const LEFT_LINES = ['FINE FLASHBACK', 'FINE DEL FLASHBACK', 'END FLASHBACK', 'END OF FLASHBACK', 'BACK TO PRESENT', 'BACK TO PRESENT DAY', 'TORNA AL PRESENTE', 'RITORNO AL PRESENTE', 'BACK TO SCENE', 'TORNA SULLA SCENA'];
+  const SHOT = /^(ANGLE ON|CLOSE ON|WIDE ON|INSERT|POV)(?=$|[\s.:,–—-])/i;
+  const upper = text => text.toLocaleUpperCase('it');
+  function convention(source, part, doc) {
+    const raw = source.slice(part.lineStart, part.lineEnd);
+    if (!raw.trim() || raw.includes('\n') || /^\s*[@!.>~=#]/.test(raw) || /[*_\\]|\[\[|\/\*/.test(raw)) return null;
+    const text = raw.trim().replace(/\s+/g, ' '), bare = upper(text).replace(/[.:]+$/, '').trim();
+    const allCaps = value => (value.match(/\p{L}/gu) || []).length > 0 && value === upper(value);
+    if (RIGHT_COLON.includes(bare) && (bare.includes(' ') || /:$/.test(text))) return '>' + bare + ':';
+    if (RIGHT_DOT.includes(bare)) return '>' + bare + '.';
+    if (LEFT_COLON.includes(bare)) return '!' + bare + ':';
+    if (LEFT_LINES.includes(bare)) return '!' + upper(text);
+    if (/^(?:MONTAGGIO|MONTAGE)(?=$|[\s.:,–—-])/i.test(text)) return '.' + upper(text);
+    const shot = SHOT.exec(text);
+    if (shot) { const line = upper(shot[1]) + text.slice(shot[1].length); return line === text && !allCaps(line) ? null : (allCaps(line) ? '!' : '') + line; }
+    // "SU" is an ordinary Italian word: it is a shot only before a character.
+    const su = /^su\s+(.+)$/i.exec(text);
+    if (su) {
+      const names = new Set();
+      for (const e of doc.elements) for (const speech of e.type === 'speech' ? [e] : e.type === 'dual' ? [e.left, e.right] : []) {
+        if (!speech?.cue || speech.cue === part) continue;
+        const name = upper(DraftEngine.plain(speech.speaker || '').replace(/^@/, '').replace(/\s*\^\s*$/, '').replace(/\s*\(.*$/, '').trim());
+        if (name) names.add(name);
+      }
+      const rest = su[1], name = [...names].sort((a, b) => b.length - a.length).find(n => upper(rest).startsWith(n) && !/[\p{L}\p{N}]/u.test(rest.charAt(n.length)));
+      if (!name) return null;
+      const line = 'SU ' + name + rest.slice(name.length);
+      return line === text && !allCaps(line) ? null : (allCaps(line) ? '!' : '') + line;
+    }
+    return null;
+  }
   function enter(source, start, end, doc, part, hardBreak = false) {
     if (start !== end) {
       const removal = removeSelection(source, start, end, doc);
       source = removal.source; start = removal.focus;
       doc = DraftEngine.parse(source, { editing: true }); part = locate(doc, start);
+    }
+    if (!hardBreak && part && !part.placeholder && !part.literal && ['action', 'character', 'transition', 'scene'].includes(part.kind) && start >= bounds(part).end && (part.kind !== 'character' || !part.speech?.parts.some(p => !p.placeholder))) {
+      const line = convention(source, part, doc);
+      if (line !== null) {
+        const change = replace(source, part.lineStart, part.lineEnd, line + '\n\n');
+        change.empty = { at: change.focus, kind: 'action' }; return change;
+      }
     }
     const speech = part?.speech, firstWords = speech?.parts.find(p => p.kind === 'dialogue' && !p.placeholder);
     if (!hardBreak && part && part === speech?.cue && firstWords) {
@@ -2339,7 +2400,11 @@ const DraftSearch = (() => {
         // all-caps occurrence elsewhere keeps its emphasis too.
         const found = gs.slice(i, match.last + 1).map(g => g.char).join('');
         const upper = ['character', 'scene', 'transition'].includes(part.kind) || (found.match(/\p{L}/gu) || []).length >= 2 && found === found.toLocaleUpperCase('it') && found !== found.toLocaleLowerCase('it');
-        for (const char of upper ? replacement.toLocaleUpperCase('it') : replacement) changed.push({ ...original, char, to: original.from });
+        // A capitalised occurrence ("Giraffa" at a sentence start, or a name)
+        // keeps its capital letter: giraffa -> elefante gives "Elefante".
+        const capital = !upper && /^\p{Lu}/u.test(found) && /^\p{Ll}/u.test(replacement);
+        const text = upper ? replacement.toLocaleUpperCase('it') : capital ? replacement.charAt(0).toLocaleUpperCase('it') + replacement.slice(1) : replacement;
+        for (const char of text) changed.push({ ...original, char, to: original.from });
         changed.push({ char: '', from: original.from, to: last.to, marks: replacement ? original.marks : 0, preserveHidden: true });
         i = match.last;
       }
@@ -2890,14 +2955,14 @@ const DraftSearch = (() => {
     for (const speech of speeches(doc.elements)) {
       if (excludedPart(speech.cue)) continue;
       const name = identity(speech.speaker); if (!name) continue;
-      const item = names.get(name) || { name, count: 0, at: speech.cue.lineStart, aliases: [], description: '', evidence: null };
-      item.count++; names.set(name, item);
+      const item = names.get(name) || { name, count: 0, at: speech.cue.lineStart, seen: [], aliases: [], description: '', evidence: null };
+      item.count++; item.seen.push(speech.cue.lineStart); names.set(name, item);
     }
     const ordered = [...names.values()].sort((a, b) => b.count - a.count || a.at - b.at), characters = [];
     for (const item of ordered) {
       const canonical = !except.has(item.name) && item.name.length >= 4 && !/\d/.test(item.name)
         ? characters.find(other => !except.has(other.name) && !/\d/.test(other.name) && distance(item.name, other.name) === 1 && other.count >= item.count && item.count === 1) : null;
-      if (canonical) canonical.aliases.push(item.name);
+      if (canonical) { canonical.aliases.push(item.name); canonical.seen.push(...item.seen); }
       else characters.push(item);
     }
     // Only quote an actual introduction, never manufacture a biography.
@@ -2945,11 +3010,15 @@ const DraftSearch = (() => {
     const query = identity(before);
     if (!['character', 'action'].includes(kind) || !query || kind === 'action' && ((query.match(/\p{L}/gu) || []).length < 2 || before !== before.toLocaleUpperCase('it') || /^!/.test(before)) || /[.!?]$/.test(query)) return null;
     const scored = [];
-    // Names are matched by spelling only. Each one carries its first
-    // appearance (cue or introduction), shown as page and scene in the list.
+    // Names are matched by spelling only. Each one carries its last
+    // appearance before this line (or, if none, its first one); the list
+    // shows it only for a character who has been away for a while.
     for (const item of catalogue.characters) {
       const score = item.name.startsWith(query) ? 0 : item.aliases.includes(query) || query.length >= 4 && distance(query, item.name) === 1 ? 1 : 9;
-      if (score < 9) scored.push({ label: item.name, value: item.name, kind: 'character', typo: score === 1, score, at: Math.min(item.at, item.evidence?.at ?? Infinity) });
+      if (score >= 9) continue;
+      const earlier = (item.seen || []).filter(at => at < lineStart);
+      const at = earlier.length ? Math.max(...earlier) : Math.min(item.at, item.evidence?.at ?? Infinity);
+      scored.push({ label: item.name, value: item.name, kind: 'character', typo: score === 1, score, at, earlier: earlier.length > 0, from: lineStart });
     }
     scored.sort((a, b) => a.score - b.score || a.label.localeCompare(b.label));
     const suffix = line.match(/\s+\((?:CONT['’]?D|CONTINUED|V\.?O\.?|O\.?S\.?|O\.?C\.?)\)/i);
@@ -2990,22 +3059,31 @@ const DraftSearch = (() => {
         dismissed = ''; hide(); editor.selectAbsolute({ anchor: value.start + item.value.length, focus: value.start + item.value.length, kind: item.kind === 'character' ? 'character' : 'scene' });
       } else { hide(); editor.toast('Il testo è cambiato: scegli di nuovo il suggerimento.'); }
     }
-    // Page and scene of a character's first appearance, from the current
+    // Page and scene of a character's last appearance, from the current
     // pagination, so the hint follows every edit, lock and renumbering.
-    function firstSeen(at) {
+    // Characters seen in this scene or the two before it need no reminder.
+    const AWAY_SCENES = 3, AWAY_PAGES = 5;
+    function lastSeen(item) {
+      const at = item.at;
       if (!Number.isFinite(at)) return '';
       const context = editor.context();
-      const page = context.pages.find(p => p.ranges.some(([a, b]) => at >= a && at <= b)) || context.pages.find(p => p.ranges.some(([a]) => a >= at));
+      const pageOf = value => context.pages.find(p => p.ranges.some(([a, b]) => value >= a && value <= b)) || context.pages.find(p => p.ranges.some(([a]) => a >= value));
+      const page = pageOf(at);
       const scenes = context.scenes, scene = scenes.filter(s => s.start <= at).at(-1);
       if (!page) return '';
-      return 'Apparso prima a pag. ' + page.label + (scene ? ' scena ' + (scene.number || scenes.indexOf(scene) + 1) : '');
+      const where = 'pag. ' + page.label + (scene ? ' scena ' + (scene.number || scenes.indexOf(scene) + 1) : '');
+      if (!item.earlier) return 'Compare più avanti a ' + where;
+      const between = scenes.filter(s => s.start > at && s.start <= item.from).length;
+      const here = pageOf(item.from), pages = here ? context.pages.indexOf(here) - context.pages.indexOf(page) : 0;
+      if (scenes.length ? between < AWAY_SCENES : pages < AWAY_PAGES) return '';
+      return 'Ultima volta a ' + where;
     }
     function paint() {
       popup.replaceChildren();
       current.items.forEach((item, i) => {
         const button = document.createElement('button'); button.type = 'button'; button.id = 'completion-' + i; button.setAttribute('role', 'option'); button.setAttribute('aria-selected', String(i === index));
         const name = document.createElement('span'); name.textContent = item.label; button.append(name);
-        const note = item.kind === 'character' ? firstSeen(item.at) : item.description;
+        const note = item.kind === 'character' ? lastSeen(item) : item.description;
         if (note) { const description = document.createElement('small'); description.textContent = note; button.append(description); }
         button.onpointerdown = event => event.preventDefault(); button.onclick = () => accept(item); popup.append(button);
       });
@@ -3392,7 +3470,7 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
       q: ['che cos è fountain', 'come riconosce i tipi di testo', 'regole di scrittura'],
       short: 'Fountain riconosce il tipo di testo da come lo scrivi: INT./EST. per le scene, nome in MAIUSCOLO per i personaggi, (tra parentesi) sotto il nome per le parentetiche. Con [[Tab]] o con un simbolo davanti lo forzi.',
       body: ['Fountain è un formato di testo semplice per sceneggiature. Non serve scegliere stili da un menu: ScripToti capisce il tipo di ogni paragrafo da come è scritto.',
-        '- Una riga che inizia con `INT.`, `EST.`, `EXT.` o `I/E` è un’**intestazione di scena**; anche `MONTAGE`, `MONTAGGIO` e `ANGLE ON` scritti in maiuscolo.',
+        '- Una riga che inizia con `INT.`, `EST.`, `EXT.` o `I/E` è un’**intestazione di scena**; anche `MONTAGE` e `MONTAGGIO`.',
         '- Un nome tutto in **MAIUSCOLO** seguito da una riga di testo è un **personaggio** con il suo **dialogo**.',
         '- Una riga tra parentesi sotto il nome è una **parentetica**.',
         '- Una riga in maiuscolo che finisce con `TO:` è una **transizione**.',
@@ -3408,7 +3486,7 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
         '- **INT.** interno, **EST.** (o **EXT.**) esterno, **INT./EST.** o **I/E** quando è entrambe le cose.',
         '- Poi il **luogo**, dal generale al particolare: `EST. VILLA ROSSI - GIARDINO`.',
         '- Poi, dopo un trattino, il **momento**: GIORNO, NOTTE, ALBA, TRAMONTO, CONTINUO, PIÙ TARDI. I suggerimenti seguono la lingua del copione: GIORNO/NOTTE se le scene sono in italiano, DAY/NIGHT se sono in inglese.',
-        'Basta scrivere `int.` all’inizio della riga: ScripToti la riconosce e la mette in maiuscolo. Anche `MONTAGE`, `MONTAGGIO` e `ANGLE ON` (per esempio `ANGLE ON LA PORTA`), scritti in maiuscolo su una riga da sola, diventano intestazioni senza bisogno del punto. Per un’intestazione diversa (per esempio «SOGNO DI ANNA») metti un punto davanti: `.SOGNO DI ANNA`.',
+        'Basta scrivere `int.` all’inizio della riga: ScripToti la riconosce e la mette in maiuscolo. Anche `MONTAGGIO` e `MONTAGE` sono intestazioni, perché segnano un cambio di situazione: quando premi [[Invio]] ScripToti aggiunge da solo il punto nascosto (`.MONTAGGIO`), così anche gli altri programmi Fountain la leggono come scena. Le inquadrature come `ANGLE ON` o `SU MARTA` invece non sono scene nuove: vedi **Inquadrature**. Per un’intestazione diversa (per esempio «SOGNO DI ANNA») metti un punto davanti: `.SOGNO DI ANNA`.',
         '## Quando serve una nuova scena',
         'Ogni volta che cambia il **luogo** o il **tempo** (il giorno dopo, più tardi, la sera stessa) serve una nuova intestazione. «Il giorno dopo» scritto dentro l’Azione è un errore frequente: il Controllo della sintassi lo segnala.',
         '## Numeri di scena',
@@ -3448,7 +3526,7 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
         '- Deve essere **breve**: poche parole. Azioni più lunghe si scrivono come Azione, interrompendo la battuta.',
         '- **Non chiude mai** una battuta: se dopo la battuta il personaggio fa qualcosa, è Azione.',
         '- **Non va accanto al nome**: lì vanno solo le estensioni tecniche come (V.O.) e (O.S.). «MARCO (sottovoce)» è un errore frequente: il Controllo della sintassi lo corregge con un clic.',
-        'Per inserirla: dopo il nome premi [[Invio]] e scrivi `(`, oppure premi [[Tab]] fino a «Parentesi». Per chiuderla premi [[Invio]]: la parentesi si chiude da sola e torni al dialogo.'] },
+        'Per inserirla: dopo il nome premi [[Invio]] e scrivi `(`: compare subito anche la parentesi chiusa, con il cursore in mezzo. Oppure premi [[Tab]] fino a «Parentesi». Quando hai finito premi [[Invio]] e torni al dialogo; se scrivi tu `)`, il cursore salta oltre quella che c’è già. [[Backspace]] su una parentetica vuota la toglie.'] },
     { id: 'estensioni', section: 'fountain', title: 'V.O., O.S. e altre estensioni',
       keys: 'vo v.o. os o.s. oc o.c. voce fuori campo voice over off screen fuori scena narratore pensieri telefono estensione cont d more f.c. differenza',
       q: ['differenza tra vo e os', 'quando si usa v.o.', 'quando si usa o.s.', 'come indico la voce fuori campo', 'voce al telefono', 'narratore', 'cosa significa cont d', 'cosa significa more', 'come indico un pensiero'],
@@ -3466,15 +3544,28 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
     { id: 'transizioni', section: 'fountain', title: 'Transizioni',
       keys: 'transizione transizioni cut to stacco stacco su dissolvenza fade out fade in smash cut a destra destra italiano',
       q: ['come scrivo una transizione', 'come scrivo stacco su', 'dissolvenza non va a destra', 'cut to', 'transizioni in italiano', 'fade out'],
-      short: 'Una riga in MAIUSCOLO che finisce con «TO:» diventa transizione da sola (CUT TO:). Per tutte le altre, comprese quelle in italiano, metti «>» davanti: «> DISSOLVENZA A:». Lascia una riga vuota prima e dopo.',
+      short: 'Scrivi la transizione su una riga da sola, anche in minuscolo («cut to:», «dissolvenza a:»), e premi Invio: ScripToti la mette in maiuscolo e a destra. FADE IN: e FINE FLASHBACK restano a sinistra.',
       body: ['Le transizioni indicano il passaggio da una scena all’altra e stanno a **destra** del foglio.',
-        '- Fountain riconosce da sola una riga in MAIUSCOLO che finisce con `TO:`, preceduta e seguita da una riga vuota: `CUT TO:`.',
-        '- Per tutte le altre, comprese quelle in italiano, metti `>` davanti:',
-        '> > STACCO SU:\n> > DISSOLVENZA A:\n> > DISSOLVENZA IN NERO.',
-        '- Lascia sempre una riga vuota **dopo** la transizione: se segue subito altro testo, la transizione viene scambiata per il nome di un personaggio.',
-        '- `FADE IN:` all’inizio del copione si scrive come Azione, a sinistra.',
+        '- Scrivi la transizione su una riga da sola, anche in minuscolo, e premi [[Invio]]: ScripToti la mette in maiuscolo, aggiunge i due punti o il punto finale e la porta a destra. Nel file mette `>` davanti, il segno di Fountain per le transizioni, così anche gli altri programmi la leggono uguale.',
+        '> cut to:\n> dissolvenza a:\n> fade out',
+        '- Riconosce: CUT TO:, SMASH CUT TO:, MATCH CUT TO:, JUMP CUT TO:, DISSOLVE TO:, FADE TO:, FADE OUT., FADE TO BLACK., STACCO SU:, STACCO NETTO:, TAGLIO SU:, DISSOLVENZA A:, DISSOLVENZA INCROCIATA:, DISSOLVENZA IN NERO., DISSOLVENZA IN CHIUSURA., CHIUSURA IN NERO.',
+        '- Per una transizione diversa metti tu `>` davanti: `> SFUMA SU:`.',
+        '- Dopo la transizione ScripToti lascia una riga vuota: se segue subito altro testo, la transizione viene scambiata per il nome di un personaggio.',
+        '- `FADE IN:` (o `DISSOLVENZA IN APERTURA:`) all’inizio del copione e `FINE FLASHBACK` (o `END FLASHBACK`, `TORNA AL PRESENTE`) non sono transizioni: restano a **sinistra**, come Azione. Anche queste, con [[Invio]], vanno in maiuscolo da sole.',
         'Usa le transizioni con parsimonia: tra una scena e l’altra lo stacco è implicito.',
         'Il Controllo della sintassi riconosce le transizioni scritte senza `>` e le corregge con un clic.'] },
+    { id: 'inquadrature', section: 'fountain', title: 'Inquadrature (ANGLE ON, SU…)',
+      keys: 'inquadratura inquadrature angle on close on su dettaglio insert pov shot punto di vista back to scene',
+      q: ['come scrivo angle on', 'come scrivo su marta', 'angle on è una nuova scena', 'inquadratura letta come personaggio', 'come indico un punto di vista'],
+      short: 'Un’inquadratura (ANGLE ON, CLOSE ON, SU MARTA) non è una scena nuova: è Azione, dentro la scena in corso. Premi Invio a fine riga e ScripToti mette in maiuscolo la parola chiave.',
+      body: ['Un’inquadratura sposta lo sguardo **dentro la stessa scena**: non ha numero di scena e vale il luogo e il momento dell’ultima intestazione. Per lo standard, e per Fountain, è **Azione**.',
+        '> angle on Tim reading a book',
+        'Con [[Invio]] a fine riga diventa `ANGLE ON Tim reading a book`: in maiuscolo va solo la parola chiave. Vale per ANGLE ON, CLOSE ON, WIDE ON, INSERT e POV.',
+        '- **SU** è anche una parola comune («su un tavolo…»): diventa inquadratura solo se dopo c’è un personaggio del copione. «su marta» diventa `SU MARTA`.',
+        '- La forma da manuale è l’inquadratura tutta in maiuscolo, con la descrizione sotto. Quando la riga è tutta in maiuscolo ScripToti aggiunge `!` davanti (in pagina non si vede), perché altrimenti con del testo subito sotto verrebbe letta come il nome di un personaggio.',
+        '> ANGLE ON TIM\n>\n> Tim legge un libro.',
+        '- Il Controllo della sintassi segnala le inquadrature lette come personaggio e le corregge con un clic.',
+        'Se il copione ha i numeri di scena bloccati e usava ANGLE ON come scena, quella scena ora risulta **omessa**: le altre tengono il loro numero.'] },
     { id: 'altri-tipi', section: 'fountain', title: 'Testo centrato, versi, doppio dialogo, note',
       keys: 'centrato centrare titolo versi canzone lirica doppio dialogo simultaneo contemporaneo note nota boneyard commento nascosto interruzione di pagina salto pagina sezioni sinossi',
       q: ['come centro un titolo', 'come scrivo una canzone', 'due personaggi parlano insieme', 'dialogo simultaneo', 'come scrivo una nota che non si stampa', 'come vado a pagina nuova'],
@@ -3539,7 +3630,7 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
       body: ['- **Zoom** in basso a destra, dal 50% al 200%.',
         '- **Vista → Tema scuro** ([[Alt+Shift+D]]); il PDF è sempre bianco.',
         '- **Vista → Ortografia**: lingua del correttore del browser (italiano o inglese).',
-        '- In basso a sinistra: la **pagina** che stai guardando sul totale («Pagina 3 di 12», «Title page» sulla pagina del titolo), **parole e caratteri** del copione. Se selezioni del testo compare «Selezione» con parole e caratteri della sola parte selezionata.'] },
+        '- In basso a sinistra: la **pagina** che stai guardando sul totale («Pagina 3 di 12», «Title page» sulla pagina del titolo): cliccaci sopra, scrivi un numero di pagina e premi [[Invio]] per andarci; se la pagina non esiste compare «Pagina non trovata». Poi **parole e caratteri** del copione. Se selezioni del testo compare «Selezione» con parole e caratteri della sola parte selezionata.'] },
 
     // ---------------------------------------------------------------- Revisione
     { id: 'revisioni', section: 'revisione', title: 'Registrare le revisioni',
@@ -3583,6 +3674,7 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
       body: ['- [[Mod+F]] apre **Cerca**; [[Invio]] e [[Shift+Invio]] passano al risultato successivo e precedente.',
         '- [[Mod+Alt+F]] apre **Trova e sostituisci**, con «Sostituisci» e «Sostituisci tutto».',
         '- Opzioni: maiuscole/minuscole, parole intere.',
+        'La sostituzione rispetta le maiuscole di ogni punto: se cambi «giraffa» in «elefante», «Giraffa» a inizio frase diventa «Elefante» e «GIRAFFA» diventa «ELEFANTE».',
         'Nei nomi dei personaggi, nelle scene e nelle transizioni il testo sostitutivo resta in maiuscolo. Per cambiare il nome di un personaggio in tutto il copione è meglio «Cambia nome personaggio».'] },
     { id: 'rinomina', section: 'strumenti', title: 'Cambiare nome a un personaggio',
       keys: 'cambia nome personaggio rinomina rinominare genere maschile femminile',
@@ -3595,7 +3687,7 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
       keys: 'suggerimenti completamento automatico autocompletamento luoghi personaggi refuso descrizione',
       q: ['come funzionano i suggerimenti', 'completamento automatico dei nomi', 'mi suggerisce un nome sbagliato'],
       short: 'Mentre scrivi una scena o un nome, ScripToti propone solo luoghi e personaggi già presenti nel copione. [[Invio]] o un clic per accettare, [[Esc]] per ignorare.',
-      body: ['Scrivendo un’intestazione, ScripToti propone i **luoghi** già usati, poi il **momento** della giornata nella lingua del copione (GIORNO, NOTTE… oppure DAY, NIGHT…). Scrivendo un nome in maiuscolo propone i **personaggi** del copione, segnala i possibili refusi (RUTA → RITA) e indica dove ognuno compare per la prima volta («Apparso prima a pag. 3 scena 2»), aggiornato a ogni modifica.',
+      body: ['Scrivendo un’intestazione, ScripToti propone i **luoghi** già usati, poi il **momento** della giornata nella lingua del copione (GIORNO, NOTTE… oppure DAY, NIGHT…). Scrivendo un nome in maiuscolo propone i **personaggi** del copione, segnala i possibili refusi (RUTA → RITA) e, per chi non compare da almeno tre scene, ricorda dove è apparso l’ultima volta («Ultima volta a pag. 3 scena 2»). L’indicazione segue ogni modifica; per i personaggi delle scene vicine non compare.',
         '- [[↑]] [[↓]] per scegliere, [[Invio]] o clic per accettare, [[Esc]] per ignorare.',
         '- Un nome simile a un altro ma voluto si può tenere come personaggio distinto.',
         'Non viene inventato niente: i suggerimenti arrivano solo dal copione aperto.'] },
@@ -3725,8 +3817,8 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
     { id: 'p-transizione', section: 'problemi', title: 'La transizione non va a destra',
       keys: 'transizione non va a destra stacco dissolvenza resta a sinistra diventa personaggio',
       q: ['la dissolvenza non va a destra', 'stacco su resta a sinistra', 'la transizione diventa un personaggio'],
-      short: 'Metti «>» davanti: «> STACCO SU:». Solo le transizioni in maiuscolo che finiscono con «TO:» sono riconosciute da sole. Lascia una riga vuota dopo, altrimenti diventa un personaggio.',
-      body: ['Fountain riconosce da sola solo le transizioni in maiuscolo che finiscono con `TO:` (CUT TO:). Per le altre scrivi `>` davanti: `> STACCO SU:`, `> DISSOLVENZA A:`.',
+      short: 'Scrivi la transizione su una riga da sola e premi Invio: ScripToti la riconosce, anche in minuscolo, e la porta a destra. Per una transizione che non conosce metti «>» davanti: «> SFUMA SU:».',
+      body: ['Le transizioni più comuni (CUT TO:, DISSOLVENZA A:, STACCO SU:, FADE OUT. e le altre elencate in **Transizioni**) vengono riconosciute quando premi [[Invio]] alla fine della riga, anche se le hai scritte in minuscolo. Se la riga c’era già da prima, mettiti alla fine e premi [[Invio]], oppure usa il Controllo della sintassi. Per una transizione diversa scrivi `>` davanti: `> SFUMA SU:`.',
         'Se dopo la transizione non c’è una riga vuota, viene scambiata per il nome di un personaggio. Il Controllo della sintassi corregge entrambi i casi.'] },
     { id: 'p-esclamativo', section: 'problemi', title: 'Si vede un simbolo (! @ > .) nel testo',
       keys: 'punto esclamativo visibile simbolo visibile chiocciola marcatore si vede',
@@ -3913,7 +4005,7 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
         const text = plain(e.part.text).trim();
         if (!text.includes('\n') && TRANSITION.test(text) && !/^FADE IN/i.test(text)) {
           const fixed = fold(text).replace(/[.:]*$/, '') + (/^(FADE OUT|FADE TO BLACK|CHIUSURA IN NERO|DISSOLVENZA IN NERO|DISSOLVENZA A NERO)$/.test(fold(text).replace(/[.:]*$/, '')) ? '.' : ':');
-          add({ rule: 'transition', severity: 'warning', start: e.part.lineStart, end: e.part.lineEnd, title: 'Transizione non riconosciuta', message: 'Fountain riconosce da solo solo le transizioni in maiuscolo che finiscono con «TO:». Per le altre, comprese quelle in italiano, metti «>» davanti: così vanno a destra come transizione.', help: 'transizioni', fix: { start: e.part.lineStart, end: e.part.lineEnd, text: '> ' + fixed, label: 'Rendi transizione: «' + fixed + '»' } });
+          add({ rule: 'transition', severity: 'warning', start: e.part.lineStart, end: e.part.lineEnd, title: 'Transizione non riconosciuta', message: 'Questa riga sembra una transizione ma viene letta come Azione. Riscrivila su una riga da sola e premi Invio, oppure correggila qui: ScripToti mette «>» davanti e la porta a destra.', help: 'transizioni', fix: { start: e.part.lineStart, end: e.part.lineEnd, text: '> ' + fixed, label: 'Rendi transizione: «' + fixed + '»' } });
         }
         // A heading written in full words is read as action.
         const words = /^(INTERNO|ESTERNO|INTERIOR|EXTERIOR|INTERNO\/ESTERNO|INT\/EST|EST\/INT)\b[.\s-]*(.*)$/i.exec(text);
@@ -3937,6 +4029,11 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
       if (TRANSITION.test(name) && !speech.dual) {
         const fixed = fold(name).replace(/[.:]*$/, '') + ':';
         add({ rule: 'transition-cue', severity: 'error', start: cue.lineStart, end: cue.lineEnd, title: 'Transizione letta come personaggio', message: 'Una transizione seguita subito da altro testo viene scambiata per il nome di un personaggio. Mettila su una riga da sola con «>» davanti e lascia una riga vuota dopo.', help: 'transizioni', fix: { start: cue.lineStart, end: cue.lineEnd, text: '> ' + fixed + '\n', label: 'Rendi transizione: «' + fixed + '»' } });
+        continue;
+      }
+      // A shot ("ANGLE ON TIM") followed at once by text is read as a character.
+      if (/^(?:(?:ANGLE ON|CLOSE ON|WIDE ON|INSERT|POV)\b|SU\s+\S)/.test(name) && !speech.dual && !raw.trimStart().startsWith('@')) {
+        add({ rule: 'shot-cue', severity: 'error', start: cue.lineStart, end: cue.lineEnd, title: 'Inquadratura letta come personaggio', message: 'Una riga tutta in maiuscolo seguita subito da altro testo viene letta come il nome di un personaggio. Un’inquadratura è Azione: metti «!» davanti (in pagina non si vede), oppure lascia una riga vuota dopo.', help: 'inquadrature', fix: { start: cue.lineStart, end: cue.lineStart, text: '!', label: 'Rendi Azione: «' + name + '»' } });
         continue;
       }
       const exts = [...name.matchAll(/\(([^)]*)\)/g)].map(m => m[1].trim());
@@ -4069,13 +4166,14 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
       return box;
     }
     const LEGEND = [
-      ['Intestazione di scena', 'Riga che inizia con INT. / EST. / EXT. / I/E, MONTAGE, MONTAGGIO o ANGLE ON, oppure «.» davanti', 'INT. CUCINA - NOTTE', 'scena'],
+      ['Intestazione di scena', 'Riga che inizia con INT. / EST. / EXT. / I/E, MONTAGE o MONTAGGIO, oppure «.» davanti', 'INT. CUCINA - NOTTE', 'scena'],
       ['Azione', 'Testo normale; «!» davanti per forzarla', 'Anna apre la finestra.', 'azione'],
       ['Personaggio', 'Nome in MAIUSCOLO su una riga, poi Invio; «@» per forzarlo', 'MARCO', 'personaggio'],
-      ['Parentetica', 'Sotto il nome, tra parentesi; Invio la chiude', '(sottovoce)', 'parentetica'],
+      ['Parentetica', 'Sotto il nome scrivi «(»: la chiusa compare da sola; Invio torna al dialogo', '(sottovoce)', 'parentetica'],
       ['Dialogo', 'Sotto il nome o la parentetica; due Invio per uscire', 'Non ho tempo.', 'personaggio'],
       ['Estensione', 'Accanto al nome: (V.O.) voce da altrove, (O.S.) presente ma non inquadrato', 'MARCO (V.O.)', 'estensioni'],
-      ['Transizione', 'MAIUSCOLO che finisce con TO:, oppure «>» davanti', '> STACCO SU:', 'transizioni'],
+      ['Transizione', 'Su una riga da sola, anche in minuscolo, poi Invio; oppure «>» davanti', 'STACCO SU:', 'transizioni'],
+      ['Inquadratura', 'Azione: ANGLE ON, CLOSE ON, SU + personaggio; Invio mette in maiuscolo la parola chiave', 'ANGLE ON Tim', 'inquadrature'],
       ['Testo centrato', 'Tra «>» e «<»', '> FINE <', 'altri-tipi'],
       ['Doppio dialogo', '«^» dopo il secondo nome', 'MARCO ^', 'altri-tipi'],
       ['Versi', '«~» all’inizio della riga', '~Volare, oh oh', 'altri-tipi'],
@@ -4880,6 +4978,8 @@ async function startUpgrade() {
     active.editorView = editor.capture();
     panel.hidden = !options.panelOpen; active.selectedForComment = options.selectedForComment || null; paint(); if (!panel.hidden) renderComments(); emergency(); recoverSoon(); refresh();
     for (const other of projects) if (other !== active) other.shared?.client.stop();
+    // ANGLE ON used to open a scene. In a locked script that scene is now omitted.
+    if (parsed.document?.locks && /^[ \t]*ANGLE ON\b/m.test(parsed.source) && !restoring) editor.toast('Da questa versione ANGLE ON non apre più una scena, come in Fountain: con i numeri bloccati quella scena risulta omessa e le altre tengono il loro numero.');
     if (active.comments.share) { attachShare(active, active.comments.share); if (parsed.externalEdit && !restoring) editor.toast('Il file era stato modificato fuori da ScripToti: l’originale è in File → Recupero.'); refresh(); }
     if (!restoring) void rememberWorkspaceBest();
   }
@@ -5904,7 +6004,7 @@ async function startUpgrade() {
     });
     for (let index = pages.length; index < oldPages.length; index++) oldPages[index].remove();
     $('#pagesStat').textContent = String(pages.length);
-    $('#currentPage').title = documentState?.locks ? 'Pagina visualizzata e pagine fisiche con riferimenti bloccati; Title page escluso.' : 'Pagina visualizzata e pagine del documento; Title page escluso.';
+    $('#currentPage').title = (documentState?.locks ? 'Pagina visualizzata e pagine fisiche con riferimenti bloccati; Title page escluso.' : 'Pagina visualizzata e pagine del documento; Title page escluso.') + ' Clic per andare a una pagina.';
     updateStats();
     $('#filename').textContent = fileName;
     $('#sceneNumbersToggle').checked = showSceneNumbers;
@@ -6074,9 +6174,9 @@ async function startUpgrade() {
         || regions.find(n => n._draft.anchor <= remembered.focus && remembered.focus <= n._draft.end));
     const current = region || rememberedRegion;
     const page = current?.closest('.script-page');
-    if (page) $('#currentPage').textContent = `Pagina ${page.dataset.pageLabel} di ${editor.children.length}`;
-    else if (current?.closest('.title-page')) $('#currentPage').textContent = 'Title page';
-    else $('#currentPage').textContent = `Pagina 1 di ${editor.children.length || 1}`;
+    if (page) pageStat(`Pagina ${page.dataset.pageLabel} di ${editor.children.length}`);
+    else if (current?.closest('.title-page')) pageStat('Title page');
+    else pageStat(`Pagina 1 di ${editor.children.length || 1}`);
     collaboration?.selection?.(plainSelection(selection));
   }
   function visiblePage() {
@@ -6087,9 +6187,38 @@ async function startUpgrade() {
     const marker = viewport.top + Math.min(140, viewport.height / 3);
     const sheets = [...stage.querySelectorAll('.paper')];
     const sheet = sheets.find(node => node.getBoundingClientRect().bottom > marker) || sheets.at(-1);
-    if (sheet?.classList.contains('title-page')) $('#currentPage').textContent = 'Title page';
-    else if (sheet) $('#currentPage').textContent = `Pagina ${sheet.dataset.pageLabel} di ${editor.children.length}`;
+    if (sheet?.classList.contains('title-page')) pageStat('Title page');
+    else if (sheet) pageStat(`Pagina ${sheet.dataset.pageLabel} di ${editor.children.length}`);
   }
+  // A click on "Pagina 3 di 40" asks for a page and jumps to it. Labels are
+  // the ones on the pages, so a locked script also accepts "12A".
+  function pageStat(text) { const stat = $('#currentPage'); if (stat && !stat.querySelector('input')) stat.textContent = text; }
+  function goToPage() {
+    const stat = $('#currentPage');
+    if (!stat || stat.querySelector('input') || !editor.children.length) return;
+    const shown = stat.textContent, input = document.createElement('input');
+    input.className = 'page-jump'; input.type = 'text'; input.inputMode = 'text'; input.autocomplete = 'off'; input.spellcheck = false;
+    input.setAttribute('aria-label', 'Vai alla pagina'); input.placeholder = 'Pagina…';
+    let done = false;
+    const close = () => { if (done) return; done = true; stat.textContent = shown; visiblePage(); };
+    input.onkeydown = event => {
+      event.stopPropagation();
+      if (event.key === 'Escape') { event.preventDefault(); close(); editor.focus(); }
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      const wanted = input.value.trim().replace(/^(?:pag(?:ina)?\.?|p\.)\s*/i, '').toLocaleUpperCase('it');
+      const sheet = wanted && [...editor.children].find(node => String(node.dataset.pageLabel || '').toLocaleUpperCase('it') === wanted);
+      if (!sheet) { input.select(); toast('Pagina non trovata.'); return; }
+      done = true; stat.textContent = shown;
+      sheet.scrollIntoView({ block: 'start' });
+      const region = sheet.querySelector('.editable-region');
+      if (region?._draft) { editor.focus({ preventScroll: true }); restoreSelection({ anchor: region._draft.anchor, focus: region._draft.anchor, kind: region.dataset.kind }); highlight(); }
+      pageStat(`Pagina ${sheet.dataset.pageLabel} di ${editor.children.length}`);
+    };
+    input.onblur = close;
+    stat.replaceChildren(input); input.focus();
+  }
+  $('#currentPage').addEventListener('click', goToPage);
   function revealCaret() {
     const s = window.getSelection();
     if (!s?.isCollapsed || !s.rangeCount) return;
