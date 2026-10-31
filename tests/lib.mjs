@@ -19,7 +19,7 @@ export function finish(results, errors) {
 }
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.json': 'application/json', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png' };
 
-export async function open({ root = ROOT, width = 1280, height = 900 } = {}) {
+export async function open({ root = ROOT, width = 1280, height = 900, locale = "it-IT" } = {}) {
   const state = { root };
   const server = http.createServer((q, r) => {
     const file = path.join(state.root, q.url === '/' ? 'index.html' : decodeURIComponent(q.url.split('?')[0]));
@@ -32,7 +32,7 @@ export async function open({ root = ROOT, width = 1280, height = 900 } = {}) {
   const url = `http://127.0.0.1:${server.address().port}/index.html`;
   const headed = process.env.HEADED === '1';
   const browser = await chromium.launch({ executablePath: CHROME, headless: !headed, args: [...CHROME_ARGS, ...(headed ? ['--window-position=-2400,-2400', '--window-size=1000,700'] : [])], ignoreDefaultArgs: ['--hide-scrollbars'] });
-  const context = await browser.newContext({ viewport: { width, height } });
+  const context = await browser.newContext({ viewport: { width, height }, locale });
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(String(e)));

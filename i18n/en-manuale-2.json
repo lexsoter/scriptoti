@@ -1,0 +1,328 @@
+{
+  "allineamento": {
+    "title": "Alignment, justification, indentation, and line spacing",
+    "keys": "alignment justify justified center right left indent first line line spacing 1 1.5 automatic synopsis treatment",
+    "q": [
+      "how do I justify text",
+      "how do I center text",
+      "first-line indent",
+      "how do I set 1.5 line spacing",
+      "automatic line spacing",
+      "I cannot justify dialogue"
+    ],
+    "short": "Format → Justify ([[Alt+Shift+J]]), Center ([[Alt+Shift+E]]), and Align left ([[Alt+Shift+L]]) apply only to Action. First-line indent ([[Alt+Shift+I]]) applies across the document. Choose line spacing in the toolbar: 1, 1.5, or Auto.",
+    "body": [
+      "Alignment and justification apply **only to Action**. Character cues, dialogue, scene headings, and transitions keep their screenplay formatting.",
+      "- [[Alt+Shift+L]] for left alignment, [[Alt+Shift+E]] for centered text, [[Alt+Shift+J]] for justified text. Choose “Align right” from the menu.",
+      "- [[Alt+Shift+I]] automatically adds a **first-line indent** to every Action paragraph (10.8 pt), as in articles and essays.",
+      "- Choose **Line spacing** in the toolbar: **1** for screenplays, **1.5** for synopses and treatments, or **Auto** (automatic: 1 if the text contains scenes and dialogue, otherwise 1.5). If you select text first, the setting applies only to those paragraphs; if they have different spacings, **Mix** appears."
+    ]
+  },
+  "title-page": {
+    "title": "Title page",
+    "keys": "title page cover title author credit contact draft date show hide",
+    "q": [
+      "how do I create a title page",
+      "how do I add the title",
+      "title page",
+      "how do I hide the title page"
+    ],
+    "short": "Format → Edit title page… opens the fields for title, author, contact details, and more. Format → Show/Hide title page shows or hides it without deleting the fields.",
+    "body": [
+      "**Format → Edit title page…** opens a form with fields for the title, credit (“Written by”), authors, original story, version, date, contact details, notes, and copyright. Empty fields are not printed.",
+      "**Format → Show/Hide title page** shows or hides it. Hiding it keeps all the fields. In new documents, it is hidden by default.",
+      "You can also write it directly at the start of the file in Fountain format: `Title: My Film` and `Author: …`, followed by a blank line."
+    ]
+  },
+  "margini": {
+    "title": "Page setup and margins",
+    "keys": "margins page setup left right top bottom centimeters symmetrical standard binding a4 paper",
+    "q": [
+      "how do I change the margins",
+      "why is the left margin wider",
+      "equal margins",
+      "page setup"
+    ],
+    "short": "Format → Page setup… lets you change all four margins in centimeters. The standard setting leaves more space on the left for binding. “Equal left and right margins” centers the text while keeping 60 characters per line.",
+    "body": [
+      "**Format → Page setup…** lets you change all four margins (from 1 to 8 cm). The preview shows how many characters fit on an Action line and how many lines fit on a page.",
+      "- **Screenplay standard**: more space on the left (3.53 cm) for binding, 60 characters per line, and 59 lines per page.",
+      "- **Equal left and right margins**: the same space on both sides, with the same text width.",
+      "The editor and PDF use the same margins, saved in the file. You cannot change them while pages and scene numbers are locked for revisions. First choose Revisions → Close revisions and unlock numbering."
+    ]
+  },
+  "vista": {
+    "title": "Zoom, dark theme, spellcheck, and counts",
+    "keys": "zoom enlarge dark light theme spelling spellcheck language Italian English words characters count pages current page page number selection",
+    "q": [
+      "how do I zoom in on the page",
+      "light theme",
+      "spellcheck",
+      "how many words",
+      "count words in a selection",
+      "where can I see the page number",
+      "what page am I on"
+    ],
+    "short": "Use the zoom control at the bottom right, [[Mod++]] and [[Mod+-]] ([[Mod+0]] resets to 100%), or pinch on your trackpad. Only the pages zoom, keeping your writing position in place. Use View → Dark theme ([[Alt+Shift+D]]) and View → Spellcheck (Italian/English). At the bottom left, you see the current page and total pages, word and character counts, or counts for your selection.",
+    "body": [
+      "- **Zoom** is at the bottom right, from 50% to 200%.",
+      "- **View → Dark theme** ([[Alt+Shift+D]]). The PDF always has a white background.",
+      "- **View → Spellcheck** sets the browser's spellcheck language (Italian or English).",
+      "- **View → Lingua / Language**: the language of the program, Italian or English. By default it follows your browser's language. It changes only menus, messages and the manual: your script stays as it is.",
+      "- At the bottom left, the **page** you are viewing and total pages appear (“Page 3 of 12,” or “Title page” on the title page). Click the indicator, enter a page number, and press [[Enter]] to go there. If the page does not exist, you see “Page not found.” Next are the script's **word and character counts**. Select some text to see “Selection,” with counts for that selection only."
+    ]
+  },
+  "revisioni": {
+    "title": "Tracking revisions",
+    "keys": "revision revisions track changes gray bands highlight highlighter mark eraser remove clear switch mode manual new pass continue close revisions actors revised pages",
+    "q": [
+      "how do I mark changes for actors",
+      "track revisions",
+      "start a new revision pass",
+      "how do I highlight a passage",
+      "print only revised pages",
+      "how do I remove a revision mark",
+      "how do I erase a gray band",
+      "what is a revision pass",
+      "how do I close revisions"
+    ],
+    "short": "The “Track revisions” switch in the toolbar (or [[Alt+Shift+R]]) marks every changed line with a gray band, including in the PDF, and locks pages and scene numbers. Use the highlighter to mark text manually and the eraser to remove marks. When you turn tracking back on, choose whether to continue the pass or start a new one.",
+    "body": [
+      "The **Track revisions** switch in the toolbar (also **Revisions → Track revisions**, [[Alt+Shift+R]]) turns on revision tracking. Every line changed from that point gets a gray band on screen and in the PDF. Pages and scene numbers stay locked. Use this to show actors what has changed.",
+      "- **Show highlights** ([[Alt+Shift+V]]) hides or shows the marks without deleting them, so you can export a clean copy.",
+      "- **Highlighter** ([[Alt+Shift+H]]) marks the selected text as a revision.",
+      "- **Eraser** ([[Alt+Shift+G]]) removes revision marks from the selected text, whether added manually or tracked automatically. With no selection, it does nothing.",
+      "- **Revision passes**: when you turn tracking back on and highlights already exist, ScripToti asks whether to **continue the pass** or **start a new one**. A pass corresponds to a delivered version. In production, it usually has a revision color too: blue, pink, yellow, and so on. Starting a new pass clears the old highlights and marks only changes made from that point. Page and scene numbers stay locked.",
+      "- **Revisions → Close revisions and unlock numbering** removes all highlights and unlocks pages and scene numbers when the revision stage is over. [[Mod+Z]] restores the highlights and numbering. To track changes again, turn the switch back on.",
+      "- **File → Export PDF · marked pages only** prints only pages with changes.",
+      "Track revisions automatically locks pages and scene numbers (see the next topic). Revisions are not yet available in shared scripts."
+    ]
+  },
+  "blocco": {
+    "title": "Locking pages and scene numbers (1A, 2B…)",
+    "keys": "lock pages scenes locked numbering production added pages a-pages a-scenes letter suffix 12a 1b unlock",
+    "q": [
+      "how do I lock page numbers",
+      "why are pages numbered 1a and 1b",
+      "production numbering",
+      "how do I unlock pages"
+    ],
+    "short": "With Track revisions on, page and scene numbers stay fixed. Added text goes onto pages 1b, 1c… and new scenes get numbers such as 12A. To return to unlocked numbering, choose Revisions → Close revisions and unlock numbering.",
+    "body": [
+      "In production, page and scene numbers must not change after edits. The **Track revisions** switch locks them:",
+      "- text that no longer fits on a page goes onto added pages, **1b, 1c…**. These are filled before more are created;",
+      "- new scenes get letter suffixes (**12A**); deleted scenes remain marked “omitted.”",
+      "Locking starts automatically with **Track revisions** and stays in place when you start a new pass. **Revisions → Close revisions and unlock numbering** removes the highlights and unlocks numbering; [[Mod+Z]] restores them."
+    ]
+  },
+  "attori": {
+    "title": "Actor copies (highlighted dialogue)",
+    "keys": "actors colors highlight dialogue actor copy reading character lines",
+    "q": [
+      "how do I highlight an actor's lines",
+      "prepare actor copies",
+      "highlight one character's dialogue"
+    ],
+    "short": "Revisions → Highlight dialogue by actor… ([[Alt+Shift+A]]): choose characters and a color. Their dialogue is highlighted in the PDF too.",
+    "body": [
+      "**Revisions → Highlight dialogue by actor…** ([[Alt+Shift+A]]) opens the character list. Check the characters you want to highlight and choose a color. Their dialogue is highlighted on screen and in the PDF, so you can prepare a copy for each actor."
+    ]
+  },
+  "commenti": {
+    "title": "Comments",
+    "keys": "comments comment notes replies resolve annotations discussion thread",
+    "q": [
+      "how do I add a comment",
+      "how do I reply to a comment",
+      "where can I see comments",
+      "resolve a comment"
+    ],
+    "short": "Select text and choose Comments → Add comment ([[Mod+Alt+M]]). Comments → Show ([[Alt+Shift+C]]) opens the panel, where you can reply or choose “Resolve.”",
+    "body": [
+      "Select text and choose **Comments → Add comment** ([[Mod+Alt+M]]). The commented text is underlined.",
+      "**Comments → Show comments** ([[Alt+Shift+C]]) opens the panel. You can reply, resolve a discussion, or reopen it. Click the quoted text to go to that point in the script.",
+      "Comments stay in the file and are not printed. In shared scripts, everyone can see them with the author's name."
+    ]
+  },
+  "cerca": {
+    "title": "Find and replace",
+    "keys": "find search replace replace all case sensitive whole words",
+    "q": [
+      "how do I find a word",
+      "how do I replace text",
+      "replace all"
+    ],
+    "short": "[[Mod+F]] finds text; [[Mod+Alt+F]] finds and replaces it. You can match case and search for whole words. Replacement text in character cues stays uppercase.",
+    "body": [
+      "- [[Mod+F]] opens **Find**. [[Enter]] and [[Shift+Enter]] move to the next and previous results.",
+      "- [[Mod+Alt+F]] opens **Find and replace**, with “Replace” and “Replace all.”",
+      "- Options: match case, whole words.",
+      "Replacement follows the capitalization at each match. If you replace “giraffe” with “elephant,” “Giraffe” at the start of a sentence becomes “Elephant,” and “GIRAFFE” becomes “ELEPHANT.”",
+      "In character cues, scene headings, and transitions, replacement text stays uppercase. To rename a character throughout the script, use “Change character name” instead."
+    ]
+  },
+  "rinomina": {
+    "title": "Renaming a character",
+    "keys": "change character name rename gender male female",
+    "q": [
+      "how do I change a character's name",
+      "rename a character",
+      "change a character's gender"
+    ],
+    "short": "Edit → Change character name…: choose the character and the new name. ScripToti shows each occurrence for you to approve. If you want, it also suggests gender changes such as he/she.",
+    "body": [
+      "**Edit → Change character name…** lists every occurrence of the name in dialogue and action, with its context. You can exclude occurrences or edit them individually.",
+      "If the old name has an article before it, the article is removed: “the fisherman” becomes “Giorgio,” not “the Giorgio.” In Italian, combined prepositions and articles are adjusted too: “del pescatore” becomes “di Giorgio,” and “al pescatore” becomes “a Giorgio.” These occurrences are flagged for review. Other articles in the sentence stay where they are.",
+      "If you specify the current and new gender, ScripToti also suggests words to change, such as he/she or boy/girl. You always approve these changes manually."
+    ]
+  },
+  "suggerimenti": {
+    "title": "Location and character suggestions",
+    "keys": "suggestions autocomplete completion locations characters typo description",
+    "q": [
+      "how do suggestions work",
+      "autocomplete character names",
+      "it suggests the wrong name"
+    ],
+    "short": "As you type a scene heading or name, ScripToti suggests only locations and characters already in the script. Press [[Enter]] or click to accept; press [[Esc]] to ignore.",
+    "body": [
+      "When you write a scene heading, ScripToti suggests **locations** already used, then the **time** of day in the script's language (DAY, NIGHT… or the Italian GIORNO, NOTTE…). When you type an uppercase name, it suggests **characters** from the script and flags possible typos (RUTA → RITA). If a character has not appeared for at least three scenes, it reminds you where they last appeared (“Last seen on page 3, scene 2”). The reference updates after every edit. It is not shown for characters in nearby scenes.",
+      "- Use [[↑]] [[↓]] to choose, [[Enter]] or a click to accept, and [[Esc]] to ignore.",
+      "- If a similar name is intentional, you can keep it as a separate character.",
+      "Nothing is invented: suggestions come only from the open script."
+    ]
+  },
+  "salvare": {
+    "title": "Saving: files, autosave, and recovery",
+    "keys": "save saving automatic autosave save as file disk permission recovery copies browser download safari iphone",
+    "q": [
+      "how do I save",
+      "does it save automatically",
+      "where is my script saved",
+      "save as",
+      "I lost my text",
+      "recover an earlier version",
+      "Safari downloads the file"
+    ],
+    "short": "Open or save your script as a file. In Chrome/Edge, ScripToti then updates it automatically (autosave) and with [[Mod+S]]. File → Recovery… keeps earlier versions in your browser. In Safari and on iPhone, Save downloads a copy.",
+    "body": [
+      "In **Chrome and Edge**, a file opened with **File → Open…** stays linked. ScripToti updates it automatically after a few seconds and with [[Mod+S]]. [[Mod+Shift+S]] is **Save As** (the `.fountain` extension is added automatically).",
+      "Your browser may ask for permission to change the file. If it does, click Save and allow access. The save status is at the top right.",
+      "In **Safari, Firefox, and on iPhone**, the browser does not allow updates to the file. Save **downloads** a copy.",
+      "## Recovery",
+      "Besides the file, ScripToti keeps working copies in your browser. **File → Recovery…** lists them. “Open copy” opens one as a separate document. Recovery copies are stored in the browser on that computer: they are not a cloud backup."
+    ]
+  },
+  "pdf": {
+    "title": "Exporting to PDF",
+    "keys": "pdf export print save as pdf filename marked revised pages",
+    "q": [
+      "how do I make a PDF",
+      "how do I print",
+      "export my script"
+    ],
+    "short": "File → Export PDF ([[Mod+P]]) opens your browser's print dialog. Choose “Save as PDF.” The suggested name is “Title - vN - date.” You can also export only marked pages.",
+    "body": [
+      "**File → Export PDF** ([[Mod+P]]) opens your browser's print dialog. Choose **Save as PDF** as the destination. Margins, line spacing, the title page, revision bands, and actor highlights appear as they do in the editor.",
+      "The suggested name includes the title, version, and date, for example “My Film - v2 - 25-10-26.”",
+      "**File → Export PDF · marked pages only** prints only pages with revisions."
+    ]
+  },
+  "conflitto": {
+    "title": "File conflicts",
+    "keys": "conflict file changed externally compare versions outside another program drive dropbox",
+    "q": [
+      "what does file conflict mean",
+      "the file was changed outside ScripToti",
+      "compare versions"
+    ],
+    "short": "“File conflict” means another program changed the file while it was open. ScripToti does not overwrite anything. File → Compare versions… shows both versions so you can choose which to keep.",
+    "body": [
+      "If another program or window changes the file while it is open, ScripToti stops and shows **File conflict**. It never overwrites the version on disk.",
+      "**File → Compare versions…** shows the versions side by side. Choose “Continue with the local copy” or “Open the file version.” Both stay in Recovery.",
+      "For shared scripts stored in a shared Drive folder, this conflict does not appear. Copies belonging to the same sharing session are merged automatically."
+    ]
+  },
+  "condividere": {
+    "title": "Sharing a script",
+    "keys": "share sharing collaborators collaborate together real time link collaborator file name write together",
+    "q": [
+      "how do I share a script",
+      "write with another person",
+      "can two people write at the same time",
+      "work together on the same script",
+      "how do I send the script to a collaborator",
+      "how does a collaborator join",
+      "how do I change my name"
+    ],
+    "short": "File → Share… (or the share icon at the far right of the toolbar): enter your name and click “Start sharing,” then “Download the file for collaborators” (or “Copy link”). Anyone who opens that file in ScripToti can write with you.",
+    "body": [
+      "Choose **File → Share…** (or the share icon on the right of the toolbar), enter your name, and click **Start sharing**. Then:",
+      "- **Download the file for collaborators** and send it by email, WhatsApp, or a Drive folder. Each person saves it wherever they like and opens it in ScripToti. Their file updates as you work, even if they reopen it years later.",
+      "- **Copy link** to open it quickly in a browser.",
+      "As you write, you see each other's cursors and names. Comments show who wrote them. [[Mod+Z]] undoes only your own changes. To change your name, use **Save name** in the same dialog.",
+      "The text is encrypted in transit. Without the file or link, no one can read it, not even the server. Anyone with the file can edit. **Disconnect this file** turns your copy into an ordinary file.",
+      "Track revisions and locked pages are not yet available in shared scripts."
+    ]
+  },
+  "led": {
+    "title": "The sharing status light and VPNs",
+    "keys": "led light green yellow red sharing status online offline unstable vpn firewall blocked network connection",
+    "q": [
+      "what does the red light mean",
+      "yellow light",
+      "sharing turns red when I use a VPN",
+      "offline",
+      "the site is blocking this network"
+    ],
+    "short": "Green: online. Yellow: connecting or an unstable connection. Red: offline; changes stay queued and are sent automatically. Some VPNs are blocked by the site's firewall. Turn off the VPN or exclude the site from it.",
+    "body": [
+      "In shared scripts, look at the top right:",
+      "- **green**: online;",
+      "- **yellow**: connecting, or the connection has been unstable in the last 30 seconds;",
+      "- **red**: offline. You can keep writing. Changes stay queued, including in the file, and are sent when the connection returns.",
+      "If the light says “the site is blocking this network (VPN?),” the hosting firewall is rejecting the VPN's address. Turn off the VPN while you write together, switch VPN servers, or exclude scriptoti.salvatorefrisina.com from the VPN.",
+      "Click the light to open the Share dialog."
+    ]
+  },
+  "drive": {
+    "title": "Shared Drive folders",
+    "keys": "drive google drive shared folder dropbox onedrive sync same file",
+    "q": [
+      "can I use a shared Drive folder",
+      "can two people open the file from Drive",
+      "Dropbox"
+    ],
+    "short": "Yes. Keep the shared script in a shared Drive folder and open it from there. ScripToti recognizes copies belonging to the same sharing session and merges them without conflicts. Set the folder to “Available offline.”",
+    "body": [
+      "A shared script can be stored in a shared Drive or Dropbox folder. Everyone opens the same file with **File → Open…**.",
+      "- ScripToti recognizes copies belonging to the same sharing session and does not stop with a “File conflict.”",
+      "- Changes reach others through ScripToti in a second. Drive delivers the updated file to each person.",
+      "- If someone edits the file in another program, the shared version takes precedence. The other version stays in Recovery.",
+      "In Drive for desktop, set the folder to **Available offline**."
+    ]
+  },
+  "controllo": {
+    "title": "Syntax check",
+    "keys": "syntax check automatic correction errors suggestions warnings wavy underline fix ignore",
+    "q": [
+      "how does syntax check work",
+      "what do the underlines mean",
+      "automatic correction",
+      "how do I dismiss a warning"
+    ],
+    "short": "Help → Syntax check flags only actual formatting errors, such as a parenthetical beside a name, an unrecognized transition, or INTERIOR written out in full. It underlines them, and the Suggestions panel explains them with Go to, Fix, and Ignore. Correct text is not flagged.",
+    "body": [
+      "**Help → Syntax check** flags only **actual errors**: text that Fountain reads or prints incorrectly, or that breaks a clear screenplay rule. Correct text is never flagged, even if ScripToti would write it differently.",
+      "- a parenthetical beside the name instead of below it;",
+      "- (V.O.) or (O.S.) on a separate line, as though it were a parenthetical;",
+      "- a parenthetical at the end of a speech;",
+      "- transitions that are not aligned right (for example, Italian transitions without `>`) or that are read as character cues;",
+      "- headings written out in full (“INTERIOR,” “EXTERIOR”), which are read as Action;",
+      "- a paragraph starting with “The next day,” “Later,” or “Meanwhile” inside a scene already in progress: it usually needs a new heading;",
+      "- (MORE) typed manually; dual dialogue (^) with no preceding speech.",
+      "These are not flagged because they are valid: manually typed (CONT’D), alternative extension spellings ((VO), the Italian (voce fuori campo), (F.C.), and so on, headings without a time of day or INT./EXT. (INT./EST. in Italian), consecutive headings, long parentheticals, and V.O. for a character present in the scene.",
+      "The affected text is underlined. The **Warnings** panel (Help → Syntax check: warnings…) explains each issue. **Go to** takes you to it; **Fix** applies the correction (undo it with [[Mod+Z]]); **Ignore** hides it for this script."
+    ]
+  }
+}

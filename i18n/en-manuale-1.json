@@ -1,0 +1,331 @@
+{
+  "_sections": {
+    "inizio": "Getting started",
+    "fountain": "Writing in Fountain",
+    "formato": "Formatting and page setup",
+    "revisione": "Revisions and production",
+    "strumenti": "Comments, search, and tools",
+    "file": "Files, saving, and PDF",
+    "condivisione": "Writing together",
+    "aiuto": "Help and syntax check",
+    "problemi": "Common problems"
+  },
+  "benvenuto": {
+    "title": "What is ScripToti?",
+    "keys": "introduction overview getting started features program app editor fountain screenplay script synopsis treatment",
+    "q": [
+      "what is ScripToti",
+      "what can I use it for",
+      "how does the app work"
+    ],
+    "short": "ScripToti is a screenplay editor: you write plain text, and it formats it as a screenplay using the rules of Fountain.",
+    "body": [
+      "ScripToti is a screenplay editor that runs in your browser. You can also install it as an app. Write plain text: ScripToti recognizes scene headings, character cues, dialogue, and transitions, and formats them automatically on A4 pages, ready to export as a PDF.",
+      "The file you save is an ordinary `.fountain` file: text you can read in any program, with comments, revisions, and settings stored in a hidden block at the end.",
+      "You can also use it for synopses and treatments: text that is not a scene heading or dialogue is Action. You can justify, center, or indent it, and use 1.5 line spacing.",
+      "## Where to start",
+      "- Open **Help → Fountain guide** to see how to write each type of text.",
+      "- Press [[Tab]] to change the type of the current paragraph.",
+      "- Turn on **Help → Syntax check** to get suggestions as you write.",
+      "- Ask any question in **Help → Ask ScripToti**."
+    ]
+  },
+  "nuovo-apri": {
+    "title": "New document, Open, and tabs",
+    "keys": "new document create open file project tabs close project recent files multiple scripts switch projects",
+    "q": [
+      "how do I create a new script",
+      "how do I open a file",
+      "how do I close a project",
+      "can I open more than one script",
+      "open recent files"
+    ],
+    "short": "File → New document creates a blank script; File → Open… ([[Mod+O]]) opens a .fountain file. Each project has its own tab below the menus; click its × to close it.",
+    "body": [
+      "**File → New document** creates a blank script. **File → Open…** ([[Mod+O]]) opens a `.fountain` or `.txt` file from your computer.",
+      "Each open script has a tab below the menu bar. Click a tab to switch projects. Each tab keeps its own text, cursor position, undo history, search, and comments.",
+      "**File → Close project** ([[Alt+Shift+W]]) or the × on the tab closes the script. If you have unsaved changes, ScripToti asks you to choose Save, Don't Save, or Cancel.",
+      "**File → Open recent…** shows your last 20 scripts. “Open file” reads the original file again; “Open copy” opens the copy stored in your browser.",
+      "Projects you leave open return when you reopen the app. Projects you close do not."
+    ]
+  },
+  "rinomina-file": {
+    "title": "Renaming a file",
+    "keys": "rename file name change filename script title top bar",
+    "q": [
+      "how do I change the file name",
+      "rename my script",
+      "how do I rename a file"
+    ],
+    "short": "Click the file name at the top center, enter a new name, and press Enter (Esc cancels). You can also use File → Rename….",
+    "body": [
+      "As in Google Docs, click the **file name at the top center**, enter a new name, and press **Enter**. **Esc** leaves the name unchanged. You can also use **File → Rename…**.",
+      "If the script is linked to a file on your computer, that file is renamed in the same folder. Your script keeps saving under the new name. If your browser asks for permission to change the file, allow it.",
+      "For safety, ScripToti will not accept the name of another script you have opened in ScripToti. This prevents it from replacing another file. To make a copy with a different name, use **File → Save As…**."
+    ]
+  },
+  "installare": {
+    "title": "Installing ScripToti as an app",
+    "keys": "install app pwa icon desktop dock double click offline no internet update version",
+    "q": [
+      "how do I install ScripToti",
+      "can I use it without internet",
+      "how do I update the app",
+      "open Fountain files with a double click"
+    ],
+    "short": "In Chrome or Edge, use File → Install ScripToti. You get an app icon and a separate window. It also works offline and opens .fountain files with a double click.",
+    "body": [
+      "In Chrome or Edge, choose **File → Install ScripToti** (or use the install icon in the address bar). Once installed, ScripToti has its own icon and window, and works without an internet connection.",
+      "When a new version is available, a bar appears saying “A new version of ScripToti is available,” with an **Update** button. Updating keeps your open projects. You can check at any time with **File → Check for updates**. This is useful if you leave the installed app open for a long time.",
+      "Do not clear the browser's site data to update the app: that is where your recovery copies are stored."
+    ]
+  },
+  "fountain-base": {
+    "title": "How Fountain works",
+    "keys": "fountain syntax format rules text types automatic recognition markdown",
+    "q": [
+      "what is Fountain",
+      "how does it recognize text types",
+      "screenplay formatting rules"
+    ],
+    "short": "Fountain recognizes text types from how you write them: INT./EXT. for scenes, a name in UPPERCASE for a character cue, and (text in parentheses) below the name for a parenthetical. Use [[Tab]] or a leading symbol to force a type.",
+    "body": [
+      "Fountain is a plain-text format for screenplays. You do not need to choose styles from a menu: ScripToti recognizes each paragraph's type from how it is written.",
+      "- A line starting with `INT.`, `EST.`, `EXT.`, or `I/E` is a **scene heading**; so are `MONTAGE` and the Italian form `MONTAGGIO`. ScripToti also recognizes the Italian exterior prefix EST.",
+      "- A name in **UPPERCASE** followed by a line of text is a **character cue** with its **dialogue**.",
+      "- A line in parentheses below the name is a **parenthetical**.",
+      "- An uppercase line ending in `TO:` is a **transition**.",
+      "- Everything else is **Action**.",
+      "Separate paragraphs with a blank line (ScripToti inserts it when you press [[Enter]]).",
+      "If automatic recognition is not enough, force the type with [[Tab]] or a symbol at the start of the line. See “Forcing a text type.”"
+    ]
+  },
+  "scena": {
+    "title": "Scene heading (slugline)",
+    "keys": "slugline scene heading location int ext est interior exterior day night scene number new scene change location",
+    "q": [
+      "how do I write a scene heading",
+      "how do I format a slugline",
+      "interior or exterior",
+      "how do I specify day or night",
+      "when do I need a new scene",
+      "my scene heading is not recognized",
+      "scene numbers"
+    ],
+    "short": "Write INT. or EXT., the location, and the time of day separated by a dash: “INT. KITCHEN - NIGHT”. ScripToti recognizes the heading and makes it uppercase. A change of location or time starts a new scene. The Italian exterior prefix EST. is also recognized.",
+    "body": [
+      "A scene heading tells you where and when the scene takes place:",
+      "> INT. ANNA'S KITCHEN - NIGHT",
+      "- **INT.** means interior, **EXT.** means exterior, and **INT./EXT.** or **I/E** means both. ScripToti also recognizes the Italian forms **EST.** and INT./EST.",
+      "- Next comes the **location**, from general to specific: `EXT. ROSSI VILLA - GARDEN`.",
+      "- After a dash, add the **time**: DAY, NIGHT, DAWN, SUNSET, CONTINUOUS, LATER. Suggestions follow the script's language: GIORNO/NOTTE for Italian scene headings, DAY/NIGHT for English ones.",
+      "Just type `int.` at the start of a line: ScripToti recognizes it and makes it uppercase. Both the Italian `MONTAGGIO` and English `MONTAGE` are treated as scene headings because they mark a change of situation. When you press [[Enter]], ScripToti adds the hidden period automatically (`.MONTAGGIO` for the Italian form), so other Fountain programs also read it as a scene heading. Shots such as `ANGLE ON` or the Italian `SU MARTA` do not start new scenes: see **Shots**. For a different heading, such as “ANNA'S DREAM,” put a period in front: `.ANNA'S DREAM`.",
+      "## When to start a new scene",
+      "Every change of **location** or **time** (the next day, later, that same evening) needs a new heading. Writing “The next day” inside Action instead is a common mistake. Syntax check flags it.",
+      "## Scene numbers",
+      "**View → Scene numbers** ([[Alt+Shift+N]]) shows them in the margins. To set a number yourself, put it between `#` signs at the end: `INT. KITCHEN - NIGHT #12A#`.",
+      "As you type, ScripToti suggests locations already used in the script. Press [[Enter]] or click to accept a suggestion; press [[Esc]] to ignore it."
+    ]
+  },
+  "azione": {
+    "title": "Action",
+    "keys": "action description paragraph plain text describe scene what happens",
+    "q": [
+      "how do I write action",
+      "what is action",
+      "describe what happens in a scene"
+    ],
+    "short": "Action is ordinary text describing what you can see and hear, in the present tense. Separate paragraphs with a blank line. If an uppercase line is mistaken for a character cue, put “!” in front of it.",
+    "body": [
+      "Action describes what you can see and hear, in the present tense: places, movements, and sounds. It is any text that is not a scene heading, character cue, dialogue, or transition.",
+      "> Anna opens the window. Traffic noise fills the room.",
+      "Keep paragraphs short: in a screenplay, a paragraph roughly corresponds to a shot.",
+      "As you type, ScripToti capitalizes the first letter of an Action paragraph, each line of dialogue, and each sentence (but not after ellipses or abbreviations such as “Mr.” or “Dr.”). If you do not want the capital, press [[Cmd/Ctrl+Z]] immediately to restore the lowercase letter. In Italian text, a standalone “E’” becomes “È”.",
+      "A line starting with an uppercase name, parentheses, and then lowercase text (“FABIO (36) wrestles with the dog.”) is Action. The text stays as you type it.",
+      "An Action line written entirely in uppercase, such as a sign, can be mistaken for a character cue. Put `!` in front to force it to be Action.",
+      "Only Action can be justified, centered, aligned right, or indented (Format menu)."
+    ]
+  },
+  "personaggio": {
+    "title": "Character cues and dialogue",
+    "keys": "character cue name dialogue speech lines speaking uppercase recognition",
+    "q": [
+      "how do I write dialogue",
+      "how do I make a character speak",
+      "where do I put the character name",
+      "how do I leave dialogue",
+      "how do I add a line break within dialogue"
+    ],
+    "short": "Write the name in UPPERCASE on its own line, press [[Enter]], and write the dialogue. [[Enter]] ends the dialogue and switches to Action; [[Shift+Enter]] adds a line break within the same speech. If the name is not recognized, press [[Tab]] or put “@” in front.",
+    "body": [
+      "Write the character's name in **UPPERCASE** on its own line, press [[Enter]], and write the dialogue:",
+      "> MARCO\n> I don't have time for this.",
+      "- [[Enter]] in dialogue ends the speech and switches to **Action**. In the middle of a line, the text after the cursor becomes Action.",
+      "- [[Shift+Enter]] adds a line break within the same speech.",
+      "- [[Enter]] on the name moves to the dialogue line. If there is no dialogue yet, the name stays a character cue while you write. If you save without adding dialogue, it becomes Action when you reopen the file.",
+      "- [[Backspace]] at the start of an Action paragraph below an uppercase name joins it to the name as dialogue.",
+      "- A name with only one uppercase letter stays Action: it needs at least two letters.",
+      "- If a name is not recognized, for example because it contains numbers or is lowercase, press [[Tab]] until you reach “Character” or put `@` in front: `@McQueen`.",
+      "As you type a name, ScripToti suggests characters already in the script, flags possible typos, and shows where each character first appears (“First appeared on page 3, scene 2”).",
+      "When a character speaks again after an Action paragraph, ScripToti adds (CONT’D) automatically. When dialogue continues onto the next page, it adds (MORE) and (CONT’D)."
+    ]
+  },
+  "parentetica": {
+    "title": "Parenthetical",
+    "keys": "parenthetical parentheses wryly delivery tone quietly laughing beside name below name acting direction",
+    "q": [
+      "how do I write a parenthetical",
+      "where does a parenthetical go",
+      "can I put a parenthetical beside the name",
+      "how do I add a delivery direction",
+      "how do I write quietly"
+    ],
+    "short": "A parenthetical goes on its own line, BELOW the name and above the dialogue: MARCO / (quietly) / dialogue. Only extensions such as (V.O.) and (O.S.) go beside the name.",
+    "body": [
+      "A parenthetical is a short direction about how a line is delivered. It goes on its own line, **below the name** and above the dialogue:",
+      "> MARCO\n> (quietly)\n> Don't wake her.",
+      "- Keep it **short**: just a few words. Write longer movements as Action, interrupting the dialogue.",
+      "- It **never ends** a speech: if the character does something after speaking, that belongs in Action.",
+      "- It **does not go beside the name**: that space is only for technical extensions such as (V.O.) and (O.S.). “MARCO (quietly)” is a common mistake. Syntax check can fix it with one click.",
+      "To add one, press [[Enter]] after the name and type `(`. The closing parenthesis appears automatically, with the cursor between them. Or press [[Tab]] until you reach “Parenthetical.” When you finish, press [[Enter]] to return to dialogue. If you type `)` yourself, the cursor skips past the one already there. [[Backspace]] removes an empty parenthetical."
+    ]
+  },
+  "estensioni": {
+    "title": "V.O., O.S., and other extensions",
+    "keys": "vo v.o. os o.s. oc o.c. voice over off screen off camera narrator thoughts phone extension cont d more f.c. difference",
+    "q": [
+      "what is the difference between V.O. and O.S.",
+      "when should I use V.O.",
+      "when should I use O.S.",
+      "how do I mark a voice-over",
+      "a voice on the phone",
+      "narrator",
+      "what does CONT'D mean",
+      "what does MORE mean",
+      "how do I write a character's thoughts"
+    ],
+    "short": "(V.O.) means the voice comes from outside the scene's location: narration, thoughts, phone calls, or recordings. (O.S.) means the character is at the location but out of view, for example in the next room. Write the extension beside the name: “MARCO (V.O.)”.",
+    "body": [
+      "Write extensions **beside the name**, on the same line:",
+      "> MARCO (V.O.)\n> That summer changed everything.",
+      "- **(V.O.)** means voice-over: the voice **comes from outside the location** of the scene. Use it for narration, thoughts, memories, voices on the phone or radio, and recorded messages.",
+      "- **(O.S.)** means off-screen: the character **is at the location** but not in the shot. They might be speaking from the next room or behind a door.",
+      "- **(O.C.)** means off-camera: another term for O.S., used in television.",
+      "- In Italian scripts, you may also see **(F.C.)**, fuori campo (= O.S.), and **(V.F.C.)**, voce fuori campo (= V.O.).",
+      "## A quick way to choose",
+      "Ask yourself: **could they enter the shot?** If yes (they are there, behind the door), use O.S. If not (they are elsewhere, it is a thought, or they are on the phone), use V.O.",
+      "## Automatic additions",
+      "Do not type (CONT’D) or (MORE) yourself. ScripToti adds them when a character speaks again after Action or when dialogue continues onto the next page."
+    ]
+  },
+  "transizioni": {
+    "title": "Transitions",
+    "keys": "transition transitions cut to dissolve fade out fade in smash cut right aligned Italian",
+    "q": [
+      "how do I write a transition",
+      "how do I write CUT TO",
+      "my dissolve is not aligned right",
+      "CUT TO",
+      "transitions in Italian",
+      "FADE OUT"
+    ],
+    "short": "Write the transition on its own line, even in lowercase (“cut to:”, “dissolve to:”), and press Enter. ScripToti makes it uppercase and aligns it right. FADE IN: and END FLASHBACK stay on the left.",
+    "body": [
+      "Transitions describe the move from one scene to another. They are aligned to the **right** of the page.",
+      "- Write the transition on its own line, even in lowercase, and press [[Enter]]. ScripToti makes it uppercase, adds a colon or a final period, and aligns it right. It puts `>` at the start in the file, the Fountain marker for transitions, so other programs read it the same way.",
+      "> cut to:\n> dissolve to:\n> fade out",
+      "- Recognized English forms: CUT TO:, SMASH CUT TO:, MATCH CUT TO:, JUMP CUT TO:, DISSOLVE TO:, FADE TO:, FADE OUT., and FADE TO BLACK. ScripToti also recognizes these Italian forms: STACCO SU:, STACCO NETTO:, TAGLIO SU:, DISSOLVENZA A:, DISSOLVENZA INCROCIATA:, DISSOLVENZA IN NERO., DISSOLVENZA IN CHIUSURA., and CHIUSURA IN NERO.",
+      "- For a different transition, put `>` in front yourself: `> FADE TO WHITE:`.",
+      "- ScripToti leaves a blank line after the transition. If other text follows immediately, the transition is mistaken for a character cue.",
+      "- `FADE IN:` (or the Italian `DISSOLVENZA IN APERTURA:`) at the start of the script and `FINE FLASHBACK` (Italian for `END FLASHBACK`, also recognized as `TORNA AL PRESENTE`) are not transitions. They stay on the **left**, as Action. Pressing [[Enter]] makes these uppercase automatically too.",
+      "Use transitions sparingly: a cut between scenes is implied.",
+      "Syntax check recognizes transitions written without `>` and can fix them with one click."
+    ]
+  },
+  "inquadrature": {
+    "title": "Shots (ANGLE ON, SU…)",
+    "keys": "shot shots angle on close on su detail insert pov point of view back to scene",
+    "q": [
+      "how do I write ANGLE ON",
+      "how do I write ANGLE ON MARTA",
+      "does ANGLE ON start a new scene",
+      "my shot is read as a character cue",
+      "how do I indicate a point of view"
+    ],
+    "short": "A shot (ANGLE ON, CLOSE ON, or the Italian SU MARTA) does not start a new scene. It is Action within the current scene. Press Enter at the end of the line, and ScripToti capitalizes the keyword.",
+    "body": [
+      "A shot shifts the view **within the same scene**. It has no scene number and uses the location and time from the last scene heading. In standard screenplay format and Fountain, it is **Action**.",
+      "> angle on Tim reading a book",
+      "Press [[Enter]] at the end of the line to turn it into `ANGLE ON Tim reading a book`: only the keyword becomes uppercase. This works for ANGLE ON, CLOSE ON, WIDE ON, INSERT, and POV.",
+      "- ScripToti also recognizes the Italian **SU**, which is a common word meaning “on” (“su un tavolo…” means “on a table…”). It becomes a shot only when followed by a character from the script. “su marta” becomes `SU MARTA`.",
+      "- The standard form is an uppercase shot heading with the description below. When the whole line is uppercase, ScripToti puts `!` in front (hidden on the page). Otherwise, text immediately below would make it read as a character cue.",
+      "> ANGLE ON TIM\n>\n> Tim reads a book.",
+      "- Syntax check flags shots read as character cues and can fix them with one click.",
+      "If scene numbers are locked and the script previously used ANGLE ON as a scene heading, that scene is now marked **omitted**. The other scenes keep their numbers."
+    ]
+  },
+  "altri-tipi": {
+    "title": "Centered text, lyrics, dual dialogue, and notes",
+    "keys": "centered center title lyrics song dual dialogue simultaneous speaking together notes hidden note boneyard excluded text page break new page sections synopsis",
+    "q": [
+      "how do I center a title",
+      "how do I write a song",
+      "two characters speak at the same time",
+      "dual dialogue",
+      "how do I write a note that will not print",
+      "how do I start a new page"
+    ],
+    "short": "Centered text: > TEXT <. Lyrics: start with ~. Dual dialogue: ^ after the second name. Hidden notes: [[nota]]. New page: === on its own line.",
+    "body": [
+      "- **Centered text**: `> THE END <`. For titles and subtitles within the script, you can also use Format → Center on Action, together with bold.",
+      "- **Lyrics, songs**: put `~` at the start of each line; the text appears in italics.",
+      "- **Dual dialogue** (two characters speaking at the same time): write the speeches one after the other and put `^` after the second name:",
+      "> ANNA\n> Yes!\n>\n> MARCO ^\n> No!",
+      "- **A note that does not print**: `[[da controllare]]`.",
+      "- **Excluded text** (boneyard): anything between `/*` and `*/` stays in the file but does not appear on the page.",
+      "- **Page break**: `===` on its own line.",
+      "- Lines starting with `#` (sections) or `=` (synopses) help you organize the script and are not printed."
+    ]
+  },
+  "forzare": {
+    "title": "Forcing a text type (Tab and symbols)",
+    "keys": "tab force text type change type symbols at sign period exclamation mark greater than tilde markers shift tab",
+    "q": [
+      "how do I change the text type",
+      "what does Tab do",
+      "how do I force a character cue",
+      "how do I force action",
+      "Fountain symbols",
+      "the exclamation mark is visible"
+    ],
+    "short": "[[Tab]] changes the paragraph type (Scene heading → Action → Character → Parenthetical → Dialogue → Transition); [[Shift+Tab]] cycles backward. You can also use a leading symbol: . scene heading, ! action, @ character cue, > transition, ~ lyrics.",
+    "body": [
+      "[[Tab]] cycles through the types for the paragraph containing the cursor: **Scene heading → Action → Character → Parenthetical → Dialogue → Transition**. [[Shift+Tab]] cycles in reverse. The new type's name appears briefly in the paragraph.",
+      "You can also type a symbol at the start of the line. The symbol stays in the file but is hidden on the page:",
+      "- `.` scene heading: `.ANNA'S DREAM`",
+      "- `!` action: `!BOOM.`",
+      "- `@` character cue: `@McQueen`",
+      "- `>` transition: `> CUT TO:`",
+      "- `> text <` centered text",
+      "- `~` lyrics",
+      "Typing `!` at the start of a forced character cue or scene heading changes it to Action."
+    ]
+  },
+  "enfasi": {
+    "title": "Bold, italic, underline, and capitalization",
+    "keys": "bold italic underline asterisks emphasis uppercase lowercase capitals caps change case",
+    "q": [
+      "how do I make text bold",
+      "how do I write in italics",
+      "how do I underline text",
+      "how do I change text to uppercase",
+      "asterisks in my text"
+    ],
+    "short": "[[Mod+B]] for bold, [[Mod+I]] for italic, [[Mod+U]] for underline. [[Mod+Shift+K]] switches between UPPERCASE and lowercase while preserving proper names. In the file, these become **text**, *text*, _text_.",
+    "body": [
+      "- [[Mod+B]] **bold**, [[Mod+I]] italic, [[Mod+U]] underline: apply them to selected text or to the text you type next.",
+      "- [[Mod+Shift+K]] switches between UPPERCASE and smart lowercase. It respects character names, proper names already in the script, sentence capitals, and some acronyms.",
+      "In a Fountain file, emphasis uses symbols: `**bold**`, `*italic*`, `_underline_`. To type a literal asterisk, use `\\*`."
+    ]
+  }
+}

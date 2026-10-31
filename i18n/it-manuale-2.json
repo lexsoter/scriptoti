@@ -15,7 +15,7 @@
       "Allineamenti e giustificazione valgono **solo per l’Azione**: personaggi, dialoghi, scene e transizioni mantengono l’impaginazione da sceneggiatura.",
       "- [[Alt+Shift+L]] sinistra, [[Alt+Shift+E]] centrato, [[Alt+Shift+J]] giustificato, «Allinea a destra» dal menu.",
       "- [[Alt+Shift+I]] **rientro automatico della prima riga** di tutti i paragrafi di Azione (10,8 pt), come negli articoli e nei saggi.",
-      "- **Interlinea** nella barra degli strumenti: **1** (sceneggiatura), **1,5** (soggetti e trattamenti) o **Automatica** (1 se il testo contiene scene e dialoghi, altrimenti 1,5). Selezionando del testo, l’interlinea vale solo per quei paragrafi."
+      "- **Interlinea** nella barra degli strumenti: **1** (sceneggiatura), **1,5** (soggetti e trattamenti) o **Auto** (automatica: 1 se il testo contiene scene e dialoghi, altrimenti 1,5). Selezionando del testo, l’interlinea vale solo per quei paragrafi; se hanno interlinee diverse compare **Mix**."
     ]
   },
   "title-page": {
@@ -68,6 +68,7 @@
       "- **Zoom** in basso a destra, dal 50% al 200%.",
       "- **Vista → Tema scuro** ([[Alt+Shift+D]]); il PDF è sempre bianco.",
       "- **Vista → Ortografia**: lingua del correttore del browser (italiano o inglese).",
+      "- **Vista → Lingua / Language**: la lingua del programma, italiano o inglese. Di base segue la lingua del browser. Cambia solo menu, messaggi e manuale: il copione resta com’è.",
       "- In basso a sinistra: la **pagina** che stai guardando sul totale («Pagina 3 di 12», «Title page» sulla pagina del titolo): cliccaci sopra, scrivi un numero di pagina e premi [[Invio]] per andarci; se la pagina non esiste compare «Pagina non trovata». Poi **parole e caratteri** del copione. Se selezioni del testo compare «Selezione» con parole e caratteri della sola parte selezionata."
     ]
   },

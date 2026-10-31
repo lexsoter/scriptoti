@@ -161,7 +161,6 @@
   "Continua il giro": "Continua il giro",
   "Seleziona il testo da segnare come revisione.": "Seleziona il testo da segnare come revisione.",
   "Interlinea dei paragrafi selezionati": "Interlinea dei paragrafi selezionati",
-  "Applica ai paragrafi selezionati. Automatica ripristina l’interlinea del documento.": "Applica ai paragrafi selezionati. Automatica ripristina l’interlinea del documento.",
   "Applica al documento. Seleziona del testo per impostarne l’interlinea separatamente.": "Applica al documento. Seleziona del testo per impostarne l’interlinea separatamente.",
   "and e": "and e",
   "Content": "Content",
@@ -181,5 +180,9 @@
   "Nel copione non ci sono personaggi.": "Nel copione non ci sono personaggi.",
   "Scrivi il nuovo nome: lettere, numeri, spazi, apostrofi o trattini.": "Scrivi il nuovo nome: lettere, numeri, spazi, apostrofi o trattini.",
   "Colore per": "Colore per",
-  "Aggiungi un personaggio con dialogo per preparare la copia attore.": "Aggiungi un personaggio con dialogo per preparare la copia attore."
+  "Aggiungi un personaggio con dialogo per preparare la copia attore.": "Aggiungi un personaggio con dialogo per preparare la copia attore.",
+  "Interlinea automatica": "Interlinea automatica",
+  "Interlinee diverse nella selezione": "Interlinee diverse nella selezione",
+  "Applica ai paragrafi selezionati. Auto ripristina l’interlinea del documento.": "Applica ai paragrafi selezionati. Auto ripristina l’interlinea del documento.",
+  "Lingua / Language": "Lingua / Language"
 }

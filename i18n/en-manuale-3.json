@@ -1,0 +1,169 @@
+{
+  "segnala": {
+    "title": "Reporting a problem or suggestion",
+    "keys": "report bug error problem suggestion idea question contact help support email feedback developer",
+    "q": [
+      "how do I report a bug",
+      "I found an error",
+      "I want to suggest a feature",
+      "how do I contact support",
+      "how do I contact the developer"
+    ],
+    "short": "Help → Contact the developer…: describe what happened. Your email is optional; include it only if you want a reply. Every report is read and considered.",
+    "body": [
+      "**Help → Contact the developer…** opens a short form. Choose whether you are reporting a problem, making a suggestion, or asking a question. Describe what happened, what you expected, and, if possible, the steps to reproduce it.",
+      "- Your **email is optional**. Include it only if you want to be contacted for more details or a reply.",
+      "- If you choose, the report includes **technical details** (version, browser, and system). Your script text is never sent.",
+      "- If you are offline, the report is saved and sent automatically when possible.",
+      "Reports go to the salvatorefrisina.com server and are not shared with anyone else."
+    ]
+  },
+  "scorciatoie": {
+    "title": "Keyboard shortcuts",
+    "keys": "shortcuts keyboard keys commands hotkeys list",
+    "q": [
+      "what keyboard shortcuts are available",
+      "keyboard shortcuts",
+      "list of commands"
+    ],
+    "short": "The main shortcuts: [[Mod+S]] to Save, [[Mod+Z]] to Undo, [[Mod+F]] to Find, [[Mod+B]]/[[Mod+I]]/[[Mod+U]] for emphasis, [[Tab]] to change text type, and [[Mod+P]] for PDF. This help topic has the full list.",
+    "body": [
+      "## File",
+      "- [[Mod+O]] Open · [[Mod+S]] Save · [[Mod+Shift+S]] Save As · [[Alt+Shift+W]] Close project · [[Mod+P]] Export PDF",
+      "## Writing",
+      "- [[Tab]] / [[Shift+Tab]] change text type · [[Enter]] new paragraph · [[Shift+Enter]] line break within the same paragraph",
+      "- [[Mod+Z]] Undo · [[Mod+Shift+Z]] Redo",
+      "- [[Mod+B]] bold · [[Mod+I]] italic · [[Mod+U]] underline · [[Mod+Shift+K]] uppercase/lowercase",
+      "- [[Mod+F]] Find · [[Mod+Alt+F]] Find and replace",
+      "## Format",
+      "- [[Alt+Shift+L]] align left · [[Alt+Shift+E]] center · [[Alt+Shift+J]] justify · [[Alt+Shift+I]] indent",
+      "## Revisions",
+      "- [[Alt+Shift+R]] track revisions · [[Alt+Shift+V]] show highlights · [[Alt+Shift+H]] highlighter · [[Alt+Shift+G]] eraser · [[Alt+Shift+A]] actor copies",
+      "## Comments and view",
+      "- [[Mod+Alt+M]] add comment · [[Alt+Shift+C]] comments · [[Alt+Shift+N]] scene numbers · [[Alt+Shift+D]] dark theme",
+      "## Help",
+      "- [[F1]] Ask ScripToti"
+    ]
+  },
+  "p-personaggio": {
+    "title": "The character name is not recognized",
+    "keys": "character name not recognized stays left not centered uppercase cue action",
+    "q": [
+      "the character name stays on the left",
+      "it does not recognize my character",
+      "I type a name but it does not become a character cue"
+    ],
+    "short": "The name must be in UPPERCASE (at least two letters), followed by dialogue on a new line. If it still does not work, press [[Tab]] until you reach “Character” or put “@” before the name.",
+    "body": [
+      "- Write the name **entirely in uppercase**, with at least two letters, and press [[Enter]]. The next line is for dialogue.",
+      "- The name must be on a line **by itself**, preceded by a blank line.",
+      "- For names with numbers, special characters, or lowercase letters, press [[Tab]] until you reach “Character,” or put `@` in front (`@Dr. House`).",
+      "See also “Character cues and dialogue.”"
+    ]
+  },
+  "p-dialogo": {
+    "title": "I cannot leave dialogue",
+    "keys": "leave exit dialogue stuck action after dialogue enter shift line break second line",
+    "q": [
+      "I cannot leave dialogue",
+      "how do I exit dialogue",
+      "end a speech",
+      "how do I return to action after dialogue",
+      "how do I add a line break within dialogue"
+    ],
+    "short": "Press [[Enter]] to end the speech and switch to Action. To add a line break within the same speech, use [[Shift+Enter]].",
+    "body": [
+      "At the end of a speech, press [[Enter]] to end the dialogue and move the cursor to **Action**. For a second line within the same speech, press [[Shift+Enter]]. You can also press [[Tab]] until you reach “Action.”"
+    ]
+  },
+  "p-slugline": {
+    "title": "The scene heading is not recognized",
+    "keys": "slugline scene heading not recognized not uppercase int not working interior",
+    "q": [
+      "I type INT. but it does not recognize the slugline",
+      "the scene heading stays lowercase",
+      "INTERIOR does not work"
+    ],
+    "short": "Start with “INT.” or “EXT.” (lowercase “int.” works too). Put the heading on its own line, preceded by a blank line. ScripToti also recognizes the Italian “EST.” prefix. Writing “INTERIOR” in full is not recognized; Syntax check can fix it.",
+    "body": [
+      "- Start the line with `INT.`, the Italian `EST.`, `EXT.`, the Italian `INT./EST.`, or `I/E`. Lowercase works too: ScripToti makes it uppercase automatically.",
+      "- Put it on its own line, with a blank line before it.",
+      "- The full words “INTERIOR” and “EXTERIOR” are not recognized. Use abbreviations, or put a period in front (`.INTERIOR HOUSE`).",
+      "- You can always force it by pressing [[Tab]] until you reach “Scene heading.”"
+    ]
+  },
+  "p-transizione": {
+    "title": "The transition is not aligned right",
+    "keys": "transition not right aligned cut dissolve stays left becomes character cue",
+    "q": [
+      "my dissolve is not aligned right",
+      "CUT TO stays on the left",
+      "my transition becomes a character cue"
+    ],
+    "short": "Write the transition on its own line and press Enter. ScripToti recognizes it, even in lowercase, and aligns it right. For a transition it does not recognize, put “>” in front: “> FADE TO WHITE:”.",
+    "body": [
+      "Common transitions (CUT TO:, FADE OUT., the Italian forms DISSOLVENZA A: and STACCO SU:, and the others listed under **Transitions**) are recognized when you press [[Enter]] at the end of the line, even if you typed them in lowercase. For a line that was already there, move to the end and press [[Enter]], or use Syntax check. For a different transition, put `>` in front: `> FADE TO WHITE:`.",
+      "Without a blank line after the transition, it is mistaken for a character cue. Syntax check can fix both cases."
+    ]
+  },
+  "p-esclamativo": {
+    "title": "A symbol (! @ > .) is visible in the text",
+    "keys": "visible exclamation mark symbol at sign marker showing in text",
+    "q": [
+      "the exclamation mark is visible",
+      "I see an at sign before the name",
+      "there is a strange symbol in my text"
+    ],
+    "short": "Fountain symbols are hidden only at the start of a line. If you can see them, they are inside the text or combined, such as “@!”. Delete them and use [[Tab]] to change the type.",
+    "body": [
+      "`!`, `@`, `.`, `>`, and `~` are hidden only as the **first character** of a line. If you see one, it is probably inside the text or next to another marker. Delete it and use [[Tab]] to choose the type.",
+      "Typing `!` at the start of a forced character cue or scene heading changes it to Action without leaving visible symbols."
+    ]
+  },
+  "p-pagine": {
+    "title": "Blank pages or “1b” pages that will not go away",
+    "keys": "blank page empty pages last page will not disappear 1b 1c added pages a-pages revision locked pages",
+    "q": [
+      "I have a blank page",
+      "the last blank page will not go away",
+      "why are there pages numbered 1b"
+    ],
+    "short": "Blank lines create blank pages: delete them with [[Backspace]]. Pages 1b, 1c… are added pages from locked production numbering. If you do not need them, choose Revisions → Close revisions and unlock numbering.",
+    "body": [
+      "- A blank page contains blank lines. Move the cursor there and delete them with [[Backspace]] or [[Canc]]. The page disappears automatically.",
+      "- With **pages and scene numbers locked** (Revisions), original pages stay even when empty, so numbering does not change. Extra text goes onto pages 1b, 1c… If you are not preparing a production revision, choose Revisions → Close revisions and unlock numbering."
+    ]
+  },
+  "p-salvataggio": {
+    "title": "Saving asks for permission or fails",
+    "keys": "save failed permission authorize press save reconnect file unsaved retry saving error",
+    "q": [
+      "press Save to grant access",
+      "my file will not save",
+      "the file needs reconnecting",
+      "retry saving"
+    ],
+    "short": "Allow your browser to change the file when it asks. Choose “Allow on every visit” if available. The file reconnects automatically when you reopen the app. If permission is needed, the browser asks when you first type or click. Meanwhile, your text is kept in browser recovery.",
+    "body": [
+      "For safety, your browser asks for permission to change a file. If you choose **Allow on every visit** in Chrome's prompt, files reconnect automatically when you reopen ScripToti, without further prompts.",
+      "If permission has expired, the browser asks when you first type or click in the script. Choose **Allow**. You can also click **Save** ([[Mod+S]]) when the top-right status says “press Save to grant access” or “needs reconnecting.”",
+      "Your text is not lost: it is kept in browser recovery while you wait (File → Recovery…)."
+    ]
+  },
+  "p-condivisione": {
+    "title": "Sharing will not connect",
+    "keys": "sharing not working connecting red offline changes not arriving",
+    "q": [
+      "sharing is not working",
+      "I cannot see the other person's changes",
+      "it stays on connecting"
+    ],
+    "short": "Check the status light. If it is red, check your connection or VPN. You need internet for the first connection; changes arrive in about a second. If it says “no longer available,” the sharing session has been deleted.",
+    "body": [
+      "- **Red, offline**: there is no connection. Changes will be sent automatically.",
+      "- **“the site is blocking this network (VPN?)”**: turn off the VPN or exclude the site from it.",
+      "- **“connecting…”** for a long time: the first time you open a shared script on a computer, you need internet.",
+      "- **“Sharing no longer available”**: the script is no longer shared on the server. Your file remains an ordinary copy."
+    ]
+  }
+}

@@ -111,6 +111,16 @@ t.check('without a caret the middle of the view stays', seen && (await centre())
 await t.page.keyboard.press(mod + '+Digit0');
 t.check('Ctrl+0 back to 100%', (await t.page.evaluate(() => document.querySelector('#zoomValue').value)) === '100%');
 
+// Triple click on a line, then typing, replaces only that line.
+const tripleScript = 'Title\n\nINT. CASA - GIORNO\n\nNevio alza le mani.\n\nNEVIO\nSiete pazzi.\n\nNevio torna al PC. Riapre il software.\n\nFabio lo indossa.\n\n';
+for (const [line, typed, want] of [['Siete pazzi.', 'Tutto bene.', 'NEVIO\nTutto bene.\n\nNevio torna al PC.'], ['Nevio torna al PC.', 'Fabio esce.', 'Siete pazzi.\n\nFabio esce.\n\nFabio lo indossa.']]) {
+  await t.load(tripleScript); await t.page.waitForTimeout(200);
+  const at = await t.page.evaluate(text => { const n = [...document.querySelectorAll('#stage .editable-region')].find(e => e.textContent.includes(text)); n.scrollIntoView({ block: 'center' }); const r = n.getBoundingClientRect(); return { x: r.left + 10, y: r.top + 8 }; }, line);
+  await t.page.mouse.click(at.x, at.y, { clickCount: 3 }); await t.type(typed);
+  const out = await t.src();
+  t.check(`triple click + typing replaces only "${line}"`, out.includes(want), JSON.stringify(out.slice(out.indexOf('NEVIO'))));
+}
+
 // Find and replace keeps a leading capital and all-caps occurrences.
 const replaced = await t.page.evaluate(() => {
   const src = 'Title\n\nINT. CASA - GIORNO\n\nGiraffa entra. Una giraffa beve. LA GIRAFFA dorme.\n\n';

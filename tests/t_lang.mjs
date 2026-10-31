@@ -1,0 +1,46 @@
+// 0.30: English interface from the browser language, Italian by default for
+// Italian browsers, the View menu switch, and the script text never touched.
+import { open } from './lib.mjs';
+const script = 'Title: Prova\n\nINT. CUCINA - NOTTE\n\nMarta apre il frigorifero. Annulla tutto.\n\nMARTA\nSalva il latte.\n\nstacco su:\n\n';
+let t = await open({ locale: 'en-US' });
+await t.load(script); await t.page.waitForTimeout(300);
+let info = await t.page.evaluate(() => ({
+  lang: document.documentElement.lang, newDoc: document.querySelector('#newBtn')?.textContent.trim(),
+  stats: document.querySelector('.stats').innerText, selector: document.querySelector('#uiLanguage').value,
+  manual: window.ScripTotiManual.sections[0].title, spell: document.querySelector('#spellLanguage').value
+}));
+t.check('English browser: English interface', info.lang === 'en' && info.newDoc === 'New document' && /Page 1 of/.test(info.stats) && info.selector === 'en', JSON.stringify(info));
+t.check('English manual and spelling', info.manual === 'Getting started' && info.spell === 'en', JSON.stringify(info));
+t.check('the script text is never translated', (await t.src()) === script.replace(/\n+$/, '\n\n') || (await t.src()).includes('Annulla tutto.') && (await t.src()).includes('Salva il latte.'), JSON.stringify((await t.src()).slice(0, 120)));
+const pageText = await t.page.evaluate(() => document.querySelector('#stage').innerText);
+t.check('the pages show the Italian text as written', pageText.includes('Annulla tutto.') && pageText.includes('Salva il latte.'), pageText.slice(0, 160));
+const lint = await t.page.evaluate(() => { window.DraftHelp.setLint?.(true); window.DraftHelp.runLint?.(); window.DraftHelp.openPanel('lint'); return new Promise(r => setTimeout(() => r(document.querySelector('.help-panel, #helpPanel, aside')?.innerText || ''), 500)); });
+t.check('syntax check messages in English', /looks like a transition/.test(lint) && !/sembra una transizione/.test(lint), lint.slice(0, 200));
+// Enter conventions still work: Italian transitions are understood.
+await t.caret((await t.src()).length); await t.type('cut to:'); await t.press('Enter');
+t.check('conventions unchanged in English', (await t.src()).includes('>CUT TO:'), JSON.stringify((await t.src()).slice(-30)));
+// Switch to Italian from the menu: the page reloads in Italian.
+t.page.on('dialog', d => d.accept()); // the unsaved draft asks before leaving, like any reload
+await Promise.all([t.page.waitForEvent('load'), t.page.evaluate(() => { const s = document.querySelector('#uiLanguage'); s.value = 'it'; s.dispatchEvent(new Event('change')); })]);
+await t.page.waitForTimeout(700);
+info = await t.page.evaluate(() => ({ lang: document.documentElement.lang, newDoc: document.querySelector('#newBtn')?.textContent.trim() }));
+t.check('switching to Italian reloads in Italian', info.lang === 'it' && info.newDoc === 'Nuovo documento', JSON.stringify(info));
+t.check('no page errors in English', !t.errors.length, JSON.stringify(t.errors));
+t.report(); await t.close();
+
+// An Italian browser gets Italian, a French one English.
+for (const [locale, want] of [['it-IT', 'it'], ['fr-FR', 'en']]) {
+  t = await open({ locale });
+  const lang = await t.page.evaluate(() => document.documentElement.lang);
+  t.check(`${locale} browser -> ${want}`, lang === want, lang);
+  if (locale === 'it-IT') {
+    // Every manual page has its English twin with the same number of paragraphs:
+    // a page changed in Italian but not in English shows up here.
+    const fs = await import('node:fs');
+    const en = Object.assign({}, ...fs.readdirSync('../i18n').filter(f => /^en-manuale/.test(f)).map(f => JSON.parse(fs.readFileSync('../i18n/' + f, 'utf8'))));
+    const pages = await t.page.evaluate(() => window.ScripTotiManual.entries.map(e => [e.id, e.body.length]));
+    const stale = pages.filter(([id, n]) => !en[id] || en[id].body.length !== n).map(([id]) => id);
+    t.check('English manual covers every Italian page', !stale.length, stale.join(', '));
+  }
+  t.report(); await t.close();
+}
