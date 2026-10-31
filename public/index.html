@@ -5096,7 +5096,14 @@ async function startUpgrade() {
       if (creating || saving || actionBusy) return;
       creating = true; clearTimeout(saveTimer); refresh();
       try {
-        const handle = await window.showSaveFilePicker({ ...pickerOptions, types: [{ description: 'Fountain', accept: { 'text/plain': ['.fountain'] } }], excludeAcceptAllOption: true, suggestedName: name });
+        // Start in the folder of the file this screenplay came from, when there is one.
+        let origin = active.disk?.handle || null;
+        if (!origin) try { origin = await journal.binding(active.session.id); } catch { origin = null; }
+        const startIn = origin?.kind === 'file' ? { startIn: origin } : {};
+        const options = { ...pickerOptions, types: [{ description: 'Fountain', accept: { 'text/plain': ['.fountain'] } }], excludeAcceptAllOption: true, suggestedName: name };
+        let handle;
+        try { handle = await window.showSaveFilePicker({ ...options, ...startIn }); }
+        catch (error) { if (error.name === 'AbortError' || !startIn.startIn) throw error; handle = await window.showSaveFilePicker(options); }
         await action(async () => {
           for (const project of projects) if (project !== active && project.disk && (project.disk.handle === handle || typeof handle.isSameEntry === 'function' && await handle.isSameEntry(project.disk.handle).catch(() => false))) throw new Error('Il file è già aperto in un’altra scheda. Scegli un altro nome oppure passa a quella scheda.');
           const baseline = await Files.read(handle), id = uid(), raw = active.session.source;

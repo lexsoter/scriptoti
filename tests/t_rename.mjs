@@ -40,5 +40,21 @@ t.check('an invalid name is refused', (await name()).session === 'Bozza finale.f
 await page.reload(); await page.waitForTimeout(2500);
 const st = await page.evaluate(() => ({ name: window.DraftSafe.session?.name, status: document.querySelector('#saveStatus').textContent.trim(), tabs: [...document.querySelectorAll('.project-tab button:first-child')].map(b => b.textContent) }));
 t.check('after reopening: new name, still linked to the file', st.tabs.includes('Bozza finale') && /Salvato sul file/.test(st.status), JSON.stringify(st));
+// Salva con nome… opens in the folder of the original file.
+const saveAs = () => page.evaluate(async () => {
+  const r = await navigator.storage.getDirectory(); window.__startIn = 'none';
+  window.showSaveFilePicker = async options => { window.__startIn = options.startIn ? (await options.startIn.isSameEntry(window.DraftSafe.disk?.handle || options.startIn) ? options.startIn.name : 'other') : 'none'; return r.getFileHandle(options.suggestedName, { create: true }); };
+  document.querySelector('#newDraftBtn').click();
+  await new Promise(ok => setTimeout(ok, 200));
+  [...document.querySelectorAll('dialog[open] button')].find(b => b.textContent.trim() === 'Sul dispositivo').click();
+  await new Promise(ok => setTimeout(ok, 1500));
+  return window.__startIn;
+});
+const linked = await saveAs();
+t.check('Salva con nome starts in the folder of the linked file', linked === 'Bozza finale.fountain', linked);
+await page.evaluate(() => window.DraftEditor.load('!Nuovo.\n', 'Senza file.fountain'));
+await page.evaluate(() => document.querySelector('#newBtn').click()); await page.waitForTimeout(800);
+const draft = await saveAs();
+t.check('a draft without a file keeps the usual folder', draft === 'none', draft);
 t.report();
 await t.close();
