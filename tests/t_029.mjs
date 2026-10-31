@@ -84,6 +84,33 @@ await t.press('Escape');
 state = await t.page.evaluate(() => document.querySelector('#currentPage').textContent);
 t.check('Escape restores the indicator', /^Pagina \d+ di \d+$/.test(state), state);
 
+// Zoom keeps the caret in place and only zooms the pages.
+await t.load('Title\n\nINT. CASA - GIORNO\n\n' + filler + '\n\n'); await t.page.waitForTimeout(300);
+await t.caretAfter('Azione numero 60 ');
+const caretY = () => t.page.evaluate(() => { const s = window.getSelection(), r = document.createRange(); r.setStart(s.focusNode, s.focusOffset); const b = r.getClientRects()[0] || r.getBoundingClientRect(); return Math.round(b.top); });
+const before = await caretY();
+const mod = process.platform === 'darwin' ? 'Meta' : 'Control';
+await t.page.keyboard.press(mod + '+Equal'); await t.page.waitForTimeout(300);
+let z = await t.page.evaluate(() => ({ zoom: document.querySelector('#zoomValue').value, body: document.body.style.zoom || '', ratio: window.devicePixelRatio }));
+const after = await caretY();
+t.check('Cmd/Ctrl + zooms the pages, not the program', z.zoom === '110%' && !z.body, JSON.stringify(z));
+t.check('the caret stays where it was', Math.abs(after - before) <= 3, before + ' -> ' + after);
+const box = await t.page.evaluate(() => { const b = document.querySelector('#stage').getBoundingClientRect(); return { x: b.left + b.width / 2, y: b.top + b.height / 2 }; });
+await t.page.mouse.move(box.x, box.y);
+await t.page.keyboard.down('Control'); for (let i = 0; i < 4; i++) { await t.page.mouse.wheel(0, -12); await t.page.waitForTimeout(30); } await t.page.keyboard.up('Control');
+await t.page.waitForTimeout(300);
+z = await t.page.evaluate(() => document.querySelector('#zoomValue').value);
+t.check('pinch / Ctrl+wheel zooms the pages', parseInt(z) > 110, z);
+t.check('caret still in place after the pinch', Math.abs((await caretY()) - before) <= 3, before + ' -> ' + (await caretY()));
+await t.page.evaluate(() => window.getSelection().removeAllRanges());
+await t.page.evaluate(() => { const s = document.querySelector('#stage'); s.scrollTop = s.scrollHeight / 2; }); await t.page.waitForTimeout(200);
+const centre = () => t.page.evaluate(([x, y]) => { const p = [...document.querySelectorAll('.paper')].find(n => n.getBoundingClientRect().bottom > y); const b = p.getBoundingClientRect(); return p.dataset.pageLabel + '@' + ((y - b.top) / b.height).toFixed(2); }, [box.x, box.y]);
+const seen = await centre();
+await t.page.keyboard.press(mod + '+Minus'); await t.page.waitForTimeout(300);
+t.check('without a caret the middle of the view stays', seen && (await centre()) === seen, seen + ' / ' + (await centre()));
+await t.page.keyboard.press(mod + '+Digit0');
+t.check('Ctrl+0 back to 100%', (await t.page.evaluate(() => document.querySelector('#zoomValue').value)) === '100%');
+
 // Find and replace keeps a leading capital and all-caps occurrences.
 const replaced = await t.page.evaluate(() => {
   const src = 'Title\n\nINT. CASA - GIORNO\n\nGiraffa entra. Una giraffa beve. LA GIRAFFA dorme.\n\n';

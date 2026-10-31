@@ -3,7 +3,7 @@
 <head>
 <meta name="scriptoti-edition" content="online">
   <meta charset="utf-8">
-  <meta name="scriptoti-version" content="0.29.0">
+  <meta name="scriptoti-version" content="0.29.1">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -3626,7 +3626,7 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
     { id: 'vista', section: 'formato', title: 'Zoom, tema scuro, ortografia, conteggi',
       keys: 'zoom ingrandire tema scuro chiaro ortografia correttore lingua italiano inglese parole caratteri conteggio pagine pagina corrente numero di pagina selezione',
       q: ['come ingrandisco la pagina', 'tema chiaro', 'correttore ortografico', 'quante parole', 'contare le parole della selezione', 'dove vedo il numero di pagina', 'in che pagina sono'],
-      short: 'Lo zoom è in basso a destra; Vista → Tema scuro ([[Alt+Shift+D]]) e Vista → Ortografia (italiano/inglese). In basso a sinistra: la pagina che stai guardando e il totale, parole e caratteri, o quelli della sola selezione.',
+      short: 'Lo zoom è in basso a destra, oppure [[Mod++]] e [[Mod+-]] ([[Mod+0]] torna al 100%) o il pizzico sul trackpad: ingrandisce solo le pagine e tiene fermo il punto in cui scrivi; Vista → Tema scuro ([[Alt+Shift+D]]) e Vista → Ortografia (italiano/inglese). In basso a sinistra: la pagina che stai guardando e il totale, parole e caratteri, o quelli della sola selezione.',
       body: ['- **Zoom** in basso a destra, dal 50% al 200%.',
         '- **Vista → Tema scuro** ([[Alt+Shift+D]]); il PDF è sempre bianco.',
         '- **Vista → Ortografia**: lingua del correttore del browser (italiano o inglese).',
@@ -6903,7 +6903,53 @@ async function startUpgrade() {
     if (!composing) render(remembered);
   };
   $('#darkModeToggle').onchange = event => { theme = event.target.checked ? 'dark' : 'light'; applyTheme(); saveOptions(); syncToolbar(); };
-  $('#zoomSlider').oninput = event => { pageZoom = Math.min(200, Math.max(50, Number(event.target.value))); applyZoom(); saveOptions(); };
+  // Zoom keeps its place: the caret stays where it was on screen when it is
+  // visible, otherwise the point at the middle of the view does. Pinch on a
+  // trackpad, Ctrl/Cmd + wheel and Ctrl/Cmd + = - 0 zoom only the pages, never
+  // the whole program.
+  function zoomTo(value) {
+    const next = Math.min(200, Math.max(50, Math.round(value)));
+    if (next === pageZoom) { applyZoom(); return; }
+    const box = stage.getBoundingClientRect(), selection = window.getSelection();
+    let range = null, point = null, target = null, fx = 0.5, fy = 0.5;
+    if (selection?.rangeCount && stage.contains(selection.focusNode)) {
+      range = document.createRange(); range.setStart(selection.focusNode, selection.focusOffset); range.collapse(true);
+      const r = range.getClientRects()[0] || range.getBoundingClientRect();
+      if (r && (r.height || r.width) && r.bottom > box.top && r.top < box.bottom && r.right > box.left && r.left < box.right) point = { x: r.left, y: r.top + r.height / 2 };
+      else range = null;
+    }
+    if (!point) {
+      point = { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+      target = document.elementFromPoint(point.x, point.y)?.closest('.paper, .editable-region') || [...stage.querySelectorAll('.paper')].find(n => n.getBoundingClientRect().bottom > point.y);
+      const t = target?.getBoundingClientRect();
+      if (t?.height) { fx = (point.x - t.left) / (t.width || 1); fy = (point.y - t.top) / t.height; } else target = null;
+    }
+    pageZoom = next; applyZoom(); saveOptions();
+    let now = null;
+    if (range) { const r = range.getClientRects()[0] || range.getBoundingClientRect(); now = { x: r.left, y: r.top + r.height / 2 }; }
+    else if (target) { const t = target.getBoundingClientRect(); now = { x: t.left + fx * t.width, y: t.top + fy * t.height }; }
+    if (now) { stage.scrollTop += now.y - point.y; stage.scrollLeft += now.x - point.x; }
+    visiblePage();
+  }
+  $('#zoomSlider').oninput = event => zoomTo(Number(event.target.value));
+  let pinch = 0;
+  stage.addEventListener('wheel', event => {
+    if (!event.ctrlKey && !event.metaKey) return;
+    event.preventDefault();
+    // A trackpad pinch sends many small steps; a mouse wheel few large ones.
+    pinch += event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
+    const steps = Math.trunc(pinch / 12);
+    if (!steps) return;
+    pinch -= steps * 12; zoomTo(pageZoom - steps * 5);
+  }, { passive: false });
+  document.addEventListener('keydown', event => {
+    if (!(mac ? event.metaKey : event.ctrlKey) || event.altKey) return;
+    const key = event.key, code = event.code;
+    const delta = key === '+' || key === '=' || code === 'Equal' || code === 'NumpadAdd' ? 10 : key === '-' || code === 'Minus' || code === 'NumpadSubtract' ? -10 : 0;
+    if (!delta && !(key === '0' || code === 'Digit0' || code === 'Numpad0')) return;
+    if (document.querySelector('dialog[open]')) return;
+    event.preventDefault(); zoomTo(delta ? Math.round((pageZoom + delta) / 10) * 10 : 100);
+  }, true);
   // The zoom and counter bars sit beside the page scrollbars, never on top
   // of them. Overlay scrollbars (macOS) take no room but still need a gap.
   function placeBars() {
