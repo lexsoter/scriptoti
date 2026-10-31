@@ -1,0 +1,327 @@
+{
+  "allineamento": {
+    "title": "Allineamenti, giustificato, rientro, interlinea",
+    "keys": "allineamento giustifica giustificato centra destra sinistra rientro prima riga interlinea 1 1,5 automatica soggetto trattamento",
+    "q": [
+      "come giustifico il testo",
+      "come centro",
+      "rientro della prima riga",
+      "come metto interlinea 1,5",
+      "interlinea automatica",
+      "non riesco a giustificare il dialogo"
+    ],
+    "short": "Formato → Giustifica ([[Alt+Shift+J]]), Centra ([[Alt+Shift+E]]), Allinea a sinistra ([[Alt+Shift+L]]) valgono solo per l’Azione. Il rientro di prima riga ([[Alt+Shift+I]]) vale per tutto il documento. L’interlinea si sceglie nella barra: 1, 1,5 o Automatica.",
+    "body": [
+      "Allineamenti e giustificazione valgono **solo per l’Azione**: personaggi, dialoghi, scene e transizioni mantengono l’impaginazione da sceneggiatura.",
+      "- [[Alt+Shift+L]] sinistra, [[Alt+Shift+E]] centrato, [[Alt+Shift+J]] giustificato, «Allinea a destra» dal menu.",
+      "- [[Alt+Shift+I]] **rientro automatico della prima riga** di tutti i paragrafi di Azione (10,8 pt), come negli articoli e nei saggi.",
+      "- **Interlinea** nella barra degli strumenti: **1** (sceneggiatura), **1,5** (soggetti e trattamenti) o **Automatica** (1 se il testo contiene scene e dialoghi, altrimenti 1,5). Selezionando del testo, l’interlinea vale solo per quei paragrafi."
+    ]
+  },
+  "title-page": {
+    "title": "Title page (frontespizio)",
+    "keys": "title page frontespizio copertina titolo autore credit contatti bozza data mostra nascondi",
+    "q": [
+      "come faccio il frontespizio",
+      "come aggiungo il titolo",
+      "title page",
+      "come nascondo il frontespizio"
+    ],
+    "short": "Formato → Modifica Title page… apre i campi (titolo, autore, contatti…). Formato → Mostra/Nascondi Title page la attiva o la nasconde senza cancellare i campi.",
+    "body": [
+      "**Formato → Modifica Title page…** apre un modulo con titolo, credit («Scritto da»), autori, soggetto originale, versione, data, contatti, note e copyright. I campi vuoti non vengono stampati.",
+      "**Formato → Mostra/Nascondi Title page** la attiva o la nasconde: nascosta, i campi restano conservati. Nei nuovi documenti parte nascosta.",
+      "Si può anche scrivere direttamente all’inizio del file in formato Fountain: `Title: Il mio film` e `Author: …`, seguiti da una riga vuota."
+    ]
+  },
+  "margini": {
+    "title": "Imposta pagina e margini",
+    "keys": "margini imposta pagina margine sinistro destro alto basso centimetri simmetrici standard rilegatura foglio a4",
+    "q": [
+      "come cambio i margini",
+      "perché il margine sinistro è più grande",
+      "margini simmetrici",
+      "imposta pagina"
+    ],
+    "short": "Formato → Imposta pagina… cambia i quattro margini in centimetri. Lo standard ha più spazio a sinistra per la rilegatura; «Sinistro e destro uguali» centra il testo mantenendo 60 caratteri per riga.",
+    "body": [
+      "**Formato → Imposta pagina…** permette di cambiare i quattro margini (da 1 a 8 cm). L’anteprima indica quanti caratteri entrano in una riga di Azione e quante righe in una pagina.",
+      "- **Standard sceneggiatura**: più spazio a sinistra (3,53 cm) per la rilegatura, 60 caratteri per riga e 59 righe per pagina.",
+      "- **Sinistro e destro uguali**: stesso spazio ai due lati, stessa larghezza del testo.",
+      "Editor e PDF usano gli stessi margini, salvati nel file. Con pagine e scene bloccate in revisione i margini non si possono cambiare: prima usa Revisione → Chiudi le revisioni e sblocca la numerazione."
+    ]
+  },
+  "vista": {
+    "title": "Zoom, tema scuro, ortografia, conteggi",
+    "keys": "zoom ingrandire tema scuro chiaro ortografia correttore lingua italiano inglese parole caratteri conteggio pagine pagina corrente numero di pagina selezione",
+    "q": [
+      "come ingrandisco la pagina",
+      "tema chiaro",
+      "correttore ortografico",
+      "quante parole",
+      "contare le parole della selezione",
+      "dove vedo il numero di pagina",
+      "in che pagina sono"
+    ],
+    "short": "Lo zoom è in basso a destra, oppure [[Mod++]] e [[Mod+-]] ([[Mod+0]] torna al 100%) o il pizzico sul trackpad: ingrandisce solo le pagine e tiene fermo il punto in cui scrivi; Vista → Tema scuro ([[Alt+Shift+D]]) e Vista → Ortografia (italiano/inglese). In basso a sinistra: la pagina che stai guardando e il totale, parole e caratteri, o quelli della sola selezione.",
+    "body": [
+      "- **Zoom** in basso a destra, dal 50% al 200%.",
+      "- **Vista → Tema scuro** ([[Alt+Shift+D]]); il PDF è sempre bianco.",
+      "- **Vista → Ortografia**: lingua del correttore del browser (italiano o inglese).",
+      "- In basso a sinistra: la **pagina** che stai guardando sul totale («Pagina 3 di 12», «Title page» sulla pagina del titolo): cliccaci sopra, scrivi un numero di pagina e premi [[Invio]] per andarci; se la pagina non esiste compare «Pagina non trovata». Poi **parole e caratteri** del copione. Se selezioni del testo compare «Selezione» con parole e caratteri della sola parte selezionata."
+    ]
+  },
+  "revisioni": {
+    "title": "Registrare le revisioni",
+    "keys": "revisione revisioni registra modifiche bande grigie evidenzia evidenziatore segna gomma togli rimuovi cancella interruttore modalità manuale nuovo giro continua chiudi revisioni attori pagine segnate",
+    "q": [
+      "come segno le modifiche per gli attori",
+      "registra revisioni",
+      "nuovo giro di revisione",
+      "come evidenzio una parte",
+      "stampare solo le pagine modificate",
+      "come tolgo una revisione",
+      "come cancello una banda grigia",
+      "che cos è un giro di revisione",
+      "come chiudo le revisioni"
+    ],
+    "short": "L’interruttore «Registra revisioni» nella barra (o [[Alt+Shift+R]]) evidenzia con una banda grigia ogni riga modificata, anche nel PDF, e blocca pagine e scene. L’evidenziatore segna a mano, la gomma toglie. Riaccendendo l’interruttore scegli se continuare il giro o iniziarne uno nuovo.",
+    "body": [
+      "L’interruttore **Registra revisioni** nella barra degli strumenti (anche **Revisione → Registra revisioni**, [[Alt+Shift+R]]) entra in modalità revisione: ogni riga modificata da quel momento ha una banda grigia, sullo schermo e nel PDF, e pagine e scene restano bloccate. Serve per comunicare le modifiche agli attori.",
+      "- **Mostra evidenziazioni** ([[Alt+Shift+V]]) le nasconde o mostra senza cancellarle (per esportare una copia pulita).",
+      "- **Evidenziatore** ([[Alt+Shift+H]]): segna come revisione il testo selezionato.",
+      "- **Gomma** ([[Alt+Shift+G]]): toglie la revisione dal testo selezionato, sia segnata a mano sia registrata. Senza selezione non fa niente.",
+      "- **Giri di revisione**: quando riaccendi l’interruttore e ci sono già evidenziazioni, ScripToti chiede se **continuare il giro** o **iniziarne uno nuovo**. Un giro corrisponde a una versione consegnata (in produzione di solito ha anche un colore di pagina: blu, rosa, giallo…). Con un nuovo giro le evidenziazioni di prima spariscono e si segnano solo le modifiche da quel momento; numeri di pagina e di scena restano bloccati.",
+      "- **Revisione → Chiudi le revisioni e sblocca la numerazione** toglie tutte le evidenziazioni e libera pagine e scene, quando la fase di revisione è finita. [[Mod+Z]] rimette evidenziazioni e numerazione; per registrare di nuovo riaccendi l’interruttore.",
+      "- **File → Esporta PDF · sole pagine segnate** stampa solo le pagine con modifiche.",
+      "Registra revisioni blocca da solo pagine e scene (vedi la voce successiva). Nei copioni condivisi le revisioni non sono ancora disponibili."
+    ]
+  },
+  "blocco": {
+    "title": "Bloccare pagine e scene (1A, 2B…)",
+    "keys": "blocca pagine scene numerazione bloccata produzione pagine aggiuntive suffisso lettere 12a 1b sblocca",
+    "q": [
+      "come blocco i numeri di pagina",
+      "perché le pagine si chiamano 1a 1b",
+      "numerazione di produzione",
+      "come sblocco le pagine"
+    ],
+    "short": "Con Registra revisioni attivo, numeri di pagina e di scena restano fissi: il testo aggiunto finisce in pagine 1b, 1c… e le scene nuove in 12A. Per tornare alla numerazione libera: Revisione → Chiudi le revisioni e sblocca la numerazione.",
+    "body": [
+      "In produzione i numeri di pagina e di scena non devono cambiare dopo le modifiche. l’interruttore **Registra revisioni** li fissa:",
+      "- il testo che non entra più in una pagina va in pagine aggiuntive **1b, 1c…**, riempite prima di crearne altre;",
+      "- le scene nuove ricevono lettere (**12A**); quelle eliminate restano «omesse».",
+      "Il blocco parte da solo con **Registra revisioni** e resta anche quando inizi un nuovo giro. **Revisione → Chiudi le revisioni e sblocca la numerazione** toglie le evidenziazioni e libera la numerazione; [[Mod+Z]] le rimette."
+    ]
+  },
+  "attori": {
+    "title": "Copia per gli attori (battute colorate)",
+    "keys": "attori colori battute evidenzia battute per attore copia attore lettura colori personaggi",
+    "q": [
+      "come evidenzio le battute di un attore",
+      "copia per gli attori",
+      "colorare i dialoghi di un personaggio"
+    ],
+    "short": "Revisione → Evidenzia battute per attore… ([[Alt+Shift+A]]): scegli i personaggi e un colore; le loro battute vengono evidenziate anche nel PDF.",
+    "body": [
+      "**Revisione → Evidenzia battute per attore…** ([[Alt+Shift+A]]) apre l’elenco dei personaggi: spunta quelli da evidenziare e scegli un colore. Le battute vengono colorate sullo schermo e nel PDF, utile per preparare la copia di ciascun attore."
+    ]
+  },
+  "commenti": {
+    "title": "Commenti",
+    "keys": "commenti commento note risposte risolvi annotazioni discussione",
+    "q": [
+      "come aggiungo un commento",
+      "come rispondo a un commento",
+      "dove vedo i commenti",
+      "risolvere un commento"
+    ],
+    "short": "Seleziona il testo e usa Commenti → Aggiungi commento ([[Mod+Alt+M]]). Commenti → Visualizza ([[Alt+Shift+C]]) apre il pannello con risposte e «Risolvi».",
+    "body": [
+      "Seleziona il testo e scegli **Commenti → Aggiungi commento** ([[Mod+Alt+M]]). Il testo commentato viene sottolineato.",
+      "**Commenti → Visualizza commenti** ([[Alt+Shift+C]]) apre il pannello: puoi rispondere, risolvere o riaprire una discussione; cliccando la citazione vai al punto del copione.",
+      "I commenti restano nel file e non vengono stampati. Nei copioni condivisi compaiono a tutti con il nome di chi li ha scritti."
+    ]
+  },
+  "cerca": {
+    "title": "Cerca, trova e sostituisci",
+    "keys": "cerca trova sostituisci ricerca sostituire tutto maiuscole parole intere",
+    "q": [
+      "come cerco una parola",
+      "come sostituisco",
+      "sostituisci tutto"
+    ],
+    "short": "[[Mod+F]] cerca; [[Mod+Alt+F]] cerca e sostituisce. Puoi distinguere maiuscole/minuscole e cercare parole intere. Nei nomi dei personaggi la sostituzione resta in maiuscolo.",
+    "body": [
+      "- [[Mod+F]] apre **Cerca**; [[Invio]] e [[Shift+Invio]] passano al risultato successivo e precedente.",
+      "- [[Mod+Alt+F]] apre **Trova e sostituisci**, con «Sostituisci» e «Sostituisci tutto».",
+      "- Opzioni: maiuscole/minuscole, parole intere.",
+      "La sostituzione rispetta le maiuscole di ogni punto: se cambi «giraffa» in «elefante», «Giraffa» a inizio frase diventa «Elefante» e «GIRAFFA» diventa «ELEFANTE».",
+      "Nei nomi dei personaggi, nelle scene e nelle transizioni il testo sostitutivo resta in maiuscolo. Per cambiare il nome di un personaggio in tutto il copione è meglio «Cambia nome personaggio»."
+    ]
+  },
+  "rinomina": {
+    "title": "Cambiare nome a un personaggio",
+    "keys": "cambia nome personaggio rinomina rinominare genere maschile femminile",
+    "q": [
+      "come cambio il nome di un personaggio",
+      "rinominare un personaggio",
+      "cambiare sesso a un personaggio"
+    ],
+    "short": "Modifica → Cambia nome personaggio…: scegli il personaggio e il nuovo nome; ScripToti mostra ogni occorrenza da approvare e, se vuoi, propone anche i cambi di genere (lui/lei…).",
+    "body": [
+      "**Modifica → Cambia nome personaggio…** elenca ogni occorrenza del nome, nei dialoghi e nell’azione, con il contesto. Puoi escluderne alcune o modificarle una per una.",
+      "Se il vecchio nome è preceduto da un articolo, l’articolo se ne va: «il pescatore» diventa «Giorgio», non «il Giorgio». Con le preposizioni articolate «del pescatore» diventa «di Giorgio», «al pescatore» «a Giorgio»: queste righe sono segnalate da controllare. Gli altri articoli della frase restano dove sono.",
+      "Indicando il genere attuale e quello nuovo, ScripToti propone anche le parole da cambiare (lui/lei, ragazzo/ragazza…), sempre da approvare a mano."
+    ]
+  },
+  "suggerimenti": {
+    "title": "Suggerimenti di luoghi e personaggi",
+    "keys": "suggerimenti completamento automatico autocompletamento luoghi personaggi refuso descrizione",
+    "q": [
+      "come funzionano i suggerimenti",
+      "completamento automatico dei nomi",
+      "mi suggerisce un nome sbagliato"
+    ],
+    "short": "Mentre scrivi una scena o un nome, ScripToti propone solo luoghi e personaggi già presenti nel copione. [[Invio]] o un clic per accettare, [[Esc]] per ignorare.",
+    "body": [
+      "Scrivendo un’intestazione, ScripToti propone i **luoghi** già usati, poi il **momento** della giornata nella lingua del copione (GIORNO, NOTTE… oppure DAY, NIGHT…). Scrivendo un nome in maiuscolo propone i **personaggi** del copione, segnala i possibili refusi (RUTA → RITA) e, per chi non compare da almeno tre scene, ricorda dove è apparso l’ultima volta («Ultima volta a pag. 3 scena 2»). L’indicazione segue ogni modifica; per i personaggi delle scene vicine non compare.",
+      "- [[↑]] [[↓]] per scegliere, [[Invio]] o clic per accettare, [[Esc]] per ignorare.",
+      "- Un nome simile a un altro ma voluto si può tenere come personaggio distinto.",
+      "Non viene inventato niente: i suggerimenti arrivano solo dal copione aperto."
+    ]
+  },
+  "salvare": {
+    "title": "Salvare: file, autosalvataggio, recupero",
+    "keys": "salva salvare salvataggio automatico autosave salva con nome file disco permesso recupero copie browser download safari iphone",
+    "q": [
+      "come salvo",
+      "salva automaticamente",
+      "dove viene salvato",
+      "salva con nome",
+      "ho perso il testo",
+      "recuperare una versione",
+      "su safari scarica il file"
+    ],
+    "short": "Apri o salva il copione come file: in Chrome/Edge ScripToti poi lo aggiorna da solo (autosave) e con [[Mod+S]]. File → Recupero… conserva le versioni precedenti nel browser. In Safari e su iPhone Salva scarica una copia.",
+    "body": [
+      "In **Chrome ed Edge** il file aperto con **File → Apri…** resta collegato: ScripToti lo aggiorna da solo dopo pochi secondi e con [[Mod+S]]. [[Mod+Shift+S]] è **Salva con nome** (l’estensione `.fountain` viene aggiunta da sola).",
+      "Il browser può chiedere il permesso di modificare il file: in quel caso premi Salva e consenti. Lo stato del salvataggio è in alto a destra.",
+      "In **Safari, Firefox e su iPhone** il browser non permette di aggiornare il file: Salva **scarica** una copia.",
+      "## Recupero",
+      "Oltre al file, ScripToti conserva copie di lavoro nel browser. **File → Recupero…** le elenca: «Apri copia» le riapre come documento indipendente. Il recupero è nel browser di quel computer: non è un backup sul cloud."
+    ]
+  },
+  "pdf": {
+    "title": "Esportare in PDF",
+    "keys": "pdf esporta stampa stampare salva come pdf nome file pagine segnate",
+    "q": [
+      "come faccio il pdf",
+      "come stampo",
+      "esportare il copione"
+    ],
+    "short": "File → Esporta PDF ([[Mod+P]]) apre la stampa del browser: scegli «Salva come PDF». Il nome proposto è «Titolo - vN - data». Esiste anche l’esportazione delle sole pagine segnate.",
+    "body": [
+      "**File → Esporta PDF** ([[Mod+P]]) apre la finestra di stampa del browser: come destinazione scegli **Salva come PDF**. Margini, interlinea, title page, bande di revisione e colori attore escono come nell’editor.",
+      "Il nome proposto contiene titolo, versione e data, per esempio «Il mio film - v2 - 25-10-26».",
+      "**File → Esporta PDF · sole pagine segnate** stampa solo le pagine con revisioni."
+    ]
+  },
+  "conflitto": {
+    "title": "Conflitto sul file",
+    "keys": "conflitto file modificato fuori confronta versioni esterno altro programma drive dropbox",
+    "q": [
+      "cosa significa conflitto sul file",
+      "il file è stato modificato fuori",
+      "confronta versioni"
+    ],
+    "short": "«Conflitto sul file» significa che il file è stato cambiato da un altro programma mentre era aperto. ScripToti non sovrascrive niente: File → Confronta versioni… mostra le due versioni e scegli quale tenere.",
+    "body": [
+      "Se il file viene modificato da un altro programma (o da un’altra finestra) mentre è aperto, ScripToti si ferma e mostra **Conflitto sul file**: non sovrascrive mai la versione sul disco.",
+      "**File → Confronta versioni…** mostra le due versioni affiancate: «Continua con la copia locale» o «Apri la versione del file». Entrambe restano in Recupero.",
+      "Per i copioni condivisi tenuti in una cartella Drive condivisa il conflitto non compare: le copie della stessa condivisione vengono unite da sole."
+    ]
+  },
+  "condividere": {
+    "title": "Condividere un copione",
+    "keys": "condividi condivisione collaboratori collaborare insieme tempo reale link file per collaboratori nome scrivere insieme",
+    "q": [
+      "come condivido un copione",
+      "scrivere in due",
+      "scrivere in due contemporaneamente",
+      "lavorare insieme sullo stesso copione",
+      "come mando il copione a un collaboratore",
+      "come faccio entrare un collaboratore",
+      "come cambio il mio nome"
+    ],
+    "short": "File → Condividi… (o l’icona di condivisione all’estremità destra della barra degli strumenti): scrivi il tuo nome e premi «Avvia la condivisione», poi «Scarica il file per i collaboratori» (o «Copia link»). Chi apre quel file con ScripToti scrive insieme a te.",
+    "body": [
+      "**File → Condividi…** (o l’icona di condivisione a destra nella barra degli strumenti), scrivi il tuo nome e premi **Avvia la condivisione**. Poi:",
+      "- **Scarica il file per i collaboratori** e mandalo (email, WhatsApp, cartella Drive). Ognuno lo salva dove vuole e lo apre con ScripToti: il suo file si aggiorna mentre lavorate, anche se lo riapre dopo anni.",
+      "- **Copia link** per un’apertura al volo dal browser.",
+      "Mentre scrivete vedete i cursori e i nomi degli altri; i commenti mostrano chi li ha scritti; [[Mod+Z]] annulla solo le tue modifiche. Il tuo nome si cambia nello stesso dialogo con **Salva nome**.",
+      "Il testo viaggia cifrato: senza il file o il link nessuno può leggerlo, nemmeno il server. Chi ha il file può modificare. **Scollega questo file** trasforma la tua copia in un file normale.",
+      "Registra revisioni e blocco delle pagine non sono ancora disponibili nei copioni condivisi."
+    ]
+  },
+  "led": {
+    "title": "Il LED della condivisione e la VPN",
+    "keys": "led luce verde giallo rosso stato condivisione in linea non in linea instabile vpn firewall blocca rete offline",
+    "q": [
+      "cosa significa il led rosso",
+      "luce gialla",
+      "la condivisione è rossa con la vpn",
+      "non in linea",
+      "il sito blocca questa rete"
+    ],
+    "short": "Verde: in linea. Giallo: collegamento in corso o connessione instabile. Rosso: non in linea; le modifiche restano in attesa e partono da sole. Con alcune VPN il firewall del sito blocca la rete: spegni la VPN o escludi il sito.",
+    "body": [
+      "Nei copioni condivisi, in alto a destra:",
+      "- **verde**: in linea;",
+      "- **giallo**: collegamento in corso, oppure connessione instabile negli ultimi 30 secondi;",
+      "- **rosso**: non in linea. Puoi continuare a scrivere: le modifiche restano in attesa (anche nel file) e partono appena torna la rete.",
+      "Se il LED dice «il sito blocca questa rete (VPN?)», il firewall dell’hosting non accetta l’indirizzo della VPN: spegnila mentre scrivete, cambia server o escludi scriptoti.salvatorefrisina.com dalla VPN.",
+      "Cliccando il LED si apre il dialogo Condividi."
+    ]
+  },
+  "drive": {
+    "title": "Cartella Drive condivisa",
+    "keys": "drive google drive cartella condivisa dropbox onedrive sincronizzazione stesso file",
+    "q": [
+      "posso usare una cartella drive condivisa",
+      "aprire il file da drive in due",
+      "dropbox"
+    ],
+    "short": "Sì: tenete il copione condiviso in una cartella Drive condivisa e apritelo da lì. ScripToti riconosce le copie della stessa condivisione e le unisce senza conflitti. Imposta la cartella come «Disponibile offline».",
+    "body": [
+      "Un copione condiviso può stare in una cartella Drive (o Dropbox) condivisa: aprite tutti lo stesso file con **File → Apri…**.",
+      "- ScripToti riconosce le copie della stessa condivisione e non si ferma con «Conflitto sul file».",
+      "- Le modifiche viaggiano in un secondo attraverso ScripToti; Drive porta a ciascuno il file aggiornato.",
+      "- Se qualcuno modifica il file con un altro programma vale la versione condivisa; l’altra resta in Recupero.",
+      "In Drive per desktop imposta la cartella come **Disponibile offline**."
+    ]
+  },
+  "controllo": {
+    "title": "Controllo della sintassi",
+    "keys": "controllo sintassi correzione automatica errori suggerimenti avvisi sottolineato ondulato correggi ignora",
+    "q": [
+      "come funziona il controllo della sintassi",
+      "cosa sono le sottolineature",
+      "correzione automatica",
+      "come tolgo un avviso"
+    ],
+    "short": "Aiuto → Controllo della sintassi segnala solo gli errori veri di formato (parentetica accanto al nome, transizioni non riconosciute, «INTERNO» per esteso…): li sottolinea e il pannello Suggerimenti li spiega, con Vai, Correggi e Ignora. Ciò che è corretto non viene segnalato.",
+    "body": [
+      "**Aiuto → Controllo della sintassi** segnala solo gli **errori veri**: testo che Fountain legge o stampa nel modo sbagliato, o che viola una regola chiara della sceneggiatura. Quello che è corretto non viene mai segnalato, anche se ScripToti lo farebbe in un altro modo.",
+      "- parentetica scritta accanto al nome invece che sotto;",
+      "- (V.O.) o (O.S.) scritti su una riga a sé, come se fossero una parentetica;",
+      "- parentetica in fondo alla battuta;",
+      "- transizioni che non vanno a destra (per esempio in italiano senza `>`) o che vengono lette come personaggio;",
+      "- intestazioni scritte per esteso («INTERNO», «ESTERNO»), che vengono lette come Azione;",
+      "- un paragrafo che inizia con «Il giorno dopo», «Più tardi», «Nel frattempo»… dentro una scena già avviata: di solito serve una nuova intestazione;",
+      "- (MORE) scritto a mano; doppio dialogo (^) senza una battuta prima.",
+      "Non vengono segnalati, perché sono corretti: (CONT’D) scritto a mano, le varie grafie delle estensioni ((VO), (voce fuori campo), (F.C.)…), intestazioni senza momento della giornata o senza INT./EST., intestazioni una dopo l’altra, parentetiche lunghe, V.O. di un personaggio presente in scena.",
+      "Le parti interessate vengono sottolineate. Il pannello **Avvisi** (Aiuto → Controllo della sintassi: avvisi…) spiega ogni problema: **Vai** porta al punto, **Correggi** applica la soluzione (si annulla con [[Mod+Z]]), **Ignora** lo nasconde per questo copione."
+    ]
+  }
+}

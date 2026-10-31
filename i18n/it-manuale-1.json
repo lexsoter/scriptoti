@@ -1,0 +1,331 @@
+{
+  "_sections": {
+    "inizio": "Primi passi",
+    "fountain": "Scrivere in Fountain",
+    "formato": "Formattazione e pagina",
+    "revisione": "Revisioni e produzione",
+    "strumenti": "Commenti, ricerca e strumenti",
+    "file": "File, salvataggio e PDF",
+    "condivisione": "Scrivere insieme",
+    "aiuto": "Aiuto e controllo della sintassi",
+    "problemi": "Problemi frequenti"
+  },
+  "benvenuto": {
+    "title": "Che cos’è ScripToti",
+    "keys": "introduzione panoramica cosa fa programma app editor fountain sceneggiatura soggetto trattamento",
+    "q": [
+      "che cos è scriptoti",
+      "a cosa serve",
+      "come funziona il programma"
+    ],
+    "short": "ScripToti è un editor di sceneggiature: scrivi testo normale e lui lo impagina da solo come una sceneggiatura, secondo le regole del formato Fountain.",
+    "body": [
+      "ScripToti è un editor di sceneggiature che funziona nel browser e si può installare come app. Scrivi testo semplice: ScripToti riconosce intestazioni di scena, personaggi, dialoghi e transizioni e li impagina automaticamente sul foglio A4, pronto per il PDF.",
+      "Il file che salvi è un normale file `.fountain`: testo leggibile da qualunque programma, con commenti, revisioni e impostazioni conservati in un blocco nascosto in fondo.",
+      "Va bene anche per soggetti e trattamenti: il testo che non è una scena o un dialogo è Azione, e si può giustificare, centrare, rientrare e scrivere con interlinea 1,5.",
+      "## Da dove partire",
+      "- Apri il menu **Aiuto → Legenda Fountain** per vedere come si scrive ogni tipo di testo.",
+      "- Premi [[Tab]] per cambiare il tipo del paragrafo in cui ti trovi.",
+      "- Accendi **Aiuto → Controllo della sintassi** per ricevere suggerimenti mentre scrivi.",
+      "- Chiedi qualunque cosa a **Aiuto → Chiedi a ScripToti**."
+    ]
+  },
+  "nuovo-apri": {
+    "title": "Nuovo documento, apri, schede",
+    "keys": "nuovo documento aprire apri file progetto schede tab chiudere chiudi progetto recenti più progetti insieme",
+    "q": [
+      "come creo un nuovo copione",
+      "come apro un file",
+      "come chiudo un progetto",
+      "posso aprire più copioni",
+      "apri recenti"
+    ],
+    "short": "File → Nuovo documento crea un copione vuoto; File → Apri… ([[Mod+O]]) apre un .fountain. Ogni progetto ha la sua scheda sotto i menu; la × la chiude.",
+    "body": [
+      "**File → Nuovo documento** crea un copione vuoto. **File → Apri…** ([[Mod+O]]) apre un file `.fountain` o `.txt` dal computer.",
+      "Ogni copione aperto ha una scheda sotto la barra dei menu: cliccala per passare da un progetto all’altro. Testo, cursore, annulla, ricerca e commenti restano separati per ogni scheda.",
+      "**File → Chiudi progetto** ([[Alt+Shift+W]]) o la × sulla scheda chiude il copione. Se ci sono modifiche non salvate ScripToti chiede: Salva, Non salvare o Annulla.",
+      "**File → Apri recenti…** mostra gli ultimi 20 copioni. «Apri file» rilegge il file originale; «Apri copia» riapre la copia conservata nel browser.",
+      "I progetti lasciati aperti tornano alla riapertura dell’app; quelli chiusi no."
+    ]
+  },
+  "rinomina-file": {
+    "title": "Cambiare nome al file",
+    "keys": "rinomina rinominare nome file cambiare nome titolo del file nome in alto",
+    "q": [
+      "come cambio il nome del file",
+      "rinominare il copione",
+      "come rinomino il file"
+    ],
+    "short": "Clicca il nome del file in alto al centro, scrivi il nuovo nome e premi Invio (Esc annulla). Oppure File → Rinomina….",
+    "body": [
+      "Come in Google Docs: clicca il **nome del file in alto al centro**, scrivi il nuovo nome e premi **Invio**. **Esc** lascia il nome com’era. Lo stesso si fa da **File → Rinomina…**.",
+      "Se il copione è un file sul computer, viene rinominato anche lì, nella stessa cartella, e continua a salvarsi con il nuovo nome. Il browser può chiedere il permesso di modificare il file: consenti.",
+      "Per sicurezza ScripToti non accetta il nome di un altro copione che hai aperto con ScripToti: così nessun file viene mai sostituito. Per una copia con un altro nome usa **File → Salva con nome…**."
+    ]
+  },
+  "installare": {
+    "title": "Installare ScripToti come app",
+    "keys": "installa app pwa icona desktop dock doppio clic offline senza internet aggiorna aggiornamento versione",
+    "q": [
+      "come installo scriptoti",
+      "posso usarlo senza internet",
+      "come aggiorno",
+      "doppio clic sui file fountain"
+    ],
+    "short": "In Chrome o Edge usa File → Installa ScripToti: avrai un’icona e una finestra propria, funziona anche offline e apre i .fountain con un doppio clic.",
+    "body": [
+      "In Chrome o Edge compare **File → Installa ScripToti** (o l’icona di installazione nella barra degli indirizzi). Dopo l’installazione ScripToti ha la sua icona, una finestra propria e funziona anche senza internet.",
+      "Quando esce una nuova versione compare la barra «È disponibile una nuova versione di ScripToti» con **Aggiorna**. L’aggiornamento conserva i progetti aperti. Puoi controllare in ogni momento con **File → Controlla aggiornamenti**: utile se l’app installata resta aperta a lungo.",
+      "Non cancellare i dati del sito dal browser per aggiornare: lì ci sono le copie di recupero."
+    ]
+  },
+  "fountain-base": {
+    "title": "Come funziona Fountain",
+    "keys": "fountain sintassi formato regole tipi di testo riconoscimento automatico markdown",
+    "q": [
+      "che cos è fountain",
+      "come riconosce i tipi di testo",
+      "regole di scrittura"
+    ],
+    "short": "Fountain riconosce il tipo di testo da come lo scrivi: INT./EST. per le scene, nome in MAIUSCOLO per i personaggi, (tra parentesi) sotto il nome per le parentetiche. Con [[Tab]] o con un simbolo davanti lo forzi.",
+    "body": [
+      "Fountain è un formato di testo semplice per sceneggiature. Non serve scegliere stili da un menu: ScripToti capisce il tipo di ogni paragrafo da come è scritto.",
+      "- Una riga che inizia con `INT.`, `EST.`, `EXT.` o `I/E` è un’**intestazione di scena**; anche `MONTAGE` e `MONTAGGIO`.",
+      "- Un nome tutto in **MAIUSCOLO** seguito da una riga di testo è un **personaggio** con il suo **dialogo**.",
+      "- Una riga tra parentesi sotto il nome è una **parentetica**.",
+      "- Una riga in maiuscolo che finisce con `TO:` è una **transizione**.",
+      "- Tutto il resto è **Azione**.",
+      "Paragrafi diversi vanno separati da una riga vuota (ScripToti la inserisce quando premi [[Invio]]).",
+      "Se il riconoscimento automatico non basta, puoi forzare il tipo con [[Tab]] oppure con un simbolo all’inizio della riga: vedi «Forzare il tipo di testo»."
+    ]
+  },
+  "scena": {
+    "title": "Intestazione di scena (slugline)",
+    "keys": "slugline intestazione scena location luogo int est ext interno esterno giorno notte heading numero di scena nuova scena cambio luogo",
+    "q": [
+      "come scrivo una scena",
+      "come si scrive la slugline",
+      "interno esterno",
+      "come indico giorno e notte",
+      "quando serve una nuova scena",
+      "la slugline non viene riconosciuta",
+      "numeri di scena"
+    ],
+    "short": "Scrivi INT. o EST. (EXT.), il luogo e il momento separati da un trattino: «INT. CUCINA - NOTTE». ScripToti la riconosce e la mette in maiuscolo. Ogni cambio di luogo o di tempo apre una nuova scena.",
+    "body": [
+      "L’intestazione di scena dice dove e quando avviene la scena:",
+      "> INT. CUCINA DI ANNA - NOTTE",
+      "- **INT.** interno, **EST.** (o **EXT.**) esterno, **INT./EST.** o **I/E** quando è entrambe le cose.",
+      "- Poi il **luogo**, dal generale al particolare: `EST. VILLA ROSSI - GIARDINO`.",
+      "- Poi, dopo un trattino, il **momento**: GIORNO, NOTTE, ALBA, TRAMONTO, CONTINUO, PIÙ TARDI. I suggerimenti seguono la lingua del copione: GIORNO/NOTTE se le scene sono in italiano, DAY/NIGHT se sono in inglese.",
+      "Basta scrivere `int.` all’inizio della riga: ScripToti la riconosce e la mette in maiuscolo. Anche `MONTAGGIO` e `MONTAGE` sono intestazioni, perché segnano un cambio di situazione: quando premi [[Invio]] ScripToti aggiunge da solo il punto nascosto (`.MONTAGGIO`), così anche gli altri programmi Fountain la leggono come scena. Le inquadrature come `ANGLE ON` o `SU MARTA` invece non sono scene nuove: vedi **Inquadrature**. Per un’intestazione diversa (per esempio «SOGNO DI ANNA») metti un punto davanti: `.SOGNO DI ANNA`.",
+      "## Quando serve una nuova scena",
+      "Ogni volta che cambia il **luogo** o il **tempo** (il giorno dopo, più tardi, la sera stessa) serve una nuova intestazione. «Il giorno dopo» scritto dentro l’Azione è un errore frequente: il Controllo della sintassi lo segnala.",
+      "## Numeri di scena",
+      "**Vista → Numeri di scena** ([[Alt+Shift+N]]) li mostra ai margini. Per fissare un numero a mano scrivilo tra `#` in fondo: `INT. CUCINA - NOTTE #12A#`.",
+      "Mentre scrivi, ScripToti suggerisce i luoghi già usati nel copione: [[Invio]] o un clic per accettare, [[Esc]] per ignorare."
+    ]
+  },
+  "azione": {
+    "title": "Azione",
+    "keys": "azione descrizione action paragrafo testo normale descrivere cosa succede",
+    "q": [
+      "come scrivo l azione",
+      "che cos è l azione",
+      "descrizione della scena"
+    ],
+    "short": "L’Azione è il testo normale: descrive al presente ciò che si vede e si sente. Ogni paragrafo è separato da una riga vuota; se una riga in maiuscolo diventa per sbaglio un personaggio, mettile davanti «!».",
+    "body": [
+      "L’Azione descrive al presente ciò che si vede e si sente: luoghi, gesti, suoni. È tutto il testo che non è una scena, un personaggio, un dialogo o una transizione.",
+      "> Anna apre la finestra. Il rumore del traffico invade la stanza.",
+      "Tieni i paragrafi brevi: in sceneggiatura un paragrafo è più o meno un’inquadratura.",
+      "La prima lettera di un paragrafo d’Azione, di ogni riga di dialogo e quella dopo un punto diventano maiuscole da sole mentre scrivi (non dopo i puntini di sospensione e abbreviazioni come «sig.» o «dott.»). Se non la vuoi, premi subito [[Cmd/Ctrl+Z]] e torna minuscola. «E’» scritta da sola diventa «È».",
+      "Una riga che comincia con un nome in maiuscolo, una parentesi e poi testo minuscolo («FABIO (36) lotta con il cane.») è Azione: il testo resta come lo scrivi.",
+      "Una riga di Azione scritta tutta in maiuscolo (per esempio un cartello) può essere scambiata per un personaggio: mettile davanti `!` per forzarla come Azione.",
+      "Solo l’Azione si può giustificare, centrare, allineare a destra e rientrare (menu Formato)."
+    ]
+  },
+  "personaggio": {
+    "title": "Personaggio e dialogo",
+    "keys": "personaggio character nome dialogo battuta parlare chi parla maiuscolo cue riconoscimento nome",
+    "q": [
+      "come scrivo un dialogo",
+      "come faccio parlare un personaggio",
+      "il nome del personaggio",
+      "come esco dal dialogo",
+      "come vado a capo nella battuta"
+    ],
+    "short": "Scrivi il nome in MAIUSCOLO su una riga, premi [[Invio]] e scrivi la battuta. [[Invio]] chiude la battuta e passa all’Azione; [[Shift+Invio]] va a capo nella stessa battuta. Se il nome non è riconosciuto premi [[Tab]] o mettigli davanti «@».",
+    "body": [
+      "Scrivi il nome del personaggio in **MAIUSCOLO** su una riga da sola, premi [[Invio]] e scrivi la battuta:",
+      "> MARCO\n> Non ho tempo per questo.",
+      "- [[Invio]] nel dialogo chiude la battuta e passa all’**Azione**; a metà riga, il testo dopo il cursore diventa Azione.",
+      "- [[Shift+Invio]] va a capo dentro la stessa battuta.",
+      "- [[Invio]] sul nome porta alla riga della battuta. Se la battuta non c’è ancora, il nome resta personaggio finché scrivi; se salvi senza battuta, alla riapertura torna Azione.",
+      "- [[Backspace]] all’inizio di un’Azione che sta sotto un nome in maiuscolo la unisce al nome: diventa la sua battuta.",
+      "- Un nome con una sola lettera maiuscola resta Azione: servono almeno due lettere.",
+      "- Se il nome non viene riconosciuto (per esempio contiene numeri o è in minuscolo), premi [[Tab]] fino a «Character» o scrivi `@` davanti: `@McQueen`.",
+      "Mentre scrivi il nome, ScripToti suggerisce i personaggi già presenti nel copione, segnala i possibili refusi e indica dove ognuno compare per la prima volta («Apparso prima a pag. 3 scena 2»).",
+      "Quando lo stesso personaggio riprende a parlare dopo un’azione, ScripToti aggiunge da solo (CONT’D); quando una battuta prosegue alla pagina dopo, aggiunge (MORE) e (CONT’D)."
+    ]
+  },
+  "parentetica": {
+    "title": "Parentetica",
+    "keys": "parentetica parentetico parentesi wryly indicazione recitazione tono sottovoce ridendo accanto al nome sotto il nome",
+    "q": [
+      "come scrivo una parentetica",
+      "dove va il parentetico",
+      "parentetico accanto al nome",
+      "indicazione di recitazione",
+      "come scrivo sottovoce"
+    ],
+    "short": "La parentetica va su una riga a sé, SOTTO il nome e sopra la battuta: MARCO / (sottovoce) / battuta. Accanto al nome vanno solo le estensioni come (V.O.) e (O.S.).",
+    "body": [
+      "La parentetica è una breve indicazione su come si dice la battuta. Va su una riga a sé, **sotto il nome** e sopra la battuta:",
+      "> MARCO\n> (sottovoce)\n> Non svegliarla.",
+      "- Deve essere **breve**: poche parole. Azioni più lunghe si scrivono come Azione, interrompendo la battuta.",
+      "- **Non chiude mai** una battuta: se dopo la battuta il personaggio fa qualcosa, è Azione.",
+      "- **Non va accanto al nome**: lì vanno solo le estensioni tecniche come (V.O.) e (O.S.). «MARCO (sottovoce)» è un errore frequente: il Controllo della sintassi lo corregge con un clic.",
+      "Per inserirla: dopo il nome premi [[Invio]] e scrivi `(`: compare subito anche la parentesi chiusa, con il cursore in mezzo. Oppure premi [[Tab]] fino a «Parentesi». Quando hai finito premi [[Invio]] e torni al dialogo; se scrivi tu `)`, il cursore salta oltre quella che c’è già. [[Backspace]] su una parentetica vuota la toglie."
+    ]
+  },
+  "estensioni": {
+    "title": "V.O., O.S. e altre estensioni",
+    "keys": "vo v.o. os o.s. oc o.c. voce fuori campo voice over off screen fuori scena narratore pensieri telefono estensione cont d more f.c. differenza",
+    "q": [
+      "differenza tra vo e os",
+      "quando si usa v.o.",
+      "quando si usa o.s.",
+      "come indico la voce fuori campo",
+      "voce al telefono",
+      "narratore",
+      "cosa significa cont d",
+      "cosa significa more",
+      "come indico un pensiero"
+    ],
+    "short": "(V.O.) = la voce non appartiene al luogo della scena: narratore, pensieri, telefono, registrazioni. (O.S.) = il personaggio è nel luogo ma non si vede, per esempio dall’altra stanza. Si scrivono accanto al nome: «MARCO (V.O.)».",
+    "body": [
+      "Le estensioni si scrivono **accanto al nome**, sulla stessa riga:",
+      "> MARCO (V.O.)\n> Quell’estate cambiò tutto.",
+      "- **(V.O.)** voice over, voce fuori campo: la voce **non appartiene al luogo** della scena. Narratore, pensieri, ricordi, voce al telefono o alla radio, messaggi registrati.",
+      "- **(O.S.)** off screen: il personaggio **è nel luogo** della scena ma non è inquadrato. Parla dall’altra stanza, da dietro una porta.",
+      "- **(O.C.)** off camera: sinonimo di O.S., usato in televisione.",
+      "- Nella tradizione italiana si trova anche **(F.C.)** fuori campo (= O.S.) e **(V.F.C.)** voce fuori campo (= V.O.).",
+      "## Il trucco per non sbagliare",
+      "Chiediti: **potrebbe entrare in inquadratura?** Se sì (è lì, dietro la porta) è O.S.; se no (è altrove, è un pensiero, è al telefono) è V.O.",
+      "## Aggiunte automatiche",
+      "(CONT’D) e (MORE) non si scrivono a mano: ScripToti li aggiunge quando lo stesso personaggio riprende a parlare dopo un’azione o quando una battuta continua alla pagina successiva."
+    ]
+  },
+  "transizioni": {
+    "title": "Transizioni",
+    "keys": "transizione transizioni cut to stacco stacco su dissolvenza fade out fade in smash cut a destra destra italiano",
+    "q": [
+      "come scrivo una transizione",
+      "come scrivo stacco su",
+      "dissolvenza non va a destra",
+      "cut to",
+      "transizioni in italiano",
+      "fade out"
+    ],
+    "short": "Scrivi la transizione su una riga da sola, anche in minuscolo («cut to:», «dissolvenza a:»), e premi Invio: ScripToti la mette in maiuscolo e a destra. FADE IN: e FINE FLASHBACK restano a sinistra.",
+    "body": [
+      "Le transizioni indicano il passaggio da una scena all’altra e stanno a **destra** del foglio.",
+      "- Scrivi la transizione su una riga da sola, anche in minuscolo, e premi [[Invio]]: ScripToti la mette in maiuscolo, aggiunge i due punti o il punto finale e la porta a destra. Nel file mette `>` davanti, il segno di Fountain per le transizioni, così anche gli altri programmi la leggono uguale.",
+      "> cut to:\n> dissolvenza a:\n> fade out",
+      "- Riconosce: CUT TO:, SMASH CUT TO:, MATCH CUT TO:, JUMP CUT TO:, DISSOLVE TO:, FADE TO:, FADE OUT., FADE TO BLACK., STACCO SU:, STACCO NETTO:, TAGLIO SU:, DISSOLVENZA A:, DISSOLVENZA INCROCIATA:, DISSOLVENZA IN NERO., DISSOLVENZA IN CHIUSURA., CHIUSURA IN NERO.",
+      "- Per una transizione diversa metti tu `>` davanti: `> SFUMA SU:`.",
+      "- Dopo la transizione ScripToti lascia una riga vuota: se segue subito altro testo, la transizione viene scambiata per il nome di un personaggio.",
+      "- `FADE IN:` (o `DISSOLVENZA IN APERTURA:`) all’inizio del copione e `FINE FLASHBACK` (o `END FLASHBACK`, `TORNA AL PRESENTE`) non sono transizioni: restano a **sinistra**, come Azione. Anche queste, con [[Invio]], vanno in maiuscolo da sole.",
+      "Usa le transizioni con parsimonia: tra una scena e l’altra lo stacco è implicito.",
+      "Il Controllo della sintassi riconosce le transizioni scritte senza `>` e le corregge con un clic."
+    ]
+  },
+  "inquadrature": {
+    "title": "Inquadrature (ANGLE ON, SU…)",
+    "keys": "inquadratura inquadrature angle on close on su dettaglio insert pov shot punto di vista back to scene",
+    "q": [
+      "come scrivo angle on",
+      "come scrivo su marta",
+      "angle on è una nuova scena",
+      "inquadratura letta come personaggio",
+      "come indico un punto di vista"
+    ],
+    "short": "Un’inquadratura (ANGLE ON, CLOSE ON, SU MARTA) non è una scena nuova: è Azione, dentro la scena in corso. Premi Invio a fine riga e ScripToti mette in maiuscolo la parola chiave.",
+    "body": [
+      "Un’inquadratura sposta lo sguardo **dentro la stessa scena**: non ha numero di scena e vale il luogo e il momento dell’ultima intestazione. Per lo standard, e per Fountain, è **Azione**.",
+      "> angle on Tim reading a book",
+      "Con [[Invio]] a fine riga diventa `ANGLE ON Tim reading a book`: in maiuscolo va solo la parola chiave. Vale per ANGLE ON, CLOSE ON, WIDE ON, INSERT e POV.",
+      "- **SU** è anche una parola comune («su un tavolo…»): diventa inquadratura solo se dopo c’è un personaggio del copione. «su marta» diventa `SU MARTA`.",
+      "- La forma da manuale è l’inquadratura tutta in maiuscolo, con la descrizione sotto. Quando la riga è tutta in maiuscolo ScripToti aggiunge `!` davanti (in pagina non si vede), perché altrimenti con del testo subito sotto verrebbe letta come il nome di un personaggio.",
+      "> ANGLE ON TIM\n>\n> Tim legge un libro.",
+      "- Il Controllo della sintassi segnala le inquadrature lette come personaggio e le corregge con un clic.",
+      "Se il copione ha i numeri di scena bloccati e usava ANGLE ON come scena, quella scena ora risulta **omessa**: le altre tengono il loro numero."
+    ]
+  },
+  "altri-tipi": {
+    "title": "Testo centrato, versi, doppio dialogo, note",
+    "keys": "centrato centrare titolo versi canzone lirica doppio dialogo simultaneo contemporaneo note nota boneyard commento nascosto interruzione di pagina salto pagina sezioni sinossi",
+    "q": [
+      "come centro un titolo",
+      "come scrivo una canzone",
+      "due personaggi parlano insieme",
+      "dialogo simultaneo",
+      "come scrivo una nota che non si stampa",
+      "come vado a pagina nuova"
+    ],
+    "short": "Centrato: > TESTO <. Versi: ~ davanti. Doppio dialogo: ^ dopo il secondo nome. Note invisibili: [[nota]]. Nuova pagina: === su una riga.",
+    "body": [
+      "- **Testo centrato**: `> FINE <`. Per titoli e sottotitoli nel corpo del testo puoi anche usare Formato → Centra sull’Azione, con il grassetto.",
+      "- **Versi, canzoni**: `~` all’inizio di ogni riga, in corsivo.",
+      "- **Doppio dialogo** (due personaggi parlano insieme): scrivi le due battute una dopo l’altra e metti `^` dopo il secondo nome:",
+      "> ANNA\n> Sì!\n>\n> MARCO ^\n> No!",
+      "- **Nota che non si stampa**: `[[da controllare]]`.",
+      "- **Testo escluso** (boneyard): tutto ciò che è tra `/*` e `*/` resta nel file ma non appare.",
+      "- **Interruzione di pagina**: `===` su una riga da sola.",
+      "- Le righe che iniziano con `#` (sezioni) o `=` (sinossi) servono a organizzare e non vengono stampate."
+    ]
+  },
+  "forzare": {
+    "title": "Forzare il tipo di testo (Tab e simboli)",
+    "keys": "tab forzare tipo cambiare tipo simboli at chiocciola punto esclamativo maggiore tilde marcatori shift tab",
+    "q": [
+      "come cambio tipo di testo",
+      "a cosa serve tab",
+      "come forzo un personaggio",
+      "come forzo l azione",
+      "simboli fountain",
+      "il punto esclamativo si vede"
+    ],
+    "short": "[[Tab]] cambia il tipo del paragrafo (Scena → Azione → Personaggio → Parentetica → Dialogo → Transizione); [[Shift+Tab]] torna indietro. In alternativa un simbolo davanti: . scena, ! azione, @ personaggio, > transizione, ~ versi.",
+    "body": [
+      "[[Tab]] fa ruotare il tipo del paragrafo in cui si trova il cursore: **Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione**. [[Shift+Tab]] va nel senso opposto. Il nome del nuovo tipo compare per un attimo nel paragrafo.",
+      "In alternativa scrivi un simbolo all’inizio della riga. Il simbolo resta nel file ma non si vede sul foglio:",
+      "- `.` intestazione di scena: `.SOGNO DI ANNA`",
+      "- `!` azione: `!BOOM.`",
+      "- `@` personaggio: `@McQueen`",
+      "- `>` transizione: `> STACCO SU:`",
+      "- `> testo <` centrato",
+      "- `~` versi",
+      "Scrivere `!` all’inizio di un personaggio o di una scena forzati li trasforma in Azione."
+    ]
+  },
+  "enfasi": {
+    "title": "Grassetto, corsivo, sottolineato, maiuscole",
+    "keys": "grassetto corsivo sottolineato bold italic underline asterischi enfasi maiuscolo minuscolo maiuscole caps cambia maiuscole",
+    "q": [
+      "come metto il grassetto",
+      "come scrivo in corsivo",
+      "come sottolineo",
+      "come trasformo in maiuscolo",
+      "asterischi nel testo"
+    ],
+    "short": "[[Mod+B]] grassetto, [[Mod+I]] corsivo, [[Mod+U]] sottolineato. [[Mod+Shift+K]] alterna MAIUSCOLO e minuscolo rispettando i nomi propri. Nel file diventano **testo**, *testo*, _testo_.",
+    "body": [
+      "- [[Mod+B]] **grassetto**, [[Mod+I]] corsivo, [[Mod+U]] sottolineato: sul testo selezionato o su quello che scrivi dopo.",
+      "- [[Mod+Shift+K]] alterna MAIUSCOLO e minuscolo «intelligente»: rispetta i nomi dei personaggi, i nomi propri già scritti nel copione, le maiuscole di inizio frase e alcune sigle.",
+      "Nel file Fountain l’enfasi è scritta con simboli: `**grassetto**`, `*corsivo*`, `_sottolineato_`. Per scrivere un asterisco vero usa `\\*`."
+    ]
+  }
+}

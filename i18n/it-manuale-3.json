@@ -1,0 +1,169 @@
+{
+  "segnala": {
+    "title": "Segnalare un problema o un suggerimento",
+    "keys": "segnala segnalare bug errore problema suggerimento idea domanda contatto assistenza supporto email feedback scrivi sviluppatore",
+    "q": [
+      "come segnalo un bug",
+      "ho trovato un errore",
+      "voglio dare un suggerimento",
+      "come contatto l assistenza",
+      "come scrivo allo sviluppatore"
+    ],
+    "short": "Aiuto → Scrivi allo sviluppatore…: descrivi cosa è successo; l’email è facoltativa, serve solo se vuoi essere ricontattato. Ogni segnalazione viene letta e valutata.",
+    "body": [
+      "**Aiuto → Scrivi allo sviluppatore…** apre un breve modulo: scegli se è un problema, un suggerimento o una domanda e descrivi cosa è successo, cosa ti aspettavi e, se puoi, i passaggi per ripeterlo.",
+      "- L’**email è facoltativa**: lasciala solo se vuoi essere ricontattato per chiarimenti o per una risposta.",
+      "- Vengono allegati, se vuoi, i **dati tecnici** (versione, browser, sistema). Il testo dei copioni non viene mai inviato.",
+      "- Senza connessione la segnalazione resta salvata e parte da sola appena possibile.",
+      "Le segnalazioni arrivano al server di salvatorefrisina.com e non vengono condivise con altri."
+    ]
+  },
+  "scorciatoie": {
+    "title": "Scorciatoie da tastiera",
+    "keys": "scorciatoie tasti rapidi tastiera comandi shortcut elenco",
+    "q": [
+      "quali sono le scorciatoie",
+      "tasti rapidi",
+      "elenco comandi"
+    ],
+    "short": "Le principali: [[Mod+S]] salva, [[Mod+Z]] annulla, [[Mod+F]] cerca, [[Mod+B]]/[[Mod+I]]/[[Mod+U]] enfasi, [[Tab]] cambia tipo, [[Mod+P]] PDF. L’elenco completo è in questa voce del manuale.",
+    "body": [
+      "## File",
+      "- [[Mod+O]] Apri · [[Mod+S]] Salva · [[Mod+Shift+S]] Salva con nome · [[Alt+Shift+W]] Chiudi progetto · [[Mod+P]] Esporta PDF",
+      "## Scrittura",
+      "- [[Tab]] / [[Shift+Tab]] cambia tipo di testo · [[Invio]] nuovo paragrafo · [[Shift+Invio]] a capo nello stesso paragrafo",
+      "- [[Mod+Z]] Annulla · [[Mod+Shift+Z]] Ripeti",
+      "- [[Mod+B]] grassetto · [[Mod+I]] corsivo · [[Mod+U]] sottolineato · [[Mod+Shift+K]] maiuscolo/minuscolo",
+      "- [[Mod+F]] Cerca · [[Mod+Alt+F]] Trova e sostituisci",
+      "## Formato",
+      "- [[Alt+Shift+L]] sinistra · [[Alt+Shift+E]] centra · [[Alt+Shift+J]] giustifica · [[Alt+Shift+I]] rientro",
+      "## Revisione",
+      "- [[Alt+Shift+R]] registra · [[Alt+Shift+V]] mostra evidenziazioni · [[Alt+Shift+H]] evidenziatore · [[Alt+Shift+G]] gomma · [[Alt+Shift+A]] attori",
+      "## Commenti e vista",
+      "- [[Mod+Alt+M]] aggiungi commento · [[Alt+Shift+C]] commenti · [[Alt+Shift+N]] numeri di scena · [[Alt+Shift+D]] tema scuro",
+      "## Aiuto",
+      "- [[F1]] Chiedi a ScripToti"
+    ]
+  },
+  "p-personaggio": {
+    "title": "Il nome del personaggio non viene riconosciuto",
+    "keys": "nome personaggio non riconosciuto resta a sinistra non va al centro maiuscolo character azione",
+    "q": [
+      "il nome del personaggio resta a sinistra",
+      "non riconosce il personaggio",
+      "scrivo il nome ma non diventa personaggio"
+    ],
+    "short": "Il nome deve essere in MAIUSCOLO (almeno due lettere) e seguito dalla battuta su una nuova riga. Se ancora non va, premi [[Tab]] fino a «Character» o scrivi «@» davanti al nome.",
+    "body": [
+      "- Scrivi il nome **tutto in maiuscolo**, almeno due lettere, e premi [[Invio]]: la riga sotto è la battuta.",
+      "- Il nome deve stare su una riga **da sola**, preceduta da una riga vuota.",
+      "- Nomi con numeri, segni particolari o lettere minuscole: premi [[Tab]] fino a «Character» oppure scrivi `@` davanti (`@Dr. House`).",
+      "Vedi anche «Personaggio e dialogo»."
+    ]
+  },
+  "p-dialogo": {
+    "title": "Non riesco a uscire dal dialogo",
+    "keys": "uscire dal dialogo resto nel dialogo azione dopo dialogo invio maiusc shift a capo seconda riga",
+    "q": [
+      "non riesco a uscire dal dialogo",
+      "come esco dal dialogo",
+      "esco dalla battuta",
+      "come torno all azione dopo una battuta",
+      "come vado a capo dentro la battuta"
+    ],
+    "short": "Premi [[Invio]]: chiude la battuta e passa all’Azione. Per andare a capo restando nella stessa battuta usa [[Shift+Invio]].",
+    "body": [
+      "Alla fine della battuta premi [[Invio]]: il dialogo si chiude e il cursore passa all’**Azione**. Per una seconda riga nella stessa battuta premi [[Shift+Invio]]. In alternativa premi [[Tab]] fino ad «Azione»."
+    ]
+  },
+  "p-slugline": {
+    "title": "La scena non diventa slugline",
+    "keys": "slugline non riconosciuta scena non maiuscola int non funziona interno",
+    "q": [
+      "scrivo int e non riconosce la slugline",
+      "la scena resta minuscola",
+      "interno non funziona"
+    ],
+    "short": "Inizia la riga con «INT.» o «EST.» (anche in minuscolo: «int.»), su una riga da sola preceduta da una riga vuota. «INTERNO» per esteso non viene riconosciuto: il Controllo della sintassi lo corregge.",
+    "body": [
+      "- La riga deve iniziare con `INT.`, `EST.`, `EXT.`, `INT./EST.` o `I/E`, anche in minuscolo: diventa maiuscola da sola.",
+      "- Deve stare su una riga da sola, con una riga vuota prima.",
+      "- «INTERNO» e «ESTERNO» per esteso non vengono riconosciuti: usa le abbreviazioni, oppure un punto davanti (`.INTERNO CASA`).",
+      "- Puoi sempre forzarla con [[Tab]] fino a «Scena»."
+    ]
+  },
+  "p-transizione": {
+    "title": "La transizione non va a destra",
+    "keys": "transizione non va a destra stacco dissolvenza resta a sinistra diventa personaggio",
+    "q": [
+      "la dissolvenza non va a destra",
+      "stacco su resta a sinistra",
+      "la transizione diventa un personaggio"
+    ],
+    "short": "Scrivi la transizione su una riga da sola e premi Invio: ScripToti la riconosce, anche in minuscolo, e la porta a destra. Per una transizione che non conosce metti «>» davanti: «> SFUMA SU:».",
+    "body": [
+      "Le transizioni più comuni (CUT TO:, DISSOLVENZA A:, STACCO SU:, FADE OUT. e le altre elencate in **Transizioni**) vengono riconosciute quando premi [[Invio]] alla fine della riga, anche se le hai scritte in minuscolo. Se la riga c’era già da prima, mettiti alla fine e premi [[Invio]], oppure usa il Controllo della sintassi. Per una transizione diversa scrivi `>` davanti: `> SFUMA SU:`.",
+      "Se dopo la transizione non c’è una riga vuota, viene scambiata per il nome di un personaggio. Il Controllo della sintassi corregge entrambi i casi."
+    ]
+  },
+  "p-esclamativo": {
+    "title": "Si vede un simbolo (! @ > .) nel testo",
+    "keys": "punto esclamativo visibile simbolo visibile chiocciola marcatore si vede",
+    "q": [
+      "si vede il punto esclamativo",
+      "vedo la chiocciola davanti al nome",
+      "simbolo strano nel testo"
+    ],
+    "short": "I simboli di Fountain spariscono solo all’inizio della riga. Se si vedono, sono in mezzo al testo o doppi (es. «@!»): cancellali e usa [[Tab]] per cambiare tipo.",
+    "body": [
+      "`!`, `@`, `.`, `>` e `~` sono invisibili solo come **primo carattere** della riga. Se ne vedi uno, probabilmente è in mezzo al testo o ce ne sono due. Cancellalo e usa [[Tab]] per scegliere il tipo.",
+      "Scrivere `!` all’inizio di un personaggio o di una scena forzati li trasforma in Azione senza lasciare simboli visibili."
+    ]
+  },
+  "p-pagine": {
+    "title": "Pagine vuote o pagine «1b» che non spariscono",
+    "keys": "pagina vuota pagine vuote non sparisce ultima pagina 1b 1c pagine aggiuntive revisione blocco",
+    "q": [
+      "ho una pagina vuota",
+      "l ultima pagina vuota non sparisce",
+      "perché ci sono pagine 1b"
+    ],
+    "short": "Le pagine vuote nascono da righe vuote: cancellale con [[Backspace]]. Le pagine 1b, 1c… sono pagine aggiuntive del blocco di produzione: se non ti servono usa Revisione → Chiudi le revisioni e sblocca la numerazione.",
+    "body": [
+      "- Una pagina vuota contiene righe vuote: portati sopra e cancellale con [[Backspace]] o [[Canc]]; la pagina sparisce da sola.",
+      "- Con **pagine e scene bloccate** (Revisione) le pagine originali restano anche se vuote, per non cambiare la numerazione, e il testo in più va in pagine 1b, 1c… Se non stai preparando una revisione di produzione, usa Revisione → Chiudi le revisioni e sblocca la numerazione."
+    ]
+  },
+  "p-salvataggio": {
+    "title": "Il salvataggio chiede il permesso o non riesce",
+    "keys": "salvataggio non riesce permesso autorizza premi salva riconnetti file da salvare errore salvataggio",
+    "q": [
+      "premi salva per autorizzare",
+      "il file non si salva",
+      "file da riconnettere",
+      "salvataggio da riprovare"
+    ],
+    "short": "Consenti al browser di modificare il file quando te lo chiede, meglio con «Consenti a ogni visita». Alla riapertura il file si ricollega da solo; se serve il permesso, il browser lo chiede al primo tasto o clic. Il testo intanto è al sicuro nel recupero del browser.",
+    "body": [
+      "Per sicurezza il browser chiede il permesso di modificare un file. Se nel messaggio di Chrome scegli **Consenti a ogni visita**, alla riapertura di ScripToti i file si ricollegano da soli, senza domande.",
+      "Se il permesso non c’è più, il browser lo chiede al primo tasto o clic nel copione: rispondi **Consenti**. Puoi anche premere **Salva** ([[Mod+S]]) quando in alto a destra compare «premi Salva per autorizzare» o «da riconnettere».",
+      "Il testo non si perde: intanto è conservato nel recupero del browser (File → Recupero…)."
+    ]
+  },
+  "p-condivisione": {
+    "title": "La condivisione non si collega",
+    "keys": "condivisione non funziona collegamento rosso non in linea non arrivano le modifiche",
+    "q": [
+      "la condivisione non funziona",
+      "non vedo le modifiche dell altro",
+      "resta in collegamento"
+    ],
+    "short": "Guarda il LED: se è rosso controlla la connessione o la VPN. Al primo collegamento serve internet; le modifiche arrivano in circa un secondo. Se dice «non più disponibile», la condivisione è stata eliminata.",
+    "body": [
+      "- **Rosso, non in linea**: manca la connessione; le modifiche partiranno da sole.",
+      "- **«il sito blocca questa rete (VPN?)»**: spegni la VPN o escludi il sito.",
+      "- **«collegamento…»** a lungo: la prima apertura su un computer richiede internet.",
+      "- **«Condivisione non più disponibile»**: il copione non è più condiviso sul server; il file resta una copia normale."
+    ]
+  }
+}
