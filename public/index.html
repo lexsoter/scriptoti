@@ -3,7 +3,7 @@
 <head>
 <meta name="scriptoti-edition" content="online">
   <meta charset="utf-8">
-  <meta name="scriptoti-version" content="0.28.0">
+  <meta name="scriptoti-version" content="0.28.1">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -372,6 +372,9 @@
 .menu-end { justify-content:flex-end; }
 .topbar .file-group { justify-content:center; min-width:0; overflow:hidden; }
 .topbar .filename { text-align:center; max-width:100%; width:100%; font-weight:550; }
+.topbar .filename.renamable { cursor:text; border-radius:4px; }
+.topbar .filename.renamable:hover { box-shadow:inset 0 0 0 1px var(--line); }
+.topbar .filename-input { width:100%; max-width:320px; font:inherit; font-weight:550; text-align:center; color:inherit; background:transparent; border:1px solid var(--line); border-radius:4px; padding:1px 6px; }
 .menu-start .brand { margin-right:0; flex:none; }
 .menu-start .menu-bar { min-width:0; }
 @media(max-width:1350px) {
@@ -522,7 +525,7 @@
         <details class="menu-dropdown"><summary>File</summary><div class="menu-panel" id="fileMenu">
           <button id="newBtn">Nuovo documento</button>
           <button id="openBtn" data-shortcut="Mod+O">Apri…</button><button id="recentBtn">Apri recenti…</button><button id="saveBtn" data-shortcut="Mod+S">Salva</button>
-          <button id="newDraftBtn" data-shortcut="Mod+Maiusc+S">Salva con nome…</button><button id="closeProjectBtn" data-shortcut="Alt+Maiusc+W">Chiudi progetto</button><hr>
+          <button id="newDraftBtn" data-shortcut="Mod+Maiusc+S">Salva con nome…</button><button id="renameFileBtn">Rinomina…</button><button id="closeProjectBtn" data-shortcut="Alt+Maiusc+W">Chiudi progetto</button><hr>
           <button id="shareBtn">Condividi…</button><hr>
           <button id="printBtn" data-shortcut="Mod+P">Esporta PDF</button><button id="printRevisedBtn">Esporta PDF · sole pagine segnate</button><button id="installBtn" hidden>Installa ScripToti</button><button id="appUpdateBtn" hidden>Aggiorna</button>
         </div></details>
@@ -3368,6 +3371,13 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
         '**File → Chiudi progetto** ([[Alt+Shift+W]]) o la × sulla scheda chiude il copione. Se ci sono modifiche non salvate ScripToti chiede: Salva, Non salvare o Annulla.',
         '**File → Apri recenti…** mostra gli ultimi 20 copioni. «Apri file» rilegge il file originale; «Apri copia» riapre la copia conservata nel browser.',
         'I progetti lasciati aperti tornano alla riapertura dell’app; quelli chiusi no.'] },
+    { id: 'rinomina-file', section: 'inizio', title: 'Cambiare nome al file',
+      keys: 'rinomina rinominare nome file cambiare nome titolo del file nome in alto',
+      q: ['come cambio il nome del file', 'rinominare il copione', 'come rinomino il file'],
+      short: 'Clicca il nome del file in alto al centro, scrivi il nuovo nome e premi Invio (Esc annulla). Oppure File → Rinomina….',
+      body: ['Come in Google Docs: clicca il **nome del file in alto al centro**, scrivi il nuovo nome e premi **Invio**. **Esc** lascia il nome com’era. Lo stesso si fa da **File → Rinomina…**.',
+        'Se il copione è un file sul computer, viene rinominato anche lì, nella stessa cartella, e continua a salvarsi con il nuovo nome. Il browser può chiedere il permesso di modificare il file: consenti.',
+        'Per sicurezza ScripToti non accetta il nome di un altro copione che hai aperto con ScripToti: così nessun file viene mai sostituito. Per una copia con un altro nome usa **File → Salva con nome…**.'] },
     { id: 'installare', section: 'inizio', title: 'Installare ScripToti come app',
       keys: 'installa app pwa icona desktop dock doppio clic offline senza internet aggiorna aggiornamento versione',
       q: ['come installo scriptoti', 'posso usarlo senza internet', 'come aggiorno', 'doppio clic sui file fountain'],
@@ -4383,7 +4393,7 @@ async function startUpgrade() {
     $('#saveBtn').textContent = 'Salva'; $('#printBtn').textContent = 'Esporta PDF';
     for (const selector of ['#newBtn', '#openBtn']) $(selector).disabled = !ready || busy;
     $('#recentBtn').disabled = !ready || busy;
-    for (const selector of ['#saveBtn', '#newDraftBtn', '#closeProjectBtn']) $(selector).disabled = !present || busy;
+    for (const selector of ['#saveBtn', '#newDraftBtn', '#renameFileBtn', '#closeProjectBtn']) $(selector).disabled = !present || busy;
     if (!present) { $('#printBtn').disabled = true; $('#printRevisedBtn').disabled = true; $('#currentPage').textContent = ''; }
     let status;
     if (!present) status = '';
@@ -5132,6 +5142,69 @@ async function startUpgrade() {
   $('#newDraftBtn').hidden = false; $('#newDraftBtn').textContent = 'Salva con nome…'; $('#newDraftBtn').title = 'Salva con nome (Ctrl/Cmd+Maiusc+S)';
   $('#saveBtn').title = 'Salva (Ctrl/Cmd+S)';
   $('#newDraftBtn').onclick = () => { if (!dialog.open && !editor.state().composing && !actionBusy && !saving && !creating && !opening) saveDestination(true); };
+  // Renaming, as in Google Docs: click the name at the top, or File → Rinomina….
+  // A file linked on the device is renamed there too, in the same folder. A name
+  // that another screenplay opened in ScripToti already has is refused, so no
+  // other file can ever be replaced.
+  function renamedName(value, old) {
+    const typed = String(value || '').trim();
+    if (/\.txt$/i.test(typed)) { Files.fountainName(typed.slice(0, -4)); return typed; }
+    const name = Files.fountainName(typed);
+    return /\.txt$/i.test(old) && !/\.fountain$/i.test(typed) ? name.replace(/\.fountain$/i, '.txt') : name;
+  }
+  async function renameProject(value) {
+    const owner = active; if (!owner.session) return false;
+    const old = owner.session.name, name = renamedName(value, old);
+    if (name === old) return true;
+    if (actionBusy || saving || creating || opening || switching) throw new Error('Attendi la fine del salvataggio e riprova.');
+    if (owner.disk) {
+      const handle = owner.disk.handle;
+      if (typeof handle.move !== 'function') throw new Error('Questo browser non permette di rinominare il file sul dispositivo. Usa File → Salva con nome….');
+      const others = projects.filter(p => p !== owner && p.disk).map(p => p.disk.handle.name);
+      const recent = (await recentRecords()).filter(e => e.device && e.id !== owner.session.id).map(e => e.name);
+      if ([...others, ...recent].some(n => n.toLowerCase() === name.toLowerCase()) && name.toLowerCase() !== old.toLowerCase()) throw new Error('Un altro copione aperto con ScripToti si chiama già «' + name + '». Scegli un nome diverso.');
+      let done = false;
+      await action(async () => {
+        let permission = await handle.queryPermission({ mode: 'readwrite' });
+        if (permission !== 'granted' && handle.requestPermission) permission = await handle.requestPermission({ mode: 'readwrite' });
+        if (permission !== 'granted') throw new Error('Consenti al browser di modificare il file per poterlo rinominare.');
+        await handle.move(name);
+        owner.disk.name = handle.name; owner.session.name = handle.name; done = true;
+      });
+      if (!done) throw new Error('Attendi la fine del salvataggio e riprova.');
+      await rememberHandle(owner);
+    } else owner.session.name = name;
+    if (owner === active) editor.filename(owner.session.name);
+    emergency(owner); refresh();
+    await persistBest(owner); await rememberRecentBest(owner); await rememberWorkspaceBest();
+    editor.toast('Nome cambiato in ' + owner.session.name + '.');
+    return true;
+  }
+  function editName() {
+    const label = $('#filename');
+    if (!active.session || label.hidden || dialog.open || editor.state().composing) return;
+    const old = active.session.name, input = make('input', undefined, 'filename-input');
+    input.value = old.replace(/\.(?:fountain|txt)$/i, ''); input.setAttribute('aria-label', 'Nome del file'); input.spellcheck = false;
+    label.hidden = true; label.after(input); input.focus(); input.select();
+    let finished = false;
+    const finish = async keep => {
+      if (finished) return; finished = true;
+      const value = input.value;
+      input.remove(); label.hidden = false;
+      if (keep && value.trim() && value.trim() !== old.replace(/\.(?:fountain|txt)$/i, '')) {
+        try { await renameProject(value); } catch (error) { editor.toast(error.message || 'Il nome non è stato cambiato.'); }
+      }
+      if (active.session) editor.focus();
+    };
+    input.addEventListener('keydown', event => {
+      event.stopPropagation();
+      if (event.key === 'Enter') { event.preventDefault(); void finish(true); }
+      else if (event.key === 'Escape') { event.preventDefault(); void finish(false); }
+    });
+    input.addEventListener('blur', () => void finish(true));
+  }
+  $('#filename').classList.add('renamable'); $('#filename').addEventListener('click', editName);
+  $('#renameFileBtn').onclick = () => { document.querySelectorAll('.menu-dropdown[open]').forEach(menu => menu.removeAttribute('open')); setTimeout(editName, 0); };
   $('#closeProjectBtn').onclick = () => closeProject();
   $('#shareBtn').onclick = () => { try { showShare(); } catch (error) { notify(error); } };
   $('#shareLed').onclick = () => { try { showShare(); } catch (error) { notify(error); } };

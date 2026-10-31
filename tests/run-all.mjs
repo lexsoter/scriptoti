@@ -1,6 +1,6 @@
 // Runs every test one after the other; fails if any of them fails.
 import { spawnSync } from 'node:child_process';
-const tests = ['t1_6', 't5', 't9_12', 't14_16', 't_round', 't_dual_margins', 't_stall', 't_reconnect', 't_share', 't_share_refused'];
+const tests = ['t1_6', 't5', 't9_12', 't14_16', 't_round', 't_dual_margins', 't_stall', 't_reconnect', 't_rename', 't_share', 't_share_refused'];
 const failed = [];
 for (const name of tests) {
   console.log(`\n== ${name}`);
