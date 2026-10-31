@@ -1,4 +1,5 @@
-# The "Pubblica" button: copies public/ to the Netsons server over FTP.
+# The "Pubblica" button: copies public/ to the Netsons server over FTP. The FTP
+# account is meant to open straight in public_html/scriptoti (set FTP_DIR otherwise).
 # It runs only when started by hand from the Actions tab, never on its own.
 name: Pubblica su Netsons
 
@@ -29,7 +30,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
           local-dir: ./public/
-          server-dir: ${{ vars.FTP_DIR || 'public_html/scriptoti/' }}
+          server-dir: ${{ vars.FTP_DIR || './' }}
 
       - name: Verifica il sito
         run: |
