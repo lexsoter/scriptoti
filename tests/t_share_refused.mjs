@@ -13,7 +13,7 @@ const url = `http://127.0.0.1:${port}/index.html`;
 const browser = await chromium.launch({ executablePath: CHROME, args: CHROME_ARGS, headless: true });
 const results = [], errors = [];
 const check = (name, ok, detail = '') => results.push({ name, ok: !!ok, detail });
-const person = async name => { const c = await browser.newContext({ viewport: { width: 1280, height: 900 } }); await c.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: `http://127.0.0.1:${port}` }); const p = await c.newPage(); p.on('pageerror', e => errors.push(name + ': ' + e)); return { c, p }; };
+const person = async name => { const c = await browser.newContext({ viewport: { width: 1280, height: 900 }, locale: 'it-IT' }); await c.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: `http://127.0.0.1:${port}` }); const p = await c.newPage(); p.on('pageerror', e => errors.push(name + ': ' + e)); return { c, p }; };
 const click = (p, t) => p.evaluate(t => [...document.querySelectorAll('dialog[open] button')].find(b => b.textContent.trim() === t).click(), t);
 const src = p => p.evaluate(() => window.DraftEditor.state().source);
 const toEnd = p => p.evaluate(() => { const s = window.DraftEditor.state().source.length; window.DraftEditor.focus(); window.DraftEditor.selectAbsolute({ anchor: s, focus: s }); });

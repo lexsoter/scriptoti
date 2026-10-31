@@ -18,7 +18,7 @@ const results = [], errors = [];
 const check = (name, ok, detail = '') => results.push({ name, ok: !!ok, detail });
 
 async function person(name) {
-  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, locale: 'it-IT' });
   await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: `http://127.0.0.1:${port}` });
   const page = await context.newPage();
   page.on('pageerror', e => errors.push(name + ': ' + e));
