@@ -111,7 +111,7 @@ for (const [width, height, locale] of [[390,844,'it-IT'],[844,390,'en-US']]) {
     await t.load(basic); await t.caretAfter('fuori.'); await keyboard(t, height > 500 ? 440 : 240);
     await t.page.locator('#phoneTab').tap(); await settle(t);
     t.check(`${label}: strip Tab changes type and keeps focus`, (await state(t)).selection.kind === 'character' && await focused(t));
-    t.check(`${label}: strip contains only Tab and B/I/U/Aa, with no caret or parenthesis controls`, JSON.stringify(await t.page.locator('.phone-keys>button').evaluateAll(nodes => nodes.map(n => n.id))) === JSON.stringify(['phoneTab','phoneBold','phoneItalic','phoneUnderline','phoneCase']) && await t.page.locator('.phone-arrows,#phoneParenthesis,#phoneBackTab').count() === 0);
+    t.check(`${label}: strip has SmartTab, the cue parenthesis, B/I/U/Aa, comment and search, with no caret controls`, JSON.stringify(await t.page.locator('.phone-keys>button').evaluateAll(nodes => nodes.map(n => n.id))) === JSON.stringify(['phoneTab','phoneParen','phoneBold','phoneItalic','phoneUnderline','phoneCase','phoneComment','phoneFind']) && await t.page.locator('.phone-arrows,#phoneParenthesis,#phoneBackTab').count() === 0);
     t.check(`${label}: Tab is an accent control with its own circle icon at the same height`, await t.page.locator('#phoneTab').evaluate(n => n.querySelector('svg circle') && n.getBoundingClientRect().height === document.querySelector('#phoneBold').getBoundingClientRect().height && getComputedStyle(n).backgroundColor !== getComputedStyle(document.querySelector('#phoneBold')).backgroundColor));
     t.check(`${label}: Undo and Redo live in the one-row header`, await t.page.locator('.topbar>#phoneUndo,.topbar>#phoneRedo').count() === 2 && await t.page.locator('.topbar').evaluate(n => n.getBoundingClientRect().height <= 50));
     const beforeStripEdit = await t.src(); await t.type('Z'); const afterStripEdit = await t.src();
@@ -137,7 +137,7 @@ for (const [width, height, locale] of [[390,844,'it-IT'],[844,390,'en-US']]) {
     t.check(`${label}: direct type choice retains focus`, (await state(t)).selection.kind === 'action' && await focused(t));
     await t.load(basic); await t.caret((await t.src()).length); await t.type('MA');
     const chip = t.page.locator('#phoneSuggestions #completionPopup button[role=option]').filter({ has:t.page.locator('span', { hasText:/^MARTA$/ }) });
-    t.check(`${label}: original character completions are chips above the keyboard`, await chip.isVisible() && await chip.evaluate(n => n.getBoundingClientRect().bottom <= document.querySelector('.phone-keys').getBoundingClientRect().top + 1) && await caretVisible(t));
+    t.check(`${label}: original character completions take the place of the buttons after SmartTab`, await chip.isVisible() && await chip.evaluate(n => document.querySelector('.phone-keys').contains(n)) && !await t.page.locator('#phoneBold').isVisible() && await caretVisible(t));
     await chip.tap(); await settle(t);
     t.check(`${label}: accepting a chip inserts the existing character and keeps focus`, /\nMARTA\n*$/.test(await t.src()) && await focused(t));
     await t.load('INT. CASA - GIORNO\n\nMarta **aspeta** fuori.\n'); await t.caretAfter('fuori.');
@@ -210,7 +210,7 @@ for (const [width, height, locale] of [[390,844,'it-IT'],[844,390,'en-US']]) {
     await settle(t);
     await t.page.locator('#phoneMenuPanel').evaluate(async n => { await Promise.all(n.getAnimations().map(a => a.finished)); });
     const menuBox = await t.page.locator('#phoneMenuPanel').boundingBox();
-    t.check(`${label}: one right side menu contains settings and seven document commands`, Math.abs(menuBox.width - width * .85) < 1 && Math.abs(menuBox.x + menuBox.width - width) < 1 && await t.page.locator('.phone-menu-body>button:not([role=switch])').count() === 7 && await t.page.locator('#phoneSettingsBtn').count() === 0);
+    t.check(`${label}: one left side menu (under ☰) contains settings and seven document commands`, Math.abs(menuBox.width - width * .85) < 1 && Math.abs(menuBox.x) < 1 && await t.page.locator('.phone-menu-body>button:not([role=switch])').count() === 7 && await t.page.locator('#phoneSettingsBtn').count() === 0);
     t.check(`${label}: menu rows use the existing desktop icons and 17px text`, await t.page.locator('[data-phone-command=commentsBtn]').evaluate(n => getComputedStyle(n).fontSize === '17px' && n.querySelector('svg').outerHTML === document.querySelector('.editor-toolbar [data-command=commentsBtn] svg').outerHTML));
     for (const [command, kind] of [['darkModeToggle','checkbox'],['sceneNumbersToggle','checkbox'],['revisionVisibleBtn','pressed']]) {
       const button = t.page.locator('[data-phone-command=' + command + ']');
@@ -226,14 +226,14 @@ for (const [width, height, locale] of [[390,844,'it-IT'],[844,390,'en-US']]) {
     const sourceBeforeSize = await t.src(); await t.page.locator('#phoneTextSize').evaluate(n => { n.value = '24'; n.dispatchEvent(new Event('input', { bubbles:true })); });
     t.check(`${label}: phone text size is applied, remembered and does not affect the source`, await t.page.locator('#phoneWriter').evaluate(n => getComputedStyle(n).fontSize) === '24px' && await t.page.evaluate(() => localStorage.getItem('scriptoti-phone-size')) === '24' && await t.src() === sourceBeforeSize);
     await t.page.keyboard.press('Escape'); await settle(t); await t.page.locator('#phoneMenuBtn').tap();
-    await t.page.touchscreen.tap(10, 200); await settle(t);
+    await t.page.touchscreen.tap(width - 10, 200); await settle(t);
     t.check(`${label}: tapping outside closes the side menu`, !await t.page.locator('#phoneMenuPanel').isVisible());
     await t.page.locator('#phoneMenuBtn').tap(); await settle(t);
     const swipeBox = await t.page.locator('.phone-menu-head').boundingBox(), swipe = await t.context.newCDPSession(t.page);
-    await swipe.send('Input.dispatchTouchEvent', { type:'touchStart', touchPoints:[{ x:swipeBox.x + 20, y:swipeBox.y + 25, id:1 }] });
-    await swipe.send('Input.dispatchTouchEvent', { type:'touchMove', touchPoints:[{ x:swipeBox.x + 140, y:swipeBox.y + 27, id:1 }] });
+    await swipe.send('Input.dispatchTouchEvent', { type:'touchStart', touchPoints:[{ x:swipeBox.x + 180, y:swipeBox.y + 25, id:1 }] });
+    await swipe.send('Input.dispatchTouchEvent', { type:'touchMove', touchPoints:[{ x:swipeBox.x + 60, y:swipeBox.y + 27, id:1 }] });
     await swipe.send('Input.dispatchTouchEvent', { type:'touchEnd', touchPoints:[] }); await swipe.detach(); await settle(t);
-    t.check(`${label}: swiping right closes the side menu`, !await t.page.locator('#phoneMenuPanel').isVisible());
+    t.check(`${label}: swiping left closes the side menu`, !await t.page.locator('#phoneMenuPanel').isVisible());
     await t.page.locator('#phoneMenuBtn').tap(); await t.page.goBack(); await settle(t);
     t.check(`${label}: browser Back still closes the menu without navigating away`, !await t.page.locator('#phoneMenuPanel').isVisible() && t.page.url() === t.url);
     await t.page.locator('#phoneMenuBtn').tap();

@@ -1,5 +1,6 @@
 // 0.34: Tab follows the context. Dialogue and parenthetical only under a
-// character; after a speech an empty line offers transition, then scene.
+// character; after a speech an empty line offers a parenthetical (0.35),
+// then transition and scene.
 import { open } from './lib.mjs';
 const t = await open();
 const kind = () => t.page.evaluate(() => DraftEditor.state().selection?.kind);
@@ -10,8 +11,21 @@ let got = await cycle(4);
 t.check('after an action: character, scene, transition, action', got === 'action > character > scene > transition > action', got);
 // Empty line after a speech.
 await t.load('Title\n\nINT. CASA - GIORNO\n\nMARTA\nCiao.\n\n'); await t.caret((await t.src()).length);
-got = await cycle(4);
-t.check('after a speech: transition, scene, character, action', got === 'action > transition > scene > character > action', got);
+got = await cycle(5);
+t.check('after a speech: parenthetical, transition, scene, character, action', got === 'action > parenthetical > transition > scene > character > action', got);
+// 0.35: a parenthetical opens as "()" with the caret inside.
+await t.load('Title\n\nINT. CASA - GIORNO\n\nMARTA\nCiao.\n\nPiove.\n\n'); await t.caretAfter('Ciao.');
+await t.press('Enter'); await t.press('Tab'); await t.type('ride');
+let src = await t.src();
+t.check('after a line: Tab joins "()" to the speech', src.includes('MARTA\nCiao.\n(ride)\n\nPiove.'), JSON.stringify(src));
+await t.load('Title\n\nINT. CASA - GIORNO\n\nMARTA\nCiao.\n\n'); await t.caretAfter('MARTA');
+await t.press('Enter'); await t.press('Tab'); await t.type('piano');
+src = await t.src();
+t.check('Enter after the name, Tab: "()" above the written line', src.includes('MARTA\n(piano)\nCiao.'), JSON.stringify(src));
+await t.load('Title\n\nINT. CASA - GIORNO\n\nMarta entra.\n\n'); await t.caret((await t.src()).length);
+await t.type('MARTA'); await t.press('Enter'); await t.press('Tab'); await t.type('piano');
+src = await t.src();
+t.check('new cue, Tab: "()" under the name', src.includes('MARTA\n(piano)'), JSON.stringify(src));
 // Under a character: parenthetical and dialogue only.
 await t.load('Title\n\nINT. CASA - GIORNO\n\nMarta entra.\n\n'); await t.caret((await t.src()).length);
 await t.type('MARTA'); await t.press('Enter');
