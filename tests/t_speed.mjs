@@ -173,6 +173,12 @@ for (const phone of [false, true]) for (const tracking of [false, true]) {
     const rebuilt = await snap();
     t.check(name + ': overflow pages, scene numbers and revision bands match a full reload', JSON.stringify(overflow.pages) === JSON.stringify(rebuilt.pages) && JSON.stringify(overflow.context) === JSON.stringify(rebuilt.context) && JSON.stringify(overflow.state.document) === JSON.stringify(rebuilt.state.document));
   }
+  // The parse shortcut must keep heading normalisation behind hidden Fountain.
+  for (const prefix of ['  ', '[[nota]]', '/*nota*/', '/*nota\n*/', '[[nota\ncontinua]]']) {
+    await t.load(prefix + 'int\n\n!Fine.\n'); await t.caret(prefix.length + 3); await t.type('.');
+    const state = await t.page.evaluate(() => DraftEditor.state());
+    t.check(name + ': heading normalisation keeps prefix ' + JSON.stringify(prefix), state.source === prefix + 'INT.\n\n!Fine.\n' && state.selection.kind === 'scene', JSON.stringify(state.source));
+  }
   t.report(); await t.close();
 }
 if (process.env.SPEED_OUTPUT) fs.writeFileSync(process.env.SPEED_OUTPUT, JSON.stringify(metrics, null, 2) + '\n');

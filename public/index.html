@@ -7274,7 +7274,9 @@ async function startUpgrade() {
     // first typed words, so no leading spaces are left in the file.
     const spacer = selection.part?.kind === 'dialogue' && !selection.titleKey && !selection.part.literal && selection.start === selection.end && text && !text.includes('\n') && row && !row.trim();
     let change = spacer ? { ...DraftEditing.replace(sourceText, rowStart, rowStart + row.length, text), anchor: rowStart + text.length, focus: rowStart + text.length } : rawInsertion(selection, text);
-    if (!selection.titleKey && !text.includes('\n') && !selection.part?.literal && (selection.part?.kind === 'scene' || DraftEngine.isScene(change.source.slice(rowStart, change.source.indexOf('\n', rowStart) < 0 ? change.source.length : change.source.indexOf('\n', rowStart))))) {
+    const nextBreak = change.source.indexOf('\n', rowStart), nextRow = change.source.slice(rowStart, nextBreak < 0 ? change.source.length : nextBreak);
+    // Hidden notes can mask a heading prefix.
+    if (!selection.titleKey && !text.includes('\n') && !selection.part?.literal && (selection.part?.kind === 'scene' || DraftEngine.isScene(nextRow.trim()) || /\[\[|\]\]|\/\*|\*\//.test(nextRow))) {
       const parsed = parseSource(change.source), scene = parsed.elements.find(e => e.type === 'scene' && e.start <= change.focus && e.end >= change.focus);
       if (scene) {
         const glyphs = DraftEngine.richText(scene.part.text, scene.part.map, scene.part.anchor).glyphs;
