@@ -1,4 +1,9 @@
-<p align="center"><img src="docs/logo-esteso.png" alt="ScripToti" width="420"></p>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/logo-esteso-bianco.png">
+    <img src="docs/logo-esteso-nero.png" alt="ScripToti" width="420">
+  </picture>
+</p>
 
 # ScripToti
 
