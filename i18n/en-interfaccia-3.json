@@ -133,5 +133,6 @@
   "Cancella": "Backspace",
   "Canc": "Delete",
   "Non posso verificare se il nuovo nome è libero nella cartella. Usa File → Salva con nome… e scegli una destinazione.": "I cannot check whether this name is available in the folder. Use File → Save As… and choose a destination.",
-  "Esiste già un file o una cartella con questo nome. Scegli un altro nome oppure usa File → Salva con nome….": "A file or folder with this name already exists. Choose another name or use File → Save As…."
+  "Esiste già un file o una cartella con questo nome. Scegli un altro nome oppure usa File → Salva con nome….": "A file or folder with this name already exists. Choose another name or use File → Save As….",
+  "Comandi: [[Mod+B]] grassetto · [[Mod+I]] corsivo · [[Mod+U]] sottolineato · [[Mod+Shift+K]] maiuscolo · [[Shift+Invio]] a capo nello stesso paragrafo; a fine riga di dialogo apre una parentetica.": "Commands: [[Mod+B]] bold · [[Mod+I]] italic · [[Mod+U]] underline · [[Mod+Shift+K]] uppercase · [[Shift+Enter]] line break within the same paragraph; at the end of a dialogue line, opens a parenthetical."
 }

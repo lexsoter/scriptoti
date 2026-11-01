@@ -11,8 +11,8 @@
     "short": "On your phone, writing fills the screen. The top bar shows pages and words. The side menu holds commands and settings.",
     "body": [
       "On your phone, text wraps to fit the screen, without page dividers. Fountain types and bold, italic and underline stay visible. Formatting symbols stay hidden. When you scroll to reread, the view stays where you leave it. It returns to the caret when you start typing or editing again.",
-      "The top bar shows the menu, file name, caret page, total pages and document word count. You also have Go to, Undo, Redo and Preview. A shared document has a dot beside the name, with the same green, yellow and red states as on the computer. Tap it to open Sharing.",
-      "While you type, **SmartTab**, with the ⇥ symbol, sits right under the top bar. Tap to change type, or press and hold to choose from the list. At the end of a character cue, **( )** adds a parenthetical. Next are B, I, U and Aa for bold, italic, underline and uppercase/lowercase, then a comment button and the magnifying glass for find and replace. Scene and character suggestions replace the buttons after SmartTab while you can choose one. Tap a suggestion to accept it. The strip disappears when you close the keyboard.",
+      "The top bar shows the menu, file name, visible page, total pages and document word count. As you scroll, the page follows the first visible line below the bars. When you start typing again, it follows the caret. Labels match the printed pages, including 12A. You also have Go to, Undo, Redo and Preview. A shared document has a dot beside the name, with the same green, yellow and red states as on the computer. Tap it to open Sharing.",
+      "While you type, **SmartTab**, with the ⇥ symbol, sits right under the top bar. Tap to change type, or press and hold to choose from the list. At the end of a character cue or dialogue line, **( )** adds a parenthetical within the same speech. After a speech, SmartTab cycles through Action, Character, Transition, Scene heading and back to Action. Next are B, I, U and Aa for bold, italic, underline and uppercase/lowercase, then a comment button and the magnifying glass for find and replace. Scene and character suggestions replace the buttons after SmartTab while you can choose one. Tap a suggestion to accept it. The strip disappears when you close the keyboard.",
       "Tap **☰**: the menu slides in **from the left**. It has Dark theme, Scene numbers and Revision highlights switches that show their actual state, followed by Text size and Lingua / Language. Below are New document, Open another document, Title page, Find and replace, Comments, Sharing, and Help and manual. Tap outside the panel or **swipe left** to close it. Text size, from 14 to 26 px, is remembered on this device and does not change the PDF.",
       "**Go to** lists Scenes, Pages and Characters. Type `page 12A`, `scene 7` or a word, then press Enter. Start, Last edit and End take you to useful places in the document. Page labels still match the printed pages, even though the writing view has no dividers.",
       "**Preview** shows the actual printed pages and does not let you edit text. Scroll between pages and pinch with two fingers to zoom. The magnifying glass searches without replacing. **Go to** lists pages and offers Start and End. The X, “Close preview”, returns to writing. The standard share icon, an arrow leaving a box, opens Export PDF (print or save) and Send file. Sending prepares a Fountain copy with the document information. It uses your device’s share sheet, or downloads the copy if sharing is unavailable.",
@@ -52,7 +52,7 @@
       "## File",
       "- [[Mod+O]] Open · [[Mod+S]] Save · [[Mod+Shift+S]] Save As · [[Alt+Shift+W]] Close project · [[Mod+P]] Export PDF",
       "## Writing",
-      "- [[Tab]] / [[Shift+Tab]] change text type · [[Enter]] new paragraph · [[Shift+Enter]] line break within the same paragraph · [[Mod+Enter]] new page",
+      "- [[Tab]] / [[Shift+Tab]] change text type · [[Enter]] new paragraph · [[Shift+Enter]] line break within the same paragraph, or a parenthetical at the end of a dialogue line · [[Mod+Enter]] new page",
       "- [[Mod+Z]] Undo · [[Mod+Shift+Z]] Redo",
       "- [[Mod+B]] bold · [[Mod+I]] italic · [[Mod+U]] underline · [[Mod+Shift+K]] uppercase/lowercase",
       "- [[Mod+F]] Find · [[Mod+Alt+F]] Find and replace",
@@ -92,9 +92,9 @@
       "how do I return to action after dialogue",
       "how do I add a line break within dialogue"
     ],
-    "short": "Press [[Enter]] to end the speech and switch to Action. To add a line break within the same speech, use [[Shift+Enter]].",
+    "short": "[[Enter]] ends the speech and switches to Action. From there, [[Tab]] offers a new character cue. [[Shift+Enter]] at the end of a line opens a parenthetical. In the middle of a line, it adds a plain line break within the same speech.",
     "body": [
-      "At the end of a speech, press [[Enter]] to end the dialogue and move the cursor to **Action**. For a second line within the same speech, press [[Shift+Enter]]. You can also press [[Tab]] until you reach “Action.”"
+      "At the end of a speech, press [[Enter]] to end dialogue and move the caret to **Action**. On that empty Action, [[Tab]] offers a new Character, then Transition, Scene heading and Action. To add a parenthetical within the same speech, press [[Shift+Enter]] at the end of a line. In the middle of a line, [[Shift+Enter]] still adds a plain line break."
     ]
   },
   "p-slugline": {
@@ -191,7 +191,7 @@
     "title": "Dictation",
     "short": "Tap the microphone (on a phone the round button at the bottom, on a computer the one in the toolbar) and speak: the text goes in where the cursor is. You can also say commands such as “new line”, “character Marta”, “new scene interior kitchen night”.",
     "body": [
-      "Tap the **microphone**: on a phone the round button at the bottom right, on a computer the one next to Share in the toolbar. Speak normally: the text appears in grey while you talk and goes into the document at the cursor as soon as you pause. On a phone the keyboard stays closed, so you can see the text.",
+      "Tap the **microphone**: on a phone the round button at the bottom right, on a computer the one next to Share in the toolbar. Speak normally: the text appears in grey while you talk and goes into the document at the cursor as soon as you pause. On a phone the keyboard stays closed, so you can see the text. When dictation starts, the view brings the caret above the panel, before the first phrase arrives.",
       "The language is the one set in **Spellcheck** (Italian or English). Recognition is the browser’s: Apple on iPhone and Safari, Google in Chrome. It needs an internet connection and permission to use the microphone; Firefox has no dictation.",
       "## Commands",
       "- “**new line**”: a new paragraph.",
@@ -225,6 +225,83 @@
       "As in Google Docs, click the **file name at the top center**, enter a new name, and press **Enter**. **Esc** leaves the name unchanged. You can also use **File → Rename…**.",
       "If your browser can rename the file on your device and check its folder, the name changes there too. The document keeps saving to the same file. Allow the browser to edit the file if it asks.",
       "ScripToti checks that the new name is available in the folder, including files you have never opened here. If a file or folder already uses that name, or the destination cannot be checked, it refuses to rename. Use **File → Save As…** to choose a destination with your browser."
+    ]
+  },
+  "forzare": {
+    "title": "Forcing a text type (Tab and symbols)",
+    "keys": "tab force text type change type symbols at sign period exclamation mark greater than tilde markers shift tab",
+    "q": [
+      "how do I change the text type",
+      "what does Tab do",
+      "how do I force a character cue",
+      "how do I force action",
+      "Fountain symbols",
+      "the exclamation mark is visible"
+    ],
+    "short": "[[Tab]] changes the paragraph type. After action, it offers a character cue. On empty Action after a speech, the cycle is Action → Character → Transition → Scene heading → Action. Under a character cue and within a speech, it alternates Dialogue and Parenthetical. [[Shift+Tab]] goes back. You can also use a leading symbol: . scene heading, ! action, @ character cue, > transition, ~ lyrics.",
+    "body": [
+      "[[Tab]] changes the type of the paragraph containing the cursor and follows the context:",
+      "- on an action, or an empty line after an action: **Character → Scene heading → Transition → Action**;",
+      "- on empty Action after a speech: **Action → Character → Transition → Scene heading → Action**, without returning to the previous speech’s parenthetical;",
+      "- under a character and inside dialogue: **Parenthetical ↔ Dialogue**. Dialogue and parenthetical never appear without a character above.",
+      "[[Shift+Tab]] goes round the same cycle backwards. The new type's name appears briefly in the paragraph.",
+      "Hold [[Tab]] for a moment to see the types beside the caret, in the same order. Choose with the arrows and [[Enter]] (or a click), [[Esc]] to close. On a phone, hold SmartTab in the strip below the top bar.",
+      "You can also type a symbol at the start of the line. The symbol stays in the file but is hidden on the page:",
+      "- `.` scene heading: `.ANNA'S DREAM`",
+      "- `!` action: `!BOOM.`",
+      "- `@` character cue: `@McQueen`",
+      "- `>` transition: `> CUT TO:`",
+      "- `> text <` centered text",
+      "- `~` lyrics",
+      "Typing `!` at the start of a forced character cue or scene heading changes it to Action."
+    ]
+  },
+  "parentetica": {
+    "title": "Parenthetical",
+    "keys": "parenthetical parentheses wryly delivery tone quietly laughing beside name below name acting direction",
+    "q": [
+      "how do I write a parenthetical",
+      "where does a parenthetical go",
+      "can I put a parenthetical beside the name",
+      "how do I add a delivery direction",
+      "how do I write quietly"
+    ],
+    "short": "A parenthetical is a short direction on its own line within a speech. At the end of a dialogue line, press [[Shift+Enter]] to create () with the caret inside. [[Enter]] returns to dialogue. On a phone, use ( ). Only extensions such as (V.O.) and (O.S.) go beside the name.",
+    "body": [
+      "A parenthetical is a short direction about how a line is delivered. It goes on its own line, **below the name** or between dialogue lines:",
+      "> MARCO\n> (quietly)\n> Don't wake her.",
+      "- Keep it **short**: just a few words. Write longer movements as Action, interrupting the dialogue.",
+      "- It **never ends** a speech: if the character does something after speaking, that belongs in Action.",
+      "- It **does not go beside the name**: that space is only for technical extensions such as (V.O.) and (O.S.). “MARCO (quietly)” is a common mistake. Syntax check can fix it with one click.",
+      "After the name, press [[Enter]] and type `(`. The closing parenthesis appears too, with the caret between them. Or use [[Tab]] to alternate Dialogue and Parenthetical. Typing `)` skips past the one already there. [[Enter]] returns to dialogue. [[Backspace]] removes an empty parenthetical.",
+      "To add one **within a speech**, go to the end of a dialogue line and press [[Shift+Enter]]. It creates `()` on the next line, without a blank line. Write the direction and press [[Enter]] to continue the dialogue. On a phone, **( )** does the same, both after a character cue and at the end of a dialogue line.",
+      "> GIULIO\n> I’m tired.\n> (to Lia)\n> Let’s go.",
+      "If you have already pressed [[Enter]] after a speech and are on empty Action, type `(` as the first character. ScripToti removes the blank line and joins `()` to the speech above. One [[Mod+Z]] undoes this inference and leaves Action starting with `(`. You can also type `!` before the parenthesis to force Action from the start.",
+      "For a plain line break within the same speech, use [[Shift+Enter]] **in the middle of a line**, not at the end. Text after the caret moves to the next line."
+    ]
+  },
+  "personaggio": {
+    "title": "Character cues and dialogue",
+    "keys": "character cue name dialogue speech lines speaking uppercase recognition",
+    "q": [
+      "how do I write dialogue",
+      "how do I make a character speak",
+      "where do I put the character name",
+      "how do I leave dialogue",
+      "how do I add a line break within dialogue"
+    ],
+    "short": "Write the name in UPPERCASE on its own line, press [[Enter]], and write the dialogue. [[Enter]] ends the speech and switches to Action. At the end of a line, [[Shift+Enter]] opens a parenthetical. In the middle of a line, it adds a plain line break. If the name is not recognized, press [[Tab]] or put “@” in front.",
+    "body": [
+      "Write the character's name in **UPPERCASE** on its own line, press [[Enter]], and write the dialogue:",
+      "> MARCO\n> I don't have time for this.",
+      "- [[Enter]] in dialogue ends the speech and switches to **Action**. In the middle of a line, the text after the cursor becomes Action.",
+      "- [[Shift+Enter]] **at the end of a dialogue line** opens a parenthetical `()` with the caret inside. [[Enter]] returns to dialogue. **In the middle of a line**, it adds a plain line break within the same speech.",
+      "- [[Enter]] on the name moves to the dialogue line. If there is no dialogue yet, the name stays a character cue while you write. If you save without adding dialogue, it becomes Action when you reopen the file.",
+      "- [[Backspace]] at the start of an Action paragraph below an uppercase name joins it to the name as dialogue.",
+      "- A name with only one uppercase letter stays Action: it needs at least two letters.",
+      "- If a name is not recognized, for example because it contains numbers or is lowercase, press [[Tab]] until you reach “Character” or put `@` in front: `@McQueen`.",
+      "As you type a name, ScripToti suggests characters already in the document, flags possible typos, and shows where each character first appears (“First appeared on page 3, scene 2”).",
+      "When a character speaks again after an Action paragraph, ScripToti adds (CONT’D) automatically. When dialogue continues onto the next page, it adds (MORE) and (CONT’D)."
     ]
   }
 }

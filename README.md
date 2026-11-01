@@ -73,7 +73,7 @@ The format is called **Fountain**: a simple, open way to write screenplays as te
 - **Syntax check**: it warns you when something will not be read the way you meant, for example a scene heading that is not recognised.
 - **A complete manual** inside the program, in the **Help** menu, in English and Italian.
 
-## Limits and known issues (version 0.36.0)
+## Limits and known issues (version 0.37.0)
 
 ScripToti is young and changes often. This list is updated with each version.
 
@@ -86,8 +86,6 @@ ScripToti is young and changes often. This list is updated with each version.
 
 **Known issues**
 
-- On the phone, while scrolling, the page number at the top updates only when you start editing again.
-- On the phone, when dictation starts, the view does not move to the caret if it was off screen. It catches up with the first phrase.
 - On iPhone, Return after a character name sometimes led to Action instead of the dialogue line. Fixed in 0.36, still to be confirmed on a real device.
 - On iPad, zoom enlarged the page but not the text. Fixed in 0.36, still to be confirmed on a real device.
 
@@ -193,7 +191,7 @@ Il formato si chiama **Fountain**: un modo semplice e aperto di scrivere scenegg
 - **Manuale completo** dentro il programma, nel menu **Aiuto**, in italiano e in inglese.
 - **In italiano o in inglese**: il programma segue la lingua del browser; si cambia da **Vista → Lingua / Language**.
 
-## Limiti e problemi noti (versione 0.36.0)
+## Limiti e problemi noti (versione 0.37.0)
 
 ScripToti è giovane e cambia spesso. Questo elenco si aggiorna a ogni versione.
 
@@ -206,8 +204,6 @@ ScripToti è giovane e cambia spesso. Questo elenco si aggiorna a ogni versione.
 
 **Problemi noti**
 
-- Sul telefono, mentre scorri, il numero di pagina in alto si aggiorna solo quando riprendi a modificare.
-- Sul telefono, all'avvio della dettatura la vista non si sposta sul cursore se era fuori schermo. Si sistema alla prima frase.
 - Su iPhone, Invio dopo il nome di un personaggio a volte portava in Azione invece che alla battuta. Corretto nella 0.36, da confermare su un dispositivo vero.
 - Su iPad lo zoom ingrandiva la pagina ma non il testo. Corretto nella 0.36, da confermare su un dispositivo vero.
 

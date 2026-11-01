@@ -31,7 +31,7 @@
       "## File",
       "- [[Mod+O]] Apri · [[Mod+S]] Salva · [[Mod+Shift+S]] Salva con nome · [[Alt+Shift+W]] Chiudi progetto · [[Mod+P]] Esporta PDF",
       "## Scrittura",
-      "- [[Tab]] / [[Shift+Tab]] cambia tipo di testo · [[Invio]] nuovo paragrafo · [[Shift+Invio]] a capo nello stesso paragrafo · [[Mod+Invio]] nuova pagina",
+      "- [[Tab]] / [[Shift+Tab]] cambia tipo di testo · [[Invio]] nuovo paragrafo · [[Shift+Invio]] a capo nello stesso paragrafo, oppure parentetica a fine riga di dialogo · [[Mod+Invio]] nuova pagina",
       "- [[Mod+Z]] Annulla · [[Mod+Shift+Z]] Ripeti",
       "- [[Mod+B]] grassetto · [[Mod+I]] corsivo · [[Mod+U]] sottolineato · [[Mod+Shift+K]] maiuscolo/minuscolo",
       "- [[Mod+F]] Cerca · [[Mod+Alt+F]] Trova e sostituisci",
@@ -71,9 +71,9 @@
       "come torno all azione dopo una battuta",
       "come vado a capo dentro la battuta"
     ],
-    "short": "Premi [[Invio]]: chiude la battuta e passa all’Azione. Per andare a capo restando nella stessa battuta usa [[Shift+Invio]].",
+    "short": "[[Invio]] chiude la battuta e passa all’Azione. Da lì [[Tab]] propone un nuovo personaggio. [[Shift+Invio]] a fine riga apre una parentetica; in mezzo alla riga fa un semplice a capo nella stessa battuta.",
     "body": [
-      "Alla fine della battuta premi [[Invio]]: il dialogo si chiude e il cursore passa all’**Azione**. Per una seconda riga nella stessa battuta premi [[Shift+Invio]]. In alternativa premi [[Tab]] fino ad «Azione»."
+      "Alla fine della battuta premi [[Invio]]: il dialogo si chiude e il cursore passa all’**Azione**. Da quell’Azione vuota [[Tab]] propone un nuovo Personaggio, poi Transizione, Scena e Azione. Per inserire una parentetica nella stessa battuta premi [[Shift+Invio]] a fine riga. In mezzo alla riga, [[Shift+Invio]] resta un semplice a capo."
     ]
   },
   "p-slugline": {
@@ -168,9 +168,17 @@
   },
   "dettatura": {
     "title": "Dettatura",
+    "keys": "dettatura dettare voce microfono parlare comandi vocali a capo nuova scena personaggio parentesi stacco annulla dictation",
+    "q": [
+      "come detto il testo",
+      "come uso il microfono",
+      "comandi vocali",
+      "come detto un personaggio",
+      "come detto una nuova scena"
+    ],
     "short": "Tocca il microfono (sul telefono il pulsante tondo in basso, sul computer quello nella barra degli strumenti) e parla: il testo entra dove c’è il cursore. Puoi dettare anche comandi come «a capo», «personaggio Marta», «nuova scena interno cucina notte».",
     "body": [
-      "Tocca il **microfono**: sul telefono il pulsante tondo in basso a destra, sul computer quello accanto a Condividi nella barra degli strumenti. Parla normalmente: il testo compare in grigio mentre parli ed entra nel documento dove c’è il cursore appena fai una pausa. Sul telefono la tastiera resta chiusa, così vedi il testo.",
+      "Tocca il **microfono**: sul telefono il pulsante tondo in basso a destra, sul computer quello accanto a Condividi nella barra degli strumenti. Parla normalmente: il testo compare in grigio mentre parli ed entra nel documento dove c’è il cursore appena fai una pausa. Sul telefono la tastiera resta chiusa, così vedi il testo. All’avvio la vista porta subito il cursore sopra il pannello, anche prima della prima frase.",
       "La lingua è quella di **Ortografia** (italiano o inglese). Il riconoscimento è quello del browser: Apple su iPhone e Safari, Google su Chrome. Serve internet e il permesso di usare il microfono; in Firefox la dettatura non c’è.",
       "## Comandi",
       "- «**a capo**» o «nuova riga»: nuovo paragrafo.",
@@ -195,8 +203,8 @@
     "short": "Sul telefono scrivi a tutto schermo. La barra in alto mostra pagina e parole; il menu laterale raccoglie comandi e impostazioni.",
     "body": [
       "Sul telefono il testo si adatta allo schermo, senza divisori di pagina. I tipi Fountain e grassetto, corsivo e sottolineato restano visibili; i simboli di formattazione restano nascosti. Quando scorri per rileggere, la vista resta dove la lasci. Torna al cursore quando riprendi a scrivere o modificare.",
-      "La barra in alto contiene menu, nome del documento, pagina del cursore, pagine totali e parole del documento. Trovi anche Vai a, Annulla, Ripeti e Anteprima. Se il documento è condiviso, il pallino accanto al nome usa gli stessi stati verde, giallo e rosso della versione per computer; toccalo per aprire Condivisione.",
-      "Mentre scrivi, subito sotto la barra in alto trovi **SmartTab**, con il simbolo ⇥: toccalo per cambiare tipo, tienilo premuto per scegliere dall’elenco. Alla fine del nome di un personaggio compare **( )** per aggiungere una parentetica. Seguono B, I, U e Aa per grassetto, corsivo, sottolineato e maiuscolo/minuscolo, poi il commento e la lente per cercare e sostituire. I suggerimenti di scene e personaggi prendono il posto dei pulsanti dopo SmartTab finché puoi sceglierli: toccane uno per accettarlo. La barra scompare quando chiudi la tastiera.",
+      "La barra in alto contiene menu, nome del documento, pagina visibile, pagine totali e parole del documento. Mentre scorri, la pagina segue la prima riga visibile sotto le barre; quando riprendi a scrivere segue il cursore. Le etichette sono quelle stampate, anche 12A. Trovi anche Vai a, Annulla, Ripeti e Anteprima. Se il documento è condiviso, il pallino accanto al nome usa gli stessi stati verde, giallo e rosso della versione per computer; toccalo per aprire Condivisione.",
+      "Mentre scrivi, subito sotto la barra in alto trovi **SmartTab**, con il simbolo ⇥: toccalo per cambiare tipo, tienilo premuto per scegliere dall’elenco. Alla fine del nome di un personaggio o di una riga di dialogo compare **( )** per aggiungere una parentetica nella stessa battuta. Dopo una battuta, SmartTab passa da Azione a Personaggio, Transizione, Scena e di nuovo Azione. Seguono B, I, U e Aa per grassetto, corsivo, sottolineato e maiuscolo/minuscolo, poi il commento e la lente per cercare e sostituire. I suggerimenti di scene e personaggi prendono il posto dei pulsanti dopo SmartTab finché puoi sceglierli: toccane uno per accettarlo. La barra scompare quando chiudi la tastiera.",
       "Tocca **☰**: il menu si apre **da sinistra**. Contiene gli interruttori Tema scuro, Numeri di scena e Revisioni visibili, che mostrano lo stato effettivo, poi Grandezza del testo e Lingua / Language. Sotto trovi Nuovo documento, Apri altro documento, Title page, Cerca e sostituisci, Commenti, Condivisione e Aiuto e manuale. Tocca fuori dal pannello o **scorri verso sinistra** per chiuderlo. La grandezza del testo, da 14 a 26 px, resta su questo dispositivo e non cambia il PDF.",
       "**Vai a** elenca Scene, Pagine e Personaggi. Scrivi `pagina 12A`, `scena 7` o una parola e premi Invio. Inizio, Ultima modifica e Fine ti riportano ai punti utili del documento. I numeri restano quelli delle pagine stampate, anche senza divisori nella scrittura.",
       "**Anteprima** mostra le vere pagine stampate e non permette di modificare il testo. Scorri tra i fogli e usa due dita per ingrandire. La lente cerca nel testo, senza sostituire; **Vai a** elenca le pagine e offre Inizio e Fine. La X, «Chiudi l’anteprima», torna alla scrittura. L’icona classica di condivisione, con la freccia che esce dal riquadro, apre Esporta PDF (stampa o salva) e Invia il file. L’invio prepara una copia Fountain con le informazioni del documento: usa la condivisione del dispositivo, oppure scarica la copia se non è disponibile.",
@@ -217,6 +225,83 @@
       "Come in Google Docs: clicca il **nome del file in alto al centro**, scrivi il nuovo nome e premi **Invio**. **Esc** lascia il nome com’era. Lo stesso si fa da **File → Rinomina…**.",
       "Se il browser permette di rinominare il file sul dispositivo e di verificare la cartella, il nome cambia anche lì e il documento continua a salvarsi sullo stesso file. Il browser può chiedere il permesso di modificarlo: consenti.",
       "ScripToti controlla che il nuovo nome sia libero nella cartella, anche tra i file mai aperti qui. Se esiste già un file o una cartella con quel nome, o non può verificare la destinazione, rifiuta la rinomina. Usa **File → Salva con nome…** per scegliere una destinazione con il browser."
+    ]
+  },
+  "forzare": {
+    "title": "Forzare il tipo di testo (Tab e simboli)",
+    "keys": "tab forzare tipo cambiare tipo simboli at chiocciola punto esclamativo maggiore tilde marcatori shift tab",
+    "q": [
+      "come cambio tipo di testo",
+      "a cosa serve tab",
+      "come forzo un personaggio",
+      "come forzo l azione",
+      "simboli fountain",
+      "il punto esclamativo si vede"
+    ],
+    "short": "[[Tab]] cambia il tipo del paragrafo: dopo un’azione propone un personaggio. Sull’Azione vuota dopo una battuta il giro è Azione → Personaggio → Transizione → Scena → Azione. Sotto un personaggio e dentro la battuta alterna Dialogo e Parentetica. [[Shift+Tab]] torna indietro. Puoi anche usare un simbolo davanti al testo: . scena, ! azione, @ personaggio, > transizione, ~ versi.",
+    "body": [
+      "[[Tab]] cambia il tipo del paragrafo in cui si trova il cursore e segue il contesto:",
+      "- su un’azione, o su una riga vuota dopo un’azione: **Personaggio → Scena → Transizione → Azione**;",
+      "- su un’Azione vuota dopo una battuta: **Azione → Personaggio → Transizione → Scena → Azione**, senza tornare alla parentetica della battuta precedente;",
+      "- sotto un personaggio e dentro un dialogo: **Parentetica ↔ Dialogo**. Dialogo e parentetica non compaiono mai senza un personaggio sopra.",
+      "[[Shift+Tab]] fa lo stesso giro al contrario. Il nome del nuovo tipo compare per un attimo nel paragrafo.",
+      "Tieni premuto [[Tab]] per un attimo e accanto al cursore compare l’elenco dei tipi, nello stesso ordine: scegli con le frecce e [[Invio]] (o con un clic), [[Esc]] per chiudere. Sul telefono tieni premuto SmartTab nella striscia sotto la barra in alto.",
+      "In alternativa scrivi un simbolo all’inizio della riga. Il simbolo resta nel file ma non si vede sul foglio:",
+      "- `.` intestazione di scena: `.SOGNO DI ANNA`",
+      "- `!` azione: `!BOOM.`",
+      "- `@` personaggio: `@McQueen`",
+      "- `>` transizione: `> STACCO SU:`",
+      "- `> testo <` centrato",
+      "- `~` versi",
+      "Scrivere `!` all’inizio di un personaggio o di una scena forzati li trasforma in Azione."
+    ]
+  },
+  "parentetica": {
+    "title": "Parentetica",
+    "keys": "parentetica parentetico parentesi wryly indicazione recitazione tono sottovoce ridendo accanto al nome sotto il nome",
+    "q": [
+      "come scrivo una parentetica",
+      "dove va il parentetico",
+      "parentetico accanto al nome",
+      "indicazione di recitazione",
+      "come scrivo sottovoce"
+    ],
+    "short": "La parentetica è una breve indicazione su una riga della battuta. A fine riga di dialogo premi [[Shift+Invio]]: compare () con il cursore dentro. [[Invio]] torna al dialogo. Sul telefono usa ( ). Accanto al nome vanno solo estensioni come (V.O.) e (O.S.).",
+    "body": [
+      "La parentetica è una breve indicazione su come si dice la battuta. Va su una riga a sé, **sotto il nome** oppure tra due righe di dialogo:",
+      "> MARCO\n> (sottovoce)\n> Non svegliarla.",
+      "- Deve essere **breve**: poche parole. Azioni più lunghe si scrivono come Azione, interrompendo la battuta.",
+      "- **Non chiude mai** una battuta: se dopo la battuta il personaggio fa qualcosa, è Azione.",
+      "- **Non va accanto al nome**: lì vanno solo le estensioni tecniche come (V.O.) e (O.S.). «MARCO (sottovoce)» è un errore frequente: il Controllo della sintassi lo corregge con un clic.",
+      "Dopo il nome premi [[Invio]] e scrivi `(`: compare anche la parentesi chiusa, con il cursore in mezzo. Oppure premi [[Tab]] per alternare Dialogo e Parentetica. Scrivere `)` scavalca quella già presente; [[Invio]] torna al dialogo. [[Backspace]] su una parentetica vuota la toglie.",
+      "Per inserirla **a metà battuta**, vai alla fine di una riga di dialogo e premi [[Shift+Invio]]: compare `()` sulla riga sotto, senza riga vuota. Scrivi l’indicazione e premi [[Invio]] per continuare il dialogo. Sul telefono **( )** fa lo stesso, sia dopo il nome sia a fine riga di dialogo.",
+      "> GIULIO\n> Ho sonno.\n> (a Lia)\n> Andiamo.",
+      "Se hai già premuto [[Invio]] dopo una battuta e sei sull’Azione vuota, scrivi `(` come primo carattere: ScripToti toglie la riga vuota e aggancia `()` alla battuta sopra. Un solo [[Mod+Z]] annulla la deduzione e lascia un’Azione che comincia con `(`. Per forzare subito l’Azione puoi anche scrivere `!` prima della parentesi.",
+      "Per un semplice a capo nella stessa battuta, usa [[Shift+Invio]] **in mezzo alla riga**, non alla fine. Il testo dopo il cursore va sulla riga sotto."
+    ]
+  },
+  "personaggio": {
+    "title": "Personaggio e dialogo",
+    "keys": "personaggio character nome dialogo battuta parlare chi parla maiuscolo cue riconoscimento nome",
+    "q": [
+      "come scrivo un dialogo",
+      "come faccio parlare un personaggio",
+      "il nome del personaggio",
+      "come esco dal dialogo",
+      "come vado a capo nella battuta"
+    ],
+    "short": "Scrivi il nome in MAIUSCOLO su una riga, premi [[Invio]] e scrivi la battuta. [[Invio]] chiude la battuta e passa all’Azione. A fine riga [[Shift+Invio]] apre una parentetica; in mezzo alla riga fa un semplice a capo. Se il nome non è riconosciuto premi [[Tab]] o mettigli davanti «@».",
+    "body": [
+      "Scrivi il nome del personaggio in **MAIUSCOLO** su una riga da sola, premi [[Invio]] e scrivi la battuta:",
+      "> MARCO\n> Non ho tempo per questo.",
+      "- [[Invio]] nel dialogo chiude la battuta e passa all’**Azione**; a metà riga, il testo dopo il cursore diventa Azione.",
+      "- [[Shift+Invio]] **a fine riga di dialogo** apre una parentetica `()` con il cursore dentro; [[Invio]] torna al dialogo. **In mezzo alla riga** fa un semplice a capo nella stessa battuta.",
+      "- [[Invio]] sul nome porta alla riga della battuta. Se la battuta non c’è ancora, il nome resta personaggio finché scrivi; se salvi senza battuta, alla riapertura torna Azione.",
+      "- [[Backspace]] all’inizio di un’Azione che sta sotto un nome in maiuscolo la unisce al nome: diventa la sua battuta.",
+      "- Un nome con una sola lettera maiuscola resta Azione: servono almeno due lettere.",
+      "- Se il nome non viene riconosciuto (per esempio contiene numeri o è in minuscolo), premi [[Tab]] fino a «Character» o scrivi `@` davanti: `@McQueen`.",
+      "Mentre scrivi il nome, ScripToti suggerisce i personaggi già presenti nel documento, segnala i possibili refusi e indica dove ognuno compare per la prima volta («Apparso prima a pag. 3 scena 2»).",
+      "Quando lo stesso personaggio riprende a parlare dopo un’azione, ScripToti aggiunge da solo (CONT’D); quando una battuta prosegue alla pagina dopo, aggiunge (MORE) e (CONT’D)."
     ]
   }
 }

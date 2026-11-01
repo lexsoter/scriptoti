@@ -11,9 +11,11 @@ let info = await t.page.evaluate(() => ({
 }));
 t.check('English browser: English interface', info.lang === 'en' && info.newDoc === 'New document' && /Page 1 of/.test(info.stats) && info.selector === 'en', JSON.stringify(info));
 t.check('English manual and spelling', info.manual === 'Getting started' && info.spell === 'en', JSON.stringify(info));
-const manual = await t.page.evaluate(() => Object.fromEntries(ScripTotiManual.entries.filter(e => ['telefono', 'dettatura'].includes(e.id)).map(e => [e.id, e.body.join(' ')])));
+const manual = await t.page.evaluate(() => Object.fromEntries(ScripTotiManual.entries.filter(e => ['telefono', 'dettatura', 'forzare', 'parentetica'].includes(e.id)).map(e => [e.id, e.body.join(' ')])));
 t.check('English phone manual describes the current menu, strip and preview', manual.telefono.includes('from the left') && manual.telefono.includes('swipe left') && manual.telefono.includes('replace the buttons after SmartTab') && manual.telefono.includes('searches without replacing'));
 t.check('English dictation manual includes editing buttons and late-result safety', manual.dettatura.includes('Backspace') && manual.dettatura.includes('Delete') && manual.dettatura.includes('discards late phrases'));
+t.check('English manual explains the new cycle and both dialogue line breaks', manual.forzare.includes('Action → Character → Transition → Scene heading → Action') && manual.parentetica.includes('[[Shift+Enter]]') && manual.parentetica.includes('middle of a line') && manual.parentetica.includes('One [[Mod+Z]]'));
+t.check('English manual explains the visible page and dictation startup', manual.telefono.includes('first visible line') && manual.telefono.includes('12A') && manual.dettatura.includes('before the first phrase'));
 
 t.check('the script text is never translated', (await t.src()) === script.replace(/\n+$/, '\n\n') || (await t.src()).includes('Annulla tutto.') && (await t.src()).includes('Salva il latte.'), JSON.stringify((await t.src()).slice(0, 120)));
 const pageText = await t.page.evaluate(() => document.querySelector('#stage').innerText);
@@ -50,7 +52,9 @@ for (const [locale, want] of [['it-IT', 'it'], ['fr-FR', 'en']]) {
     t.check('English manual covers every Italian page', !stale.length, stale.join(', '));
     const phone = await t.page.evaluate(() => ScripTotiManual.entries.find(e => e.id === 'telefono').body.join(' '));
     t.check('Italian phone manual describes the current menu, strip and preview', phone.includes('da sinistra') && phone.includes('scorri verso sinistra') && phone.includes('posto dei pulsanti dopo SmartTab') && phone.includes('senza sostituire'));
-
+    const updated = await t.page.evaluate(() => Object.fromEntries(ScripTotiManual.entries.filter(e => ['forzare', 'parentetica', 'dettatura'].includes(e.id)).map(e => [e.id, e.body.join(' ')])));
+    t.check('Italian manual explains the new cycle and both dialogue line breaks', updated.forzare.includes('Azione → Personaggio → Transizione → Scena → Azione') && updated.parentetica.includes('[[Shift+Invio]]') && updated.parentetica.includes('in mezzo alla riga') && updated.parentetica.includes('Un solo [[Mod+Z]]'));
+    t.check('Italian manual explains the visible page and dictation startup', phone.includes('prima riga visibile') && phone.includes('12A') && updated.dettatura.includes('prima della prima frase'));
   }
   t.report(); await t.close();
 }
