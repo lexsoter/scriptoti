@@ -3,7 +3,7 @@
 <head>
 <meta name="scriptoti-edition" content="online">
   <meta charset="utf-8">
-  <meta name="scriptoti-version" content="0.32.0">
+  <meta name="scriptoti-version" content="0.32.1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1479,6 +1479,17 @@ const DraftEditing = (() => {
   }
   function erase(source, start, end, doc, part, direction, word = false) {
     if (start !== end) return removeSelection(source, start, end, doc);
+    // Backspace right after a page break ("===", with only blank lines in
+    // between) removes the break, never the text on the page before it.
+    if (direction < 0) {
+      const brk = /(^|\n)([ \t]*={3,}[ \t]*)\n([ \t]*\n)*[ \t]*$/.exec(source.slice(0, start));
+      if (brk) {
+        const at = brk.index + brk[1].length;
+        const change = replace(source, at, at + brk[2].length + 1, '');
+        change.anchor = change.focus = start - brk[2].length - 1;
+        change.empty = { at: change.focus, kind: 'action' }; return change;
+      }
+    }
     // A blank line inside a speech is stored as a row of spaces (an empty row
     // would end the speech). Backspace removes that whole row at once, so
     // repeated blank lines, and the empty page they made, can be deleted.

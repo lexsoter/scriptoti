@@ -161,6 +161,15 @@ t.check('held Tab opens the list with the current type marked', list === 'Scena,
 t.check('arrows + Enter choose a type and close the list', chosen === 'dialogue' && closed, chosen);
 t.check('one Undo restores the text after a direct choice', (await t.src()) === typedBefore, JSON.stringify((await t.src()).slice(-30)));
 
+// A page break ("===") at the end: Backspace on the empty page removes the
+// break, never the text of the page before.
+await t.load('Title\n\nINT. CASA - GIORNO\n\nMarta esce.\n\n>FADE OUT.\n\n===\n\n\n\n');
+const before = await t.page.evaluate(() => document.querySelectorAll('.script-page').length);
+const firstOnLast = await t.page.evaluate(() => [...document.querySelectorAll('.script-page')].at(-1).querySelector('.editable-region')?._draft.anchor);
+await t.caret(firstOnLast); await t.press('Backspace');
+const after = await t.page.evaluate(() => document.querySelectorAll('.script-page').length), text = await t.src();
+t.check('Backspace removes a page break and its empty page', before === 2 && after === 1 && !/^===$/m.test(text) && text.includes('>FADE OUT.') && text.includes('Marta esce.'), JSON.stringify({ before, after, tail: text.slice(-30) }));
+
 // Find and replace keeps a leading capital and all-caps occurrences.
 const replaced = await t.page.evaluate(() => {
   const src = 'Title\n\nINT. CASA - GIORNO\n\nGiraffa entra. Una giraffa beve. LA GIRAFFA dorme.\n\n';
