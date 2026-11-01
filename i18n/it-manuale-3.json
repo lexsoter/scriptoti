@@ -182,5 +182,41 @@
       "In inglese: «new line», «new scene interior kitchen night», «character Marta», «parenthetical», «cut to», «undo», «stop dictation».",
       "Nel pannello trovi **Tipo ⇥** (come il Tab), **A capo** (nuovo paragrafo), **Cancella** (indietro), **Canc** (in avanti) e **Annulla**. Tieni premuto Cancella o Canc per ripetere: sul telefono la tastiera resta chiusa. **Tastiera** smette di dettare e apre la tastiera; **Fine** chiude il pannello. L’ultima frase può ancora entrare prima che il microfono si fermi. Se cambi documento, la dettatura si chiude e le frasi in ritardo vengono scartate."
     ]
+  },
+  "telefono": {
+    "title": "Sul telefono",
+    "keys": "telefono smartphone iphone android safari tastiera scrittura anteprima vai a pagine scene personaggi grandezza testo menu laterale scorrimento invia file smarttab cerca sostituisci",
+    "q": [
+      "come scrivo sul telefono",
+      "come vado a una pagina",
+      "come chiudo il menu sul telefono",
+      "come ingrandisco il testo sul telefono"
+    ],
+    "short": "Sul telefono scrivi a tutto schermo. La barra in alto mostra pagina e parole; il menu laterale raccoglie comandi e impostazioni.",
+    "body": [
+      "Sul telefono il testo si adatta allo schermo, senza divisori di pagina. I tipi Fountain e grassetto, corsivo e sottolineato restano visibili; i simboli di formattazione restano nascosti. Quando scorri per rileggere, la vista resta dove la lasci. Torna al cursore quando riprendi a scrivere o modificare.",
+      "La barra in alto contiene menu, nome del documento, pagina del cursore, pagine totali e parole del documento. Trovi anche Vai a, Annulla, Ripeti e Anteprima. Se il documento è condiviso, il pallino accanto al nome usa gli stessi stati verde, giallo e rosso della versione per computer; toccalo per aprire Condivisione.",
+      "Mentre scrivi, subito sotto la barra in alto trovi **SmartTab**, con il simbolo ⇥: toccalo per cambiare tipo, tienilo premuto per scegliere dall’elenco. Alla fine del nome di un personaggio compare **( )** per aggiungere una parentetica. Seguono B, I, U e Aa per grassetto, corsivo, sottolineato e maiuscolo/minuscolo, poi il commento e la lente per cercare e sostituire. I suggerimenti di scene e personaggi prendono il posto dei pulsanti dopo SmartTab finché puoi sceglierli: toccane uno per accettarlo. La barra scompare quando chiudi la tastiera.",
+      "Tocca **☰**: il menu si apre **da sinistra**. Contiene gli interruttori Tema scuro, Numeri di scena e Revisioni visibili, che mostrano lo stato effettivo, poi Grandezza del testo e Lingua / Language. Sotto trovi Nuovo documento, Apri altro documento, Title page, Cerca e sostituisci, Commenti, Condivisione e Aiuto e manuale. Tocca fuori dal pannello o **scorri verso sinistra** per chiuderlo. La grandezza del testo, da 14 a 26 px, resta su questo dispositivo e non cambia il PDF.",
+      "**Vai a** elenca Scene, Pagine e Personaggi. Scrivi `pagina 12A`, `scena 7` o una parola e premi Invio. Inizio, Ultima modifica e Fine ti riportano ai punti utili del documento. I numeri restano quelli delle pagine stampate, anche senza divisori nella scrittura.",
+      "**Anteprima** mostra le vere pagine stampate e non permette di modificare il testo. Scorri tra i fogli e usa due dita per ingrandire. La lente cerca nel testo, senza sostituire; **Vai a** elenca le pagine e offre Inizio e Fine. La X, «Chiudi l’anteprima», torna alla scrittura. L’icona classica di condivisione, con la freccia che esce dal riquadro, apre Esporta PDF (stampa o salva) e Invia il file. L’invio prepara una copia Fountain con le informazioni del documento: usa la condivisione del dispositivo, oppure scarica la copia se non è disponibile.",
+      "**Title page** apre un modulo a schermo intero con titolo, credito, autore, versione, data e contatti. Salva per applicare i campi e tornare al documento. Scrittura, salvataggio automatico, commenti e condivisione usano gli stessi comandi della versione per computer.",
+      "**Esporta PDF** permette di includere la Title page e scegliere tutte le pagine oppure un intervallo, usando le etichette effettive, come 12A. Se ci sono revisioni puoi scegliere solo le pagine segnate. Le opzioni valgono anche sul computer e con [[Mod+P]]. I tablet mantengono la vista a pagine della versione per computer."
+    ]
+  },
+  "rinomina-file": {
+    "title": "Cambiare nome al file",
+    "keys": "rinomina rinominare nome file cambiare nome titolo del file nome in alto",
+    "q": [
+      "come cambio il nome del file",
+      "rinominare il documento",
+      "come rinomino il file"
+    ],
+    "short": "Clicca il nome del file in alto al centro, scrivi il nuovo nome e premi Invio (Esc annulla). Oppure File → Rinomina….",
+    "body": [
+      "Come in Google Docs: clicca il **nome del file in alto al centro**, scrivi il nuovo nome e premi **Invio**. **Esc** lascia il nome com’era. Lo stesso si fa da **File → Rinomina…**.",
+      "Se il browser permette di rinominare il file sul dispositivo e di verificare la cartella, il nome cambia anche lì e il documento continua a salvarsi sullo stesso file. Il browser può chiedere il permesso di modificarlo: consenti.",
+      "ScripToti controlla che il nuovo nome sia libero nella cartella, anche tra i file mai aperti qui. Se esiste già un file o una cartella con quel nome, o non può verificare la destinazione, rifiuta la rinomina. Usa **File → Salva con nome…** per scegliere una destinazione con il browser."
+    ]
   }
 }

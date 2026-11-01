@@ -1,6 +1,6 @@
 const CACHE = 'scriptoti-0.35.0';
-const BUILD = '8941cda7ff756a3d3195c9d7553a16e7f7cbecd1c4f705240698fd78d337f4d7';
-const SHELL = 'b35a806840010c0073c9ab9e1f77f9309e549f45c5e27700fcca8906bad30c77';
+const BUILD = '3c33d79cdcd71adc3d7af935999a8a87d5054c61fc640bdd25d5c3e0039f988f';
+const SHELL = '77291d731f8c73529a0b93d14a2ed8d873daae17dee0b9894af808d3d2bdebb3';
 const RELEASE = CACHE + '-' + BUILD;
 const VERSION = 'name="scriptoti-version" content="0.35.0"';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon.svg', './icon-v021-192.png', './icon-v021-512.png', './icon-v021.svg', './icon-s2-32.png', './icon-s2-180.png', './icon-s2-192.png', './icon-s2-512.png', './icon-s2-mark.png', './logo-esteso-bianco.png', './logo-esteso-nero.png'];
