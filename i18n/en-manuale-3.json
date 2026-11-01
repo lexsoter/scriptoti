@@ -201,7 +201,7 @@
       "- “**cut to**”, “dissolve to”, “fade out”: a transition.",
       "- “**undo**” said on its own: takes back the last step. “**stop dictation**”: stops listening.",
       "In Italian: «a capo», «nuova scena interno cucina notte», «personaggio Marta», «parentesi», «stacco», «annulla», «stop dettatura».",
-      "The panel also has **Type ⇥** (like Tab), **Undo**, **Keyboard** (on a phone: stops dictating and opens the keyboard to correct) and **Done**."
+      "The panel has **Type ⇥** (like Tab), **New paragraph**, **Backspace**, **Delete** (forward) and **Undo**. Hold Backspace or Delete to keep deleting: on your phone the keyboard stays closed. **Keyboard** stops dictation and opens the keyboard; **Done** closes the panel. The final phrase can still arrive before the microphone stops. Switching documents closes dictation and discards late phrases."
     ],
     "keys": "dictation dictate voice microphone speak spoken commands new line new scene character parenthetical cut to undo",
     "q": [

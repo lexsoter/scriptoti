@@ -13,6 +13,31 @@ const fake = () => {
 };
 const say = async (t, text, final = true) => { await t.page.evaluate(([x, f]) => window.__say(x, f), [text, final]); await t.page.waitForTimeout(150); };
 
+async function controls(t) {
+  await t.load('!abcdefghij.\n'); await t.caretAfter('abc');
+  const original = await t.src();
+  await t.page.locator('.dictate-back').click();
+  t.check('dictation Backspace deletes backwards', (await t.src()).includes('abdefghij.'), JSON.stringify(await t.src()));
+  await t.page.evaluate(() => [...document.querySelectorAll('.dictate-actions button')].find(b => b.textContent === 'Annulla').click());
+  t.check('dictation deletion can be undone', await t.src() === original);
+  await t.caretAfter('abc'); await t.page.locator('.dictate-forward').click();
+  t.check('dictation Delete removes the following character', (await t.src()).includes('abcefghij.'), JSON.stringify(await t.src()));
+  await t.caret((await t.src()).trimEnd().length); const beforeEnter = await t.src();
+  await t.page.locator('.dictate-enter').click();
+  t.check('dictation A capo uses the paragraph command', (await t.src()).length > beforeEnter.length, JSON.stringify(await t.src()));
+  await t.page.evaluate(() => [...document.querySelectorAll('.dictate-actions button')].find(b => b.textContent === 'Annulla').click());
+  t.check('dictation A capo can be undone', await t.src() === beforeEnter);
+  for (const direction of ['back', 'forward']) {
+    await t.load('!abcdefghijklmnopqrstuvwx.\n'); await t.caretAfter(direction === 'back' ? 'abcdefghijklmnopqrstuvwx' : 'abc');
+    const before = await t.src(), button = await t.page.locator('.dictate-' + direction).boundingBox();
+    await t.page.mouse.move(button.x + button.width / 2, button.y + button.height / 2);
+    await t.page.mouse.down(); await t.page.waitForTimeout(650); await t.page.mouse.up();
+    const after = await t.src(); await t.page.waitForTimeout(220);
+    t.check('holding ' + direction + ' repeats, releasing stops', before.length - after.length >= 3 && await t.src() === after, JSON.stringify({ before, after }));
+  }
+  t.check('dictation buttons preserve editor focus', await t.page.evaluate(() => document.querySelector('#stage').contains(document.activeElement)));
+}
+
 // Computer.
 let t = await open();
 await t.context.addInitScript(fake); await t.page.reload(); await t.page.waitForTimeout(600);
@@ -38,6 +63,7 @@ await say(t, 'sto ancora parlando', false);
 t.check('provisional text shows in the panel, not in the document', (await t.page.locator('#dictatePanel').innerText()).includes('sto ancora parlando') && !(await t.src()).includes('sto ancora parlando'));
 await t.page.waitForTimeout(1600);
 t.check('after a pause the phrase is finished (recogniser stopped and restarted)', await t.page.evaluate(() => window.__stops >= 1 && window.__starts >= 2));
+await controls(t);
 await t.page.click('.dictate-stop');
 t.check('Fine closes the panel', !(await t.page.locator('#dictatePanel').isVisible()));
 t.check('no page errors', !t.errors.length, JSON.stringify(t.errors));
@@ -52,6 +78,13 @@ await t.page.locator('#dictateFab').tap(); await t.page.waitForTimeout(200);
 t.check('phone: no keyboard while dictating (inputmode none) and panel open', await t.page.evaluate(() => document.querySelector('#phoneWriter').getAttribute('inputmode')) === 'none' && await t.page.locator('#dictatePanel').isVisible());
 await say(t, 'Fuori piove.');
 t.check('phone: dictated text reaches the document', (await t.src()).includes('Fuori piove.'), JSON.stringify((await t.src()).slice(-30)));
+await controls(t);
+t.check('phone: editing buttons keep the keyboard closed', await t.page.evaluate(() => document.querySelector('#phoneWriter').getAttribute('inputmode') === 'none'));
+const panel = await t.page.evaluate(() => {
+  const buttons = [...document.querySelectorAll('.dictate-actions button')].map(b => b.getBoundingClientRect());
+  return { rows: new Set(buttons.map(b => b.top)).size, fit: buttons.every(b => b.left >= 0 && b.right <= innerWidth && b.height >= 44) };
+});
+t.check('phone: dictation controls fit in two touch-sized rows', panel.rows === 2 && panel.fit, JSON.stringify(panel));
 await t.page.locator('.dictate-keyboard').tap(); await t.page.waitForTimeout(200);
 t.check('phone: Tastiera stops dictation and gives the keyboard back', !(await t.page.locator('#dictatePanel').isVisible()) && await t.page.evaluate(() => !document.querySelector('#phoneWriter').hasAttribute('inputmode')));
 t.check('phone: no page errors', !t.errors.length, JSON.stringify(t.errors));
