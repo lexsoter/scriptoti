@@ -41,7 +41,6 @@
   "Tra doppie parentesi quadre": "Between double square brackets",
   "Grassetto · corsivo · sottolineato": "Bold · italic · underline",
   "Comandi: [[Mod+B]] grassetto · [[Mod+I]] corsivo · [[Mod+U]] sottolineato · [[Mod+Shift+K]] maiuscolo · [[Shift+Invio]] a capo nello stesso paragrafo.": "Commands: [[Mod+B]] bold · [[Mod+I]] italic · [[Mod+U]] underline · [[Mod+Shift+K]] uppercase · [[Shift+Enter]] new line in the same paragraph.",
-  "[[Tab]] cambia il tipo del paragrafo: Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione ([[Shift+Tab]] all’indietro). I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] changes the paragraph type: Scene → Action → Character → Parenthetical → Dialogue → Transition ([[Shift+Tab]] goes back). The symbols at the start of the line stay in the file but are not shown.",
   "Nessun problema trovato. ✓": "No problems found. ✓",
   "Come scrivo STACCO SU?": "How do I write CUT TO?",
   "Email facoltativa": "Email (optional)",
@@ -76,5 +75,6 @@
   "caratteri per riga di Azione": "characters per Action line",
   "righe per pagina": "lines per page",
   "Questa riga sembra una transizione ma viene letta come Azione. Riscrivila su una riga da sola e premi Invio, oppure correggila qui: ScripToti mette «>» davanti e la porta a destra.": "This line looks like a transition but is read as Action. Write it again on its own line and press Enter, or fix it here: ScripToti puts «>» in front and moves it to the right.",
-  "in linea": "online"
+  "in linea": "online",
+  "[[Tab]] cambia il tipo del paragrafo: Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione ([[Shift+Tab]] all’indietro); tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] changes the paragraph type: Scene → Action → Character → Parenthetical → Dialogue → Transition ([[Shift+Tab]] goes back); hold it to choose from the list. The symbols at the start of the line stay in the file but are not shown."
 }

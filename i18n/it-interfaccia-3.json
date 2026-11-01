@@ -41,7 +41,6 @@
   "Tra doppie parentesi quadre": "Tra doppie parentesi quadre",
   "Grassetto · corsivo · sottolineato": "Grassetto · corsivo · sottolineato",
   "Comandi: [[Mod+B]] grassetto · [[Mod+I]] corsivo · [[Mod+U]] sottolineato · [[Mod+Shift+K]] maiuscolo · [[Shift+Invio]] a capo nello stesso paragrafo.": "Comandi: [[Mod+B]] grassetto · [[Mod+I]] corsivo · [[Mod+U]] sottolineato · [[Mod+Shift+K]] maiuscolo · [[Shift+Invio]] a capo nello stesso paragrafo.",
-  "[[Tab]] cambia il tipo del paragrafo: Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione ([[Shift+Tab]] all’indietro). I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] cambia il tipo del paragrafo: Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione ([[Shift+Tab]] all’indietro). I simboli all’inizio della riga restano nel file ma non si vedono.",
   "Nessun problema trovato. ✓": "Nessun problema trovato. ✓",
   "Come scrivo STACCO SU?": "Come scrivo STACCO SU?",
   "Email facoltativa": "Email facoltativa",
@@ -76,5 +75,6 @@
   "caratteri per riga di Azione": "caratteri per riga di Azione",
   "righe per pagina": "righe per pagina",
   "Questa riga sembra una transizione ma viene letta come Azione. Riscrivila su una riga da sola e premi Invio, oppure correggila qui: ScripToti mette «>» davanti e la porta a destra.": "Questa riga sembra una transizione ma viene letta come Azione. Riscrivila su una riga da sola e premi Invio, oppure correggila qui: ScripToti mette «>» davanti e la porta a destra.",
-  "in linea": "in linea"
+  "in linea": "in linea",
+  "[[Tab]] cambia il tipo del paragrafo: Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione ([[Shift+Tab]] all’indietro); tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] cambia il tipo del paragrafo: Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione ([[Shift+Tab]] all’indietro); tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono."
 }

@@ -143,6 +143,24 @@ await t.press('Backspace', 40);
 const shrunk = await t.page.evaluate(() => document.querySelectorAll('.script-page').length);
 t.check('Backspace removes blank dialogue lines and the empty page', grown === 2 && shrunk === 1 && (await t.src()).trimEnd().endsWith('MARTA\nCiao.'), JSON.stringify({ grown, shrunk, tail: (await t.src()).slice(-20) }));
 
+// Computer: a short Tab still changes the type; a held Tab opens the list,
+// arrows + Enter choose, one Undo goes back.
+await t.load('Title\n\nINT. CASA - GIORNO\n\nMarta entra.\n\n'); await t.caretAfter('Marta');
+const kindNow = () => t.page.evaluate(() => DraftEditor.state().selection?.kind);
+await t.press('Tab');
+const afterShort = await kindNow();
+await t.press('Shift+Tab');
+await t.page.keyboard.down('Tab'); await t.page.waitForTimeout(500); await t.page.keyboard.up('Tab');
+const list = await t.page.evaluate(() => { const p = document.querySelector('.type-picker'); return p && !p.hidden ? [...p.children].map(b => b.textContent + (b.getAttribute('aria-selected') === 'true' ? '*' : '')).join(',') : ''; });
+const typedBefore = await t.src();
+await t.press('ArrowDown'); await t.press('ArrowDown'); await t.press('ArrowDown'); await t.press('Enter');
+const chosen = await kindNow(), closed = await t.page.evaluate(() => document.querySelector('.type-picker').hidden);
+await t.page.keyboard.press(process.platform === 'darwin' ? 'Meta+z' : 'Control+z'); await t.page.waitForTimeout(150);
+t.check('short Tab changes the type on release', afterShort === 'character', afterShort);
+t.check('held Tab opens the list with the current type marked', list === 'Scena,Azione*,Personaggio,Parentesi,Dialogo,Transizione', list);
+t.check('arrows + Enter choose a type and close the list', chosen === 'dialogue' && closed, chosen);
+t.check('one Undo restores the text after a direct choice', (await t.src()) === typedBefore, JSON.stringify((await t.src()).slice(-30)));
+
 // Find and replace keeps a leading capital and all-caps occurrences.
 const replaced = await t.page.evaluate(() => {
   const src = 'Title\n\nINT. CASA - GIORNO\n\nGiraffa entra. Una giraffa beve. LA GIRAFFA dorme.\n\n';

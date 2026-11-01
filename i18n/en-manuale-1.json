@@ -301,6 +301,7 @@
     "short": "[[Tab]] changes the paragraph type (Scene heading → Action → Character → Parenthetical → Dialogue → Transition); [[Shift+Tab]] cycles backward. You can also use a leading symbol: . scene heading, ! action, @ character cue, > transition, ~ lyrics.",
     "body": [
       "[[Tab]] cycles through the types for the paragraph containing the cursor: **Scene heading → Action → Character → Parenthetical → Dialogue → Transition**. [[Shift+Tab]] cycles in reverse. The new type's name appears briefly in the paragraph.",
+      "Hold [[Tab]] for a moment and the list of types appears beside the caret: choose with the arrows and [[Enter]] (or a click), [[Esc]] to close. On a phone, hold the type button in the bar above the keyboard.",
       "You can also type a symbol at the start of the line. The symbol stays in the file but is hidden on the page:",
       "- `.` scene heading: `.ANNA'S DREAM`",
       "- `!` action: `!BOOM.`",

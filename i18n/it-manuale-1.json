@@ -301,6 +301,7 @@
     "short": "[[Tab]] cambia il tipo del paragrafo (Scena → Azione → Personaggio → Parentetica → Dialogo → Transizione); [[Shift+Tab]] torna indietro. In alternativa un simbolo davanti: . scena, ! azione, @ personaggio, > transizione, ~ versi.",
     "body": [
       "[[Tab]] fa ruotare il tipo del paragrafo in cui si trova il cursore: **Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione**. [[Shift+Tab]] va nel senso opposto. Il nome del nuovo tipo compare per un attimo nel paragrafo.",
+      "Tieni premuto [[Tab]] per un attimo e accanto al cursore compare l’elenco dei tipi: scegli con le frecce e [[Invio]] (o con un clic), [[Esc]] per chiudere. Sul telefono tieni premuto il pulsante del tipo nella barra sopra la tastiera.",
       "In alternativa scrivi un simbolo all’inizio della riga. Il simbolo resta nel file ma non si vede sul foglio:",
       "- `.` intestazione di scena: `.SOGNO DI ANNA`",
       "- `!` azione: `!BOOM.`",
