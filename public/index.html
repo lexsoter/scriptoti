@@ -8369,7 +8369,17 @@ async function startUpgrade() {
   const dictateActions = el('div', 'dictate-actions');
   const dictateButton = (label, action, cls = '') => { const b = el('button', cls, T(label)); b.type = 'button'; b.onpointerdown = event => event.preventDefault(); b.onclick = action; dictateActions.append(b); return b; };
   dictatePanel.append(dictateStatus, dictateLive, dictateActions); document.body.append(dictateFab, dictatePanel);
-  let dictation = null;
+  let dictation = null, dictationFinal = null;
+  const dictateOwner = () => window.DraftSafe?.activeId || null;
+  const acceptsDictation = (session, rec) => session.rec === rec && session.owner === dictateOwner() && (dictation === session || dictationFinal === session);
+  function discardDictation(session) {
+    if (!session) return;
+    clearTimeout(session.idle);
+    const rec = session.rec; session.rec = null;
+    if (dictation === session) dictation = null;
+    if (dictationFinal === session) dictationFinal = null;
+    try { rec?.abort(); } catch {}
+  }
   const dictateLang = () => spellLanguage === 'en' ? 'en-US' : 'it-IT';
   function dictationNames() {
     const names = new Set();
@@ -8426,43 +8436,54 @@ async function startUpgrade() {
   }
   function startDictation() {
     if (!Recognition || dictation || !writable) return;
+    discardDictation(dictationFinal);
     if (phoneWriting()) {
       // Keep the caret, not the keyboard: inputmode none opens no keyboard.
       phoneWriter.setAttribute('inputmode', 'none');
       if (remembered) restoreSelection(remembered); else phoneWriter.focus({ preventScroll: true });
     } else if (!readSelection() && remembered) restoreSelection(remembered);
-    dictation = { interim: '', idle: 0, rec: null };
+    dictation = { owner: dictateOwner(), interim: '', idle: 0, rec: null };
     listen(); paintDictation();
   }
   function listen() {
     if (!dictation) return;
-    const rec = new Recognition(); dictation.rec = rec;
+    const session = dictation, rec = new Recognition(); session.rec = rec;
     rec.lang = dictateLang(); rec.continuous = true; rec.interimResults = true;
     rec.onresult = event => {
+      if (!acceptsDictation(session, rec)) return;
       let interim = '';
       for (let i = event.resultIndex; i < event.results.length; i++) {
+        if (!acceptsDictation(session, rec)) return;
         const text = event.results[i][0].transcript;
         if (event.results[i].isFinal) { if (text.trim()) dictateSteps(text.trim()); }
         else interim += text;
       }
-      if (!dictation) return;
-      dictation.interim = interim.trim(); paintDictation();
+      if (dictation !== session || !acceptsDictation(session, rec)) return;
+      session.interim = interim.trim(); paintDictation();
       // Some recognisers (Safari in Italian) only finish a phrase when they
       // stop: after a short pause, stop and listen again to take the text in.
-      clearTimeout(dictation.idle);
-      if (dictation.interim) dictation.idle = setTimeout(() => { try { rec.stop(); } catch {} }, 1300);
+      clearTimeout(session.idle);
+      if (session.interim) session.idle = setTimeout(() => { if (acceptsDictation(session, rec)) try { rec.stop(); } catch {} }, 1300);
     };
     rec.onerror = event => {
+      if (!acceptsDictation(session, rec)) return;
       const messages = { 'not-allowed': 'Microfono non autorizzato: consenti l’uso del microfono a questo sito nelle impostazioni del browser.', 'service-not-allowed': 'Microfono non autorizzato: consenti l’uso del microfono a questo sito nelle impostazioni del browser.', 'audio-capture': 'Il microfono è usato da un’altra app o pagina: chiudila e riprova.', network: 'La dettatura ha bisogno di internet.' };
-      if (messages[event.error]) { toast(T(messages[event.error])); stopDictation(); }
+      if (messages[event.error]) { toast(T(messages[event.error])); discardDictation(session); phoneWriter?.removeAttribute('inputmode'); paintDictation(); }
     };
-    rec.onend = () => { if (dictation?.rec === rec) setTimeout(() => { if (dictation?.rec === rec) listen(); }, 120); };
-    try { rec.start(); } catch { toast(T('Il microfono è usato da un’altra app o pagina: chiudila e riprova.')); stopDictation(); }
+    rec.onend = () => {
+      if (!acceptsDictation(session, rec)) return;
+      session.rec = null; clearTimeout(session.idle);
+      if (dictationFinal === session) dictationFinal = null;
+      else setTimeout(() => { if (dictation === session && session.owner === dictateOwner() && !session.rec) listen(); }, 120);
+    };
+    try { rec.start(); } catch { toast(T('Il microfono è usato da un’altra app o pagina: chiudila e riprova.')); discardDictation(session); phoneWriter?.removeAttribute('inputmode'); paintDictation(); }
   }
   function stopDictation() {
     if (!dictation) return;
-    const rec = dictation.rec; clearTimeout(dictation.idle); dictation = null;
-    try { rec?.stop(); } catch {}
+    const session = dictation; clearTimeout(session.idle); dictation = null;
+    // Safari can send the final phrase between stop and end, in this document only.
+    dictationFinal = session;
+    try { session.rec?.stop(); } catch { discardDictation(session); }
     phoneWriter?.removeAttribute('inputmode');
     paintDictation();
   }
@@ -8473,7 +8494,12 @@ async function startUpgrade() {
   dictateFab.onclick = startDictation;
   if ($('#dictateBtn')) { $('#dictateBtn').hidden = !Recognition; $('#dictateBtn').onclick = () => dictation ? stopDictation() : startDictation(); }
   for (const type of ['selectionchange', 'focusin', 'focusout']) document.addEventListener(type, () => requestAnimationFrame(paintDictation));
-  window.addEventListener('draft-editor-state', () => requestAnimationFrame(paintDictation));
+  window.addEventListener('draft-editor-state', () => {
+    for (const session of [dictation, dictationFinal]) if (session && session.owner !== dictateOwner()) {
+      discardDictation(session); phoneWriter?.removeAttribute('inputmode');
+    }
+    requestAnimationFrame(paintDictation);
+  });
   dictateKeyboard.hidden = false;
   paintDictation();
   // The zoom and counter bars sit beside the page scrollbars, never on top
