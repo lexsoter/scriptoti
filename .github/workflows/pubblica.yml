@@ -54,4 +54,9 @@ jobs:
               echo "Online la versione $VERSION"; exit 0
             fi
           done
-          echo "Il sito non mostra ancora la versione $VERSION"; exit 1
+          echo "Il sito non mostra ancora la versione $VERSION"
+          # What the server answered, to tell an old page from a block page.
+          curl -sS -o /tmp/page.html -w "HTTP %{http_code}, %{size_download} byte, %{content_type}\n" "https://scriptoti.salvatorefrisina.com/index.html?v=$(date +%s)"
+          head -c 400 /tmp/page.html; echo
+          grep -o 'scriptoti-version" content="[^"]*"' /tmp/page.html || true
+          exit 1
