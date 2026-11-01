@@ -1912,9 +1912,7 @@ const DraftEditing = (() => {
   // character. Each list is a cycle; Tab moves forward, Shift+Tab back.
   function tabCycle(doc, part) {
     if (!part) return ['action', 'character', 'scene', 'transition'];
-    // After a line of dialogue a parenthetical comes first, then a transition.
-    const afterSpeech = ['action', 'parenthetical', 'transition', 'scene', 'character'];
-    if (closingParenthetical(part)) return afterSpeech;
+    const afterSpeech = ['action', 'character', 'transition', 'scene'];
     if (['dialogue', 'parenthetical'].includes(part.kind)) return ['dialogue', 'parenthetical'];
     const empty = part.placeholder || !String(part.text || '').trim();
     if (empty) {
@@ -1922,13 +1920,6 @@ const DraftEditing = (() => {
       if (before && ['dialogue', 'parenthetical', 'lyric'].includes(before.kind)) return afterSpeech;
     }
     return ['action', 'character', 'scene', 'transition'];
-  }
-  // An empty "()" closing a speech after its dialogue: the parenthetical
-  // Tab offered after the last line, not one under the cue.
-  function closingParenthetical(part) {
-    if (part?.kind !== 'parenthetical' || part.placeholder || DraftEngine.plain(part.text).replace(/^\(|\)$/g, '').trim()) return false;
-    const list = part.speech?.parts || [], i = list.indexOf(part);
-    return i > 0 && i === list.length - 1 && ['dialogue', 'parenthetical', 'lyric'].includes(list[i - 1].kind);
   }
   // How many steps around typeOrder (what cycleType takes) reach the next
   // type of the context's cycle.
@@ -1946,24 +1937,13 @@ const DraftEditing = (() => {
     const kind = typeOrder[(current + direction + typeOrder.length) % typeOrder.length];
     // A parenthetical asked for where nothing is written yet opens as "()"
     // with the caret inside, like typing "(": in the empty slot under a cue,
-    // on an empty row inside a speech (Enter after the name), or after the
-    // last line of dialogue, where it joins that speech.
+    // or on an empty row inside a speech (Enter after the name).
     if (kind === 'parenthetical') {
       if (part.placeholder && part.kind === 'dialogue' && part.speech) return type(source, at, at, '(', part);
       const rowStart = source.lastIndexOf('\n', at - 1) + 1, rowEnd = source.indexOf('\n', at) < 0 ? source.length : source.indexOf('\n', at);
       if (part.kind === 'dialogue' && !part.placeholder && rowStart >= part.lineStart && rowEnd <= part.lineEnd && !source.slice(rowStart, rowEnd).trim()) {
         const change = replace(source, rowStart, rowEnd, '()'); change.anchor = change.focus = rowStart + 1; change.kind = 'parenthetical'; return change;
       }
-      const previous = parts(doc).filter(p => !p.placeholder && p.lineEnd <= at).at(-1);
-      if (part.placeholder && !part.speech && previous?.speech && ['dialogue', 'parenthetical', 'lyric'].includes(previous.kind) && /^\n*$/.test(source.slice(previous.lineEnd, at))) {
-        const head = source.slice(0, previous.lineEnd), rest = source.slice(at).replace(/^\n*/, '');
-        const change = replace(source, 0, source.length, head + '\n()\n\n' + rest); change.anchor = change.focus = head.length + 2; change.kind = 'parenthetical'; change.edits = null; return change;
-      }
-    }
-    // Leaving that empty closing "()" gives the empty slot after the speech back.
-    if (closingParenthetical(part)) {
-      const head = source.slice(0, part.lineStart - 1), rest = source.slice(part.lineEnd).replace(/^\n*/, '');
-      return { source: head + '\n\n\n\n' + rest, anchor: head.length + 2, focus: head.length + 2, kind, empty: { at: head.length + 2, kind } };
     }
     // An empty "()" turned back into dialogue leaves no trace: the row goes,
     // and the caret waits for the line (on the next one, or in the empty slot).
