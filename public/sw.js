@@ -1,5 +1,5 @@
-const CACHE = 'scriptoti-0.31.0';
-const VERSION = 'name="scriptoti-version" content="0.31.0"';
+const CACHE = 'scriptoti-0.31.1';
+const VERSION = 'name="scriptoti-version" content="0.31.1"';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon.svg', './icon-v021-192.png', './icon-v021-512.png', './icon-v021.svg'];
 const allowed = new Set(ASSETS.map(path => new URL(path, self.location.href).href));
 

@@ -3,7 +3,7 @@
 <head>
 <meta name="scriptoti-edition" content="online">
   <meta charset="utf-8">
-  <meta name="scriptoti-version" content="0.31.0">
+  <meta name="scriptoti-version" content="0.31.1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -6324,6 +6324,11 @@ async function startUpgrade() {
       activeRegion = region;
       activeRegion?.classList.add('active-edit');
     }
+    // Phone keyboards follow autocapitalize: capitals on names, headings and
+    // transitions, ordinary sentence capitals everywhere else, so after Enter
+    // on a name or a heading the keyboard is back to lower case.
+    const capitals = ['character', 'scene', 'transition'].includes(selection?.part?.kind || selection?.kind) ? 'characters' : 'sentences';
+    if (editor.getAttribute('autocapitalize') !== capitals) editor.setAttribute('autocapitalize', capitals);
     if (selection) remembered = plainSelection(selection);
     updateStyleButtons(selection);
     const rememberedRegion = remembered && (remembered.titleKey

@@ -121,6 +121,19 @@ for (const [line, typed, want] of [['Siete pazzi.', 'Tutto bene.', 'NEVIO\nTutto
   t.check(`triple click + typing replaces only "${line}"`, out.includes(want), JSON.stringify(out.slice(out.indexOf('NEVIO'))));
 }
 
+// Phone keyboards: capitals on names and headings, sentence case after Enter.
+const caps = () => t.page.evaluate(() => document.querySelector('#stage [contenteditable="true"], .document-editor')?.closest('[contenteditable="true"]')?.getAttribute('autocapitalize'));
+await t.load('Title\n\nINT. CASA - GIORNO\n\nMarta entra.\n\n'); await t.caret((await t.src()).length);
+await t.type('MARTA');
+const onCue = await caps();
+await t.press('Enter');
+const onDialogue = await caps();
+await t.type('Ciao.'); await t.press('Enter'); await t.press('Enter'); await t.type('int. bar - notte');
+const onHeading = await caps();
+await t.press('Enter');
+const afterHeading = await caps();
+t.check('keyboard capitals: name and heading yes, after Enter no', onCue === 'characters' && onDialogue === 'sentences' && onHeading === 'characters' && afterHeading === 'sentences', JSON.stringify({ onCue, onDialogue, onHeading, afterHeading }));
+
 // Find and replace keeps a leading capital and all-caps occurrences.
 const replaced = await t.page.evaluate(() => {
   const src = 'Title\n\nINT. CASA - GIORNO\n\nGiraffa entra. Una giraffa beve. LA GIRAFFA dorme.\n\n';
