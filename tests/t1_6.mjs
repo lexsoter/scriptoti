@@ -27,15 +27,15 @@ await t.caretAfter('Ciao'); await t.press('Enter');
 s = await t.src(); k = await t.kinds();
 t.check('2 Enter mid-dialogue -> rest becomes Action', s.includes('FABIO\nCiao\n\n, come stai.') && k.includes('action:, come stai.'), JSON.stringify(s) + ' ' + k);
 
-// 3. Capital after Shift+Enter in a dialogue
+// 3. A parenthetical after Shift+Enter, then the ordinary dialogue capitals.
 await t.load(base + 'FABIO\nProva. Yeah.\n\nFine.');
-await t.caretAfter('Yeah.'); await t.press('Shift+Enter'); await t.type('yeah.');
+await t.caretAfter('Yeah.'); await t.press('Shift+Enter'); await t.type('piano'); await t.press(')'); await t.press('Enter'); await t.type('yeah.');
 s = await t.src();
-t.check('3 capital after Shift+Enter', s.includes('Prova. Yeah.\nYeah.'), JSON.stringify(s));
+t.check('3 capital in dialogue after the Shift+Enter parenthetical', s.includes('Prova. Yeah.\n(piano)\nYeah.'), JSON.stringify(s));
 await t.load(base + 'FABIO\nProva. Yeah.\n\nFine.');
-await t.caretAfter('Yeah.'); await t.press('Shift+Enter'); await t.type('y'); await t.press('Meta+z');
+await t.caretAfter('Yeah.'); await t.press('Shift+Enter'); await t.press(')'); await t.press('Enter'); await t.type('y'); await t.press('Meta+z');
 s = await t.src();
-t.check('3 undo after that capital gives back the lowercase', s.includes('Prova. Yeah.\ny\n'), JSON.stringify(s));
+t.check('3 undo after that capital gives back the lowercase', s.includes('Prova. Yeah.\n()\ny\n'), JSON.stringify(s));
 
 // 4. "FABIO (36) lotta" typed as an action stays an action, in its own case
 await t.load(base + 'Luca parla.\n\n');

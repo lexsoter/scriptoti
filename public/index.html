@@ -1780,6 +1780,23 @@ const DraftEditing = (() => {
     }
     return null;
   }
+  function dialogueEnd(source, at, part) {
+    if (part?.kind !== 'dialogue' || part.placeholder || part.literal) return false;
+    const start = source.lastIndexOf('\n', at - 1) + 1, end = source.indexOf('\n', at), stop = end < 0 ? source.length : end;
+    const row = glyphs(part).filter(g => g.from >= start && g.from < stop && !/\s/.test(g.char));
+    return row.length > 0 && row.at(-1).to <= at;
+  }
+  function parenthetical(source, at, doc, part) {
+    if (dialogueEnd(source, at, part)) {
+      const newline = source.indexOf('\n', at), end = newline < 0 ? source.length : newline;
+      const change = replace(source, end, end, '\n()'); change.anchor = change.focus = end + 2; change.kind = 'parenthetical'; return change;
+    }
+    if (part?.kind !== 'action' || part.literal || part.forced || part.placeholder || part.text.trim() !== '(' || at !== part.end) return null;
+    const previous = parts(doc).filter(p => !p.placeholder && p.lineEnd < part.lineStart).at(-1);
+    if (!previous?.speech || !['dialogue','parenthetical','lyric'].includes(previous.kind) || !/^\n{2,}$/.test(source.slice(previous.lineEnd, part.lineStart))) return null;
+    const change = replace(source, previous.lineEnd, part.lineEnd, '\n()');
+    change.anchor = change.focus = previous.lineEnd + 2; change.kind = 'parenthetical'; return change;
+  }
   function enter(source, start, end, doc, part, hardBreak = false) {
     if (start !== end) {
       const removal = removeSelection(source, start, end, doc);
@@ -1864,6 +1881,7 @@ const DraftEditing = (() => {
       const change = replace(source, part.lineEnd, part.lineEnd, close + '\n');
       change.empty = { at: change.focus, kind: 'dialogue' }; return change;
     }
+    if (hardBreak && part?.kind === 'dialogue') { const change = parenthetical(source, start, doc, part); if (change) return change; }
     if (hardBreak) {
       const change = replace(source, start, start, '\n');
       if (!part || start >= part.end) change.empty = { at: change.focus, kind: part?.kind === 'dialogue' ? 'dialogue' : 'action' };
@@ -2259,7 +2277,7 @@ const DraftEditing = (() => {
       clear() { undoStack.length = redoStack.length = 0; last = null; }
     };
   }
-  return { replace, parts, bounds, locate, type, removeSelection, erase, enter, cycleType, typeOrder, tabCycle, tabStep, style, serializeStyled, marksAt, caseNames, changeCase, nextDraftName, characterNames, renameCandidates, applyRenames, history };
+  return { replace, parts, bounds, locate, type, removeSelection, erase, dialogueEnd, parenthetical, enter, cycleType, typeOrder, tabCycle, tabStep, style, serializeStyled, marksAt, caseNames, changeCase, nextDraftName, characterNames, renameCandidates, applyRenames, history };
 })();
 
 </script>
@@ -6987,6 +7005,10 @@ async function startUpgrade() {
     if (typingStyle && kind !== 'format') {
       const current = readSelection(); if (current) { typingStyle.at = current.focus; updateStyleButtons(current); }
     }
+    if (kind === 'insertText' && sourceText === change.source && currentType?.start === currentType?.end && currentType?.part?.kind === 'action') {
+      const joined = DraftEditing.parenthetical(sourceText, currentType.focus, doc, currentType.part);
+      if (joined) { history.breakGroup(); collaboration?.breakGroup?.(); commit(joined, 'autoParenthetical', currentType); }
+    }
   }
   function undo(redo = false) {
     flushLayout(); hideTypeHint();
@@ -8425,6 +8447,7 @@ async function startUpgrade() {
   // "()" with the caret inside (DraftEditing.cycleType).
   const phoneParen = phoneKeyButton('phoneParen', '( )', 'Aggiungi una parentetica', () => {
     const selection = readSelection(); if (!selection) return;
+    if (DraftEditing.dialogueEnd(sourceText, selection.focus, selection.part)) { phoneKey('Enter', true); return; }
     if ((selection.part?.kind || selection.kind) === 'character') phoneKey('Enter');
     setParagraphType('parenthetical');
   });
@@ -8484,7 +8507,7 @@ async function startUpgrade() {
       }
       phoneTab.disabled ||= !selection || Boolean(selection.titleKey);
       const part = selection?.part, collapsed = selection && selection.anchor === selection.focus;
-      phoneParen.hidden = !collapsed || !part || part.placeholder && part.kind !== 'dialogue' || !(part.kind === 'character' && selection.focus >= DraftEditing.bounds(part).end || part.kind === 'dialogue' && part.speech?.parts[0] === part && !DraftEngine.plain(part.text).split('\n')[0].trim() && selection.focus <= part.lineStart + (part.text.split('\n')[0].length));
+      phoneParen.hidden = !collapsed || !part || part.placeholder && part.kind !== 'dialogue' || !(part.kind === 'character' && selection.focus >= DraftEditing.bounds(part).end || DraftEditing.dialogueEnd(sourceText, selection.focus, part) || part.kind === 'dialogue' && part.speech?.parts[0] === part && !DraftEngine.plain(part.text).split('\n')[0].trim() && selection.focus <= part.lineStart + (part.text.split('\n')[0].length));
     }
     if (changed) { if (shown) window.DraftCompletionUI?.refresh(); else if (phoneSuggestions.contains($('#completionPopup'))) window.DraftCompletionUI?.hide(); }
     phoneUndo.disabled = Boolean(composing) || $('#undoBtn').disabled; phoneRedo.disabled = Boolean(composing) || $('#redoBtn').disabled;

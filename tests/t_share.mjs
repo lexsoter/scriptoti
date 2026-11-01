@@ -54,13 +54,13 @@ if (ask) { await ask.fill('Bruno'); await B.page.keyboard.press('Enter'); await 
 await settle(3000);
 check('Bruno sees the same script', (await src(B)) === (await src(A)) && (await src(B)).includes('FABIO\nCiao.'), JSON.stringify(await src(B)));
 
-// Anna: Shift+Enter in dialogue + automatic capital, then Enter to Action
+// Anna: Shift+Enter parenthetical, dialogue capitals, then Enter to Action
 await caretAfter(A, 'Ciao.');
-await A.page.keyboard.press('Shift+Enter'); await A.page.keyboard.type('come va.', { delay: 20 });
+await A.page.keyboard.press('Shift+Enter'); await A.page.keyboard.type('a Lia', { delay: 20 }); await A.page.keyboard.press(')'); await A.page.keyboard.press('Enter'); await A.page.keyboard.type('come va.', { delay: 20 });
 await A.page.keyboard.press('Enter'); await A.page.keyboard.type('luca ride.', { delay: 20 });
 await settle();
 let a = await src(A), b = await src(B);
-check('Anna: Shift+Enter capital and Enter to Action reach Bruno', a === b && a.includes('FABIO\nCiao.\nCome va.\n\nLuca ride.'), JSON.stringify(b));
+check('Anna: Shift+Enter parenthetical, dialogue and Action reach Bruno', a === b && a.includes('FABIO\nCiao.\n(a Lia)\nCome va.\n\nLuca ride.'), JSON.stringify(b));
 
 // Bruno: E' -> È and "FABIO (36) lotta" as Action
 await caretAfter(B, 'Fine.');
