@@ -21,6 +21,20 @@ You write your script as plain text and ScripToti lays it out in the standard fi
 
 ---
 
+## Why ScripToti exists
+
+I needed a screenwriting program that let me work on **the same file on a Mac and on Windows**, at different times of the day, and always find it up to date, without exporting, importing or emailing copies to myself. The programs I knew either run on one system only, keep scripts in their own cloud behind a subscription, or use closed formats.
+
+This is what we built to get there:
+
+- **One app, every computer.** ScripToti runs in the browser and is the same on Mac, Windows and Linux. You can install it as an app, and it keeps working without internet after the first visit.
+- **Your script is a normal file.** Each document is a plain `.fountain` file on your disk, not data locked inside the program. Fountain is open text: the same file opens in Highland, Beat, Slugline or any text editor.
+- **It writes straight to that file.** With Chrome or Edge, ScripToti opens and saves the file itself, with automatic saving. Keep it in a synced folder (Google Drive, Dropbox, OneDrive) and the sync service carries it to your other computers: in the evening you reopen it on the other machine and it is the latest version.
+- **It never overwrites blindly.** Before writing, ScripToti checks that the file was not changed elsewhere in the meantime: by another computer, another program or another window. If it was, it stops with **File conflict** instead of overwriting, shows you the two versions side by side and lets you choose. The version you set aside stays in Recovery.
+- **The production work travels with the script.** Comments, coloured revisions and locked page and scene numbers (12A, 4B…) are saved inside the `.fountain` file itself, in a hidden block that other programs ignore. You find everything on the other computer too.
+- **Several people, at the same time.** Share a script with a link and the changes reach the others in about a second, while the file in the shared folder remains the common copy.
+- **On the phone too.** On a phone the text fits the screen, with keys made for screenplays and voice dictation, to reread and draft away from the computer.
+
 ## What a screenplay is, and why it needs a dedicated program
 
 A screenplay is not written like a story: it follows precise layout rules, the same all over the world. Each scene starts with a heading that says where and when, followed by a description of what we see. When someone speaks, their name goes in the middle in capitals, with the line underneath. Doing this by hand in an ordinary word processor is slow and awkward: ScripToti does it for you as you type.
@@ -59,6 +73,30 @@ The format is called **Fountain**: a simple, open way to write screenplays as te
 - **Syntax check**: it warns you when something will not be read the way you meant, for example a scene heading that is not recognised.
 - **A complete manual** inside the program, in the **Help** menu, in English and Italian.
 
+## Limits and known issues (version 0.36.0)
+
+ScripToti is young and changes often. This list is updated with each version.
+
+**Limits of browsers and devices**
+
+- Working straight on the file on your disk needs **Chrome or Edge** on a computer. Safari and Firefox do not allow it: there ScripToti works on a copy, which you save or download again.
+- On **iPhone and iPad** ScripToti works on a copy of the file you choose, also from Drive. To put it back on Drive use **Send file**. You cannot open a file with ScripToti straight from the Google Drive app. A real app for iPhone and Android, planned, will remove these limits.
+- On a computer, **renaming a file saved on disk is refused** for safety: the browser does not let ScripToti check that the new name is free in that folder. Use **File → Save As…** instead.
+- **Dictation** uses the browser's speech recognition: quality depends on the device, it needs a connection, and only one page at a time can use the microphone.
+
+**Known issues**
+
+- On the phone, while scrolling, the page number at the top updates only when you start editing again.
+- On the phone, when dictation starts, the view does not move to the caret if it was off screen. It catches up with the first phrase.
+- On iPhone, Return after a character name sometimes led to Action instead of the dialogue line. Fixed in 0.36, still to be confirmed on a real device.
+- On iPad, zoom enlarged the page but not the text. Fixed in 0.36, still to be confirmed on a real device.
+
+**Not there yet**
+
+- A view filter (only dialogue, one character, day or night scenes…).
+- Apps for iPhone and Android.
+- Full handling of revisions and locked numbers in scripts shared by several people (planned for 1.0).
+
 ## Questions
 
 **Is it free?** Yes.
@@ -67,7 +105,7 @@ The format is called **Fountain**: a simple, open way to write screenplays as te
 
 **Where do my scripts go?** To your computer, in the files you choose: ScripToti does not upload them to any server. The only exception is sharing a script to write together: then the changes go through the server only to reach the others, and they are encrypted.
 
-**Does it work on a phone?** It opens, but it is designed for a computer with a keyboard. A phone version is in preparation.
+**Does it work on a phone?** Yes. On a phone the text fits the screen, with keys made for screenplays, a print preview and voice dictation. Some limits are listed above.
 
 **Which browser do I need?** It works best with Chrome or Edge, which can save straight to the files on your computer.
 
@@ -101,6 +139,20 @@ Created by Salvatore Frisina.
 Scrivi il copione come testo normale e ScripToti lo impagina da solo nel formato standard del cinema: carattere Courier, margini giusti, nomi dei personaggi centrati, numeri di pagina. Quando hai finito lo esporti in PDF, pronto da mandare o da stampare.
 
 ---
+
+## Perché esiste ScripToti
+
+Mi serviva un programma per scrivere sceneggiature che mi permettesse di lavorare **sullo stesso file sia sul Mac sia su Windows**, in momenti diversi della giornata, e di trovarlo sempre aggiornato, senza esportare, importare o mandarmi copie per email. I programmi che conoscevo funzionano su un solo sistema, oppure tengono i copioni in un loro cloud con un abbonamento, oppure usano formati chiusi.
+
+Ecco cosa abbiamo costruito per arrivarci:
+
+- **Una sola app, su ogni computer.** ScripToti gira nel browser ed è uguale su Mac, Windows e Linux. Puoi installarlo come app, e dopo la prima apertura funziona anche senza internet.
+- **Il copione è un normale file.** Ogni documento è un file `.fountain` sul tuo disco, non un dato chiuso dentro il programma. Fountain è testo aperto: lo stesso file si apre con Highland, Beat, Slugline o qualsiasi editor di testo.
+- **Scrive direttamente su quel file.** Con Chrome o Edge ScripToti apre e salva il file stesso, con il salvataggio automatico. Tienilo in una cartella sincronizzata (Google Drive, Dropbox, OneDrive) e il servizio di sincronizzazione lo porta sugli altri computer: la sera lo riapri dall'altro computer ed è la versione più recente.
+- **Non sovrascrive mai alla cieca.** Prima di scrivere, ScripToti controlla che nel frattempo il file non sia stato cambiato altrove: da un altro computer, da un altro programma o da un'altra finestra. Se è successo, si ferma con **Conflitto sul file** invece di sovrascrivere, ti mostra le due versioni affiancate e ti fa scegliere. La versione che metti da parte resta in Recupero.
+- **Il lavoro di produzione viaggia con il copione.** Commenti, revisioni colorate e numeri di pagina e di scena bloccati (12A, 4B…) sono salvati dentro il file `.fountain`, in un blocco nascosto che gli altri programmi ignorano. Ritrovi tutto anche sull'altro computer.
+- **Più persone, nello stesso momento.** Condividi un copione con un link: le modifiche arrivano agli altri in circa un secondo, mentre il file nella cartella condivisa resta la copia comune.
+- **Anche sul telefono.** Sul telefono il testo si adatta allo schermo, con tasti pensati per la sceneggiatura e la dettatura vocale, per rileggere e scrivere bozze lontano dal computer.
 
 ## Che cos'è una sceneggiatura e perché serve un programma apposta
 
@@ -141,6 +193,30 @@ Il formato si chiama **Fountain**: un modo semplice e aperto di scrivere scenegg
 - **Manuale completo** dentro il programma, nel menu **Aiuto**, in italiano e in inglese.
 - **In italiano o in inglese**: il programma segue la lingua del browser; si cambia da **Vista → Lingua / Language**.
 
+## Limiti e problemi noti (versione 0.36.0)
+
+ScripToti è giovane e cambia spesso. Questo elenco si aggiorna a ogni versione.
+
+**Limiti dei browser e dei dispositivi**
+
+- Lavorare direttamente sul file del disco richiede **Chrome o Edge** su un computer. Safari e Firefox non lo permettono: lì ScripToti lavora su una copia, che salvi o scarichi di nuovo.
+- Su **iPhone e iPad** ScripToti lavora su una copia del file scelto, anche da Drive. Per rimetterlo su Drive usa **Invia il file**. Non si può aprire un file con ScripToti direttamente dall'app di Google Drive. Un'app vera per iPhone e Android, già prevista, toglierà questi limiti.
+- Sul computer **la rinomina di un file salvato sul disco viene rifiutata** per sicurezza: il browser non permette a ScripToti di controllare che il nuovo nome sia libero nella cartella. Usa **File → Salva con nome…**.
+- La **dettatura** usa il riconoscimento vocale del browser: la qualità dipende dal dispositivo, serve la connessione e solo una pagina alla volta può usare il microfono.
+
+**Problemi noti**
+
+- Sul telefono, mentre scorri, il numero di pagina in alto si aggiorna solo quando riprendi a modificare.
+- Sul telefono, all'avvio della dettatura la vista non si sposta sul cursore se era fuori schermo. Si sistema alla prima frase.
+- Su iPhone, Invio dopo il nome di un personaggio a volte portava in Azione invece che alla battuta. Corretto nella 0.36, da confermare su un dispositivo vero.
+- Su iPad lo zoom ingrandiva la pagina ma non il testo. Corretto nella 0.36, da confermare su un dispositivo vero.
+
+**Non ancora presente**
+
+- Un filtro della vista (solo dialoghi, un solo personaggio, scene di giorno o di notte…).
+- App per iPhone e Android.
+- Gestione completa di revisioni e numeri bloccati nei copioni condivisi tra più persone (prevista per la 1.0).
+
 ## Domande frequenti
 
 **È gratis?** Sì.
@@ -149,7 +225,7 @@ Il formato si chiama **Fountain**: un modo semplice e aperto di scrivere scenegg
 
 **Dove finiscono i miei copioni?** Sul tuo computer, nei file che scegli tu: ScripToti non li carica su nessun server. L'unica eccezione è la condivisione per scrivere insieme. In quel caso le modifiche passano dal server solo per arrivare agli altri, e sono cifrate.
 
-**Funziona sul telefono?** Si apre, ma è pensato per un computer con tastiera. Una versione per il telefono è in preparazione.
+**Funziona sul telefono?** Sì. Sul telefono il testo si adatta allo schermo, con tasti pensati per la sceneggiatura, l'anteprima di stampa e la dettatura vocale. Alcuni limiti sono elencati sopra.
 
 **Quale browser serve?** Funziona al meglio con Chrome o Edge, che permettono di salvare direttamente sui file del computer.
 
