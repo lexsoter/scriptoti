@@ -190,6 +190,27 @@ for (const [width, height, locale] of [[390,844,'it-IT'],[844,390,'en-US']]) {
     const labels = await t.page.locator('#scriptEditor>.script-page').evaluateAll(nodes => nodes.map(n => n.dataset.pageLabel));
     t.check(`${label}: writing has no page dividers but preserves real locked labels`, await t.page.locator('.phone-page-divider').count() === 0 && labels.includes('12A'));
     t.check(`${label}: dialogue keeps its indent without the vertical rule`, await t.page.locator('.phone-paragraph.dialogue').first().evaluate(n => parseFloat(getComputedStyle(n).marginLeft) > 0 && getComputedStyle(n).borderLeftStyle === 'none'));
+    // Reading follows the first visible text row, without moving the selection.
+    await t.caret((await t.src()).length);
+    const readingSource = await t.src(), readingFocus = (await state(t)).selection.focus;
+    async function scrollLabel(wanted) {
+      await t.page.evaluate(wanted => {
+        const stage = document.querySelector('#stage'), row = [...document.querySelectorAll('#phoneWriter .phone-region')].find(n => n.dataset.pageLabel === wanted && n.getBoundingClientRect().height > 0);
+        const strip = document.querySelector('#phoneKeyboard'), edge = Math.max(stage.getBoundingClientRect().top, document.querySelector('.topbar').getBoundingClientRect().bottom, strip.hidden ? 0 : strip.getBoundingClientRect().bottom);
+        stage.dispatchEvent(new WheelEvent('wheel', { bubbles: true, deltaY: 1000 }));
+        stage.scrollTop += row.getBoundingClientRect().top - edge + 2;
+        stage.dispatchEvent(new Event('scroll'));
+      }, wanted);
+      await t.page.waitForFunction(wanted => new RegExp('\\b' + wanted + ' (?:di|of) ').test(document.querySelector('.phone-file-status').textContent), wanted);
+    }
+    await scrollLabel('12A');
+    t.check(`${label}: scrolling shows the printed locked label 12A`, /12A (?:di|of)/.test(await t.page.locator('.phone-file-status').textContent()));
+    await scrollLabel(labels[3]);
+    t.check(`${label}: scrolling updates the page without changing text or caret`, await t.src() === readingSource && (await state(t)).selection.focus === readingFocus);
+    await t.type(' Riprendo.');
+    await t.page.waitForFunction(() => { const p = DraftEditor.state().selection.page; return document.querySelector('.phone-file-status').textContent.includes(p + ' '); });
+    t.check(`${label}: editing switches the header back to the caret page`, await caretVisible(t));
+    await locked(t);
     const fullCount = await t.page.locator('.phone-file-status').textContent(); await t.caret((await t.src()).indexOf('MARTA'), (await t.src()).indexOf('MARTA') + 5); await settle(t);
     t.check(`${label}: header keeps the document word count when text is selected`, (await t.page.locator('.phone-file-status').textContent()).split(' · ')[1] === fullCount.split(' · ')[1]);
     await t.page.locator('#phoneGotoBtn').tap(); await t.page.locator('[data-tab=pages]').tap();

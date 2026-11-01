@@ -6301,7 +6301,7 @@ async function startUpgrade() {
   document.addEventListener('pointerdown', hideTypeHint, true);
   document.addEventListener('focusout', hideTypeHint);
   let composing = null, nativeEdit = null, rendering = false, activeRegion = null;
-  let layoutPending = false, layoutTimer = 0, settlingLayout = false;
+  let layoutPending = false, layoutTimer = 0, settlingLayout = false, phoneReading = false;
   let typingStyle = null, saving = false, draftCounters = {};
   let verticalAim = null, navigationRows = null, properNames = [];
   let collaboration = null, writable = true;
@@ -6664,6 +6664,7 @@ async function startUpgrade() {
   }
   function render(selection = null) {
     cancelLayout();
+    if (phoneMedia.matches && !phoneReading) phoneScrollGuard = performance.now() + 150;
     navigationRows = null;
     rendering = true; const scrollTop = stage.scrollTop, scrollLeft = stage.scrollLeft;
     doc = parseSource(sourceText, { empty, caret: selection?.titleKey ? undefined : selection?.focus ?? remembered?.focus });
@@ -6981,6 +6982,7 @@ async function startUpgrade() {
     hideTypeHint();
     verticalAim = null;
     if (!writable) { if (!composing) render(before?.selection || remembered); return; }
+    phoneReading = false;
     if (layoutPending && !previewCandidate(change, kind, selection)) { flushLayout(); selection = readSelection() || selection; }
     const supplied = change.document, explicitBefore = before;
     before = before || snapshot(selection);
@@ -7621,7 +7623,7 @@ async function startUpgrade() {
     commit(insertion(selection, text.replace(/\r\n?/g, '\n')), 'paste', selection);
   }
   function start(text, name = 'Untitled.fountain', isSaved = false, presentation = null) {
-    cancelLayout();
+    cancelLayout(); phoneReading = false;
     const normalized = text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
     const prepared = Production ? Production.prepare(normalized, presentation) : Presentation?.validate(presentation, normalized) || null;
     clearTimeout(recoveryTimer);
@@ -8050,10 +8052,21 @@ async function startUpgrade() {
     phoneShareLed.setAttribute('aria-label', led.getAttribute('aria-label') || T('Condivisione'));
   }
   new MutationObserver(syncPhoneShare).observe($('#shareLed'), { attributes:true }); syncPhoneShare();
+  let phoneWordText = null, phoneWords = '';
+  function visiblePhonePage() {
+    const edge = Math.max(stage.getBoundingClientRect().top, topbar.getBoundingClientRect().bottom, phoneKeyboard.hidden ? 0 : phoneKeyboard.getBoundingClientRect().bottom, window.visualViewport?.offsetTop || 0);
+    const visible = phoneRegions.filter(n => !n._draft.part.blank || n.classList.contains('active-edit'));
+    let a = 0, b = visible.length;
+    while (a < b) { const m = (a + b) >>> 1; if (visible[m].getBoundingClientRect().bottom <= edge + 1) a = m + 1; else b = m; }
+    const label = (visible[a] || visible.at(-1))?.dataset.pageLabel;
+    return phonePages.find(p => p.label === label) || phonePages[0];
+  }
   function updatePhoneLocation() {
     if (!phoneMedia.matches || !doc) return;
-    const selection = readSelection(), page = phonePages.find(p => p.label === selection?.region?.dataset.pageLabel) || phonePageAt(selection?.focus ?? remembered?.focus ?? doc.bodyStart);
-    const words = layoutPending ? $('#wordsStat').textContent : countText(doc.text).words.toLocaleString(window.ScripTotiI18n?.lang === 'en' ? 'en-US' : 'it-IT');
+    const selection = phoneReading ? null : readSelection();
+    const page = phoneReading ? visiblePhonePage() : phonePages.find(p => p.label === selection?.region?.dataset.pageLabel) || phonePageAt(selection?.focus ?? remembered?.focus ?? doc.bodyStart);
+    if (!layoutPending && phoneWordText !== doc.text) { phoneWordText = doc.text; phoneWords = countText(doc.text).words.toLocaleString(window.ScripTotiI18n?.lang === 'en' ? 'en-US' : 'it-IT'); }
+    const words = phoneWords || $('#wordsStat').textContent;
     phoneLocation.textContent = T('pag.') + ' ' + (page?.label || '1') + ' ' + T('di') + ' ' + phonePages.length + ' · ' + words + ' ' + T('parole');
     phoneLocation.title = $('#saveStatus').textContent;
     phoneWriter.classList.toggle('scene-numbers-visible', showSceneNumbers);
@@ -8116,7 +8129,7 @@ async function startUpgrade() {
     // Wait for the suggestion strip and keyboard viewport to finish resizing.
     phoneFrame = requestAnimationFrame(() => { phoneFrame = requestAnimationFrame(() => { phoneFrame = 0; revealPhoneCaret(); phoneCaretPending = false; }); });
   }
-  const stopPhoneFollow = () => { phoneCaretPending = false; cancelAnimationFrame(phoneFrame); phoneFrame = 0; };
+  const stopPhoneFollow = () => { phoneScrollGuard = 0; phoneCaretPending = false; cancelAnimationFrame(phoneFrame); phoneFrame = 0; };
   for (const type of ['touchstart','pointerdown','wheel']) stage.addEventListener(type, stopPhoneFollow, { passive:true });
   for (const type of ['paste','cut']) phoneWriter.addEventListener(type, () => schedulePhoneCaret(true));
   function phoneViewport() {
@@ -8149,6 +8162,7 @@ async function startUpgrade() {
   window.visualViewport?.addEventListener('scroll', phoneViewport);
   addEventListener('resize', phoneViewport); phoneMedia.addEventListener('change', phoneViewport);
   stage.addEventListener('scroll', () => {
+    if (phoneWriting() && performance.now() > phoneScrollGuard) { phoneReading = true; queuePhoneUi(); }
     if (stage.scrollTop < phoneScrollTop - 12 && performance.now() > phoneScrollGuard) phoneTools(true);
     phoneScrollTop = stage.scrollTop;
   }, { passive:true });
