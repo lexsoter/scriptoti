@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Prova dettatura</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; padding: max(16px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom)); background: #18181b; color: #ececee; font: 16px/1.45 system-ui, -apple-system, sans-serif; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  p { margin: 0 0 12px; color: #b4b4bb; }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 12px 0; }
+  select, label { font-size: 16px; }
+  select { height: 40px; padding: 0 8px; border-radius: 8px; border: 1px solid #3a3a42; background: #26262b; color: inherit; }
+  #mic { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; height: 72px; border: 0; border-radius: 18px; background: #2f4a86; color: #fff; font: 600 18px system-ui, sans-serif; }
+  #mic.on { background: #b3261e; }
+  #mic svg { width: 26px; height: 26px; }
+  #text { min-height: 160px; padding: 14px; border-radius: 14px; background: #222226; font: 18px/1.45 "Courier New", monospace; white-space: pre-wrap; }
+  #interim { color: #8d8d95; }
+  #log { margin-top: 14px; padding: 10px; border-radius: 10px; background: #111113; font: 12px/1.5 ui-monospace, monospace; color: #b4b4bb; white-space: pre-wrap; max-height: 220px; overflow: auto; }
+  .row button { height: 40px; padding: 0 14px; border: 1px solid #3a3a42; border-radius: 8px; background: #26262b; color: inherit; font-size: 15px; }
+</style>
+</head>
+<body>
+<h1>Prova dettatura per ScripToti</h1>
+<p>Tocca il microfono e parla. Il testo compare qui sotto senza aprire la tastiera. Prova anche le pause, la punteggiatura («virgola», «punto») e le due lingue.</p>
+<div class="row">
+  <label for="lang">Lingua</label>
+  <select id="lang"><option value="it-IT">Italiano</option><option value="en-US">English</option></select>
+  <label><input type="checkbox" id="continuous" checked> continua dopo le pause</label>
+</div>
+<button id="mic" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span id="micLabel">Detta</span></button>
+<div class="row"><button id="clear" type="button">Cancella il testo</button><button id="copy" type="button">Copia il resoconto</button></div>
+<div id="text"><span id="final"></span><span id="interim"></span></div>
+<div id="log"></div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const log = message => { $('log').textContent += new Date().toLocaleTimeString() + '  ' + message + '\n'; $('log').scrollTop = 1e9; };
+  const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  log('Browser: ' + navigator.userAgent);
+  log('Aperta ' + (standalone ? 'dall\'icona sulla Home (app installata)' : 'nel browser'));
+  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!Recognition) {
+    log('RISULTATO: questo browser non offre il riconoscimento vocale alle pagine web.');
+    $('mic').disabled = true; $('micLabel').textContent = 'Non disponibile qui';
+    return;
+  }
+  log('Riconoscimento vocale disponibile.');
+  let recognition = null, listening = false, wanted = false, started = 0;
+  function start() {
+    recognition = new Recognition();
+    recognition.lang = $('lang').value;
+    recognition.continuous = $('continuous').checked;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+    recognition.onstart = () => { listening = true; started = Date.now(); $('mic').classList.add('on'); $('micLabel').textContent = 'Sto ascoltando… tocca per fermare'; log('Ascolto avviato (' + recognition.lang + ', continuo: ' + recognition.continuous + ')'); };
+    recognition.onresult = event => {
+      let interim = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const text = event.results[i][0].transcript;
+        if (event.results[i].isFinal) { $('final').textContent += text + ' '; log('Frase finale: «' + text + '»'); }
+        else interim += text;
+      }
+      $('interim').textContent = interim;
+    };
+    recognition.onerror = event => log('Errore: ' + event.error + (event.message ? ' – ' + event.message : ''));
+    recognition.onend = () => {
+      listening = false; $('interim').textContent = '';
+      log('Ascolto terminato dopo ' + Math.round((Date.now() - started) / 1000) + ' s');
+      // Restart after a pause while the user still wants to dictate.
+      if (wanted && $('continuous').checked) { log('Riparto da solo dopo la pausa'); try { start(); return; } catch (error) { log('Non riesco a ripartire: ' + error.message); } }
+      wanted = false; $('mic').classList.remove('on'); $('micLabel').textContent = 'Detta';
+    };
+    try { recognition.start(); } catch (error) { log('Non parte: ' + error.message); }
+  }
+  $('mic').onclick = () => {
+    if (listening || wanted) { wanted = false; recognition?.stop(); return; }
+    wanted = true; start();
+  };
+  $('clear').onclick = () => { $('final').textContent = ''; $('interim').textContent = ''; };
+  $('copy').onclick = async () => {
+    try { await navigator.clipboard.writeText($('log').textContent + '\nTESTO:\n' + $('final').textContent); log('Resoconto copiato: incollalo in chat a Claude.'); }
+    catch { log('Copia non riuscita: fai uno screenshot.'); }
+  };
+})();
+</script>
+</body>
+</html>
