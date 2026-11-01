@@ -172,6 +172,21 @@ for (const phone of [false, true]) for (const tracking of [false, true]) {
     await t.page.waitForFunction(() => !DraftEditor.pending);
     const rebuilt = await snap();
     t.check(name + ': overflow pages, scene numbers and revision bands match a full reload', JSON.stringify(overflow.pages) === JSON.stringify(rebuilt.pages) && JSON.stringify(overflow.context) === JSON.stringify(rebuilt.context) && JSON.stringify(overflow.state.document) === JSON.stringify(rebuilt.state.document));
+    const references = await t.page.evaluate(({ phone }) => {
+      const put = (scene, text) => {
+        const source = DraftEditor.state().source, at = source.indexOf('Elena sistema', source.indexOf('LABORATORIO ' + scene)) + 6;
+        DraftEditor.selectAbsolute({ anchor: at, focus: at });
+        document.querySelector(phone ? '#phoneWriter' : '#scriptEditor').dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertText', data: text }));
+      };
+      const canonical = s => JSON.stringify(s.document) === JSON.stringify(DraftProduction.reconcile(s.source, s.document, s.empty));
+      put('070', 'Una modifica lunga da controllare. '.repeat(140)); const first = DraftEditor.state().source;
+      put('071', 'seconda '); const both = DraftEditor.state().source;
+      document.querySelector('#undoBtn').click(); const undone = DraftEditor.state(), undo = undone.source === first && canonical(undone);
+      document.querySelector('#redoBtn').click(); const redone = DraftEditor.state();
+      return { undo, redo: redone.source === both && canonical(redone) };
+    }, { phone });
+    t.check(name + ': Undo between rapid edits keeps complete overflow references', references.undo);
+    t.check(name + ': Redo keeps the exact text and complete overflow references', references.redo);
   }
   // The parse shortcut must keep heading normalisation behind hidden Fountain.
   for (const prefix of ['  ', '[[nota]]', '/*nota*/', '/*nota\n*/', '[[nota\ncontinua]]']) {

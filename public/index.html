@@ -7024,6 +7024,9 @@ async function startUpgrade() {
     const current = snapshot(), next = history[redo ? 'redo' : 'undo'](current);
     if (!next) return;
     if (next.document) next.document = { ...next.document, revisions: { ...next.document.revisions, tracking: documentState.revisions.tracking, visible: documentState.revisions.visible } };
+    // A history snapshot may precede its deferred page references.
+    try { if (Production && next.document?.locks) next.document = Production.reconcile(next.source, next.document, next.empty); }
+    catch (error) { history[redo ? 'undo' : 'redo'](next); toast(error.message); return; }
     if (collaboration?.commit?.(next, redo ? 'redo' : 'undo', current) === false) { history[redo ? 'undo' : 'redo'](next); return; }
     sourceText = next.source; documentState = next.document || documentState; empty = next.empty;
     render(next.selection); markChanged(); revealCaret();
