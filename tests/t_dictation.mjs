@@ -57,6 +57,29 @@ t.check('phone: Tastiera stops dictation and gives the keyboard back', !(await t
 t.check('phone: no page errors', !t.errors.length, JSON.stringify(t.errors));
 t.report(); await t.close();
 
+// Exact and fuzzy character names must preserve every following dialogue word.
+t = await open();
+for (const [lang, command, rest] of [
+  ['it-IT', 'Personaggio', 'è tardi.'], ['it-IT', 'Personaggio', 'e poi?'],
+  ['it-IT', 'Personaggio', 'a casa.'], ['it-IT', 'Personaggio', 'ha ragione.'],
+  ['en-US', 'Character', 'I agree.'], ['en-US', 'Character', 'a moment.']
+]) {
+  const steps = await t.page.evaluate(([lang, command, rest]) => window.DraftDictation.parse(command + ' Francesca ' + rest, { lang, names: ['FRANCESCA', 'FRANCESCA ELI', 'MARIA GRAZIA'] }), [lang, command, rest]);
+  t.check('character preserves ' + JSON.stringify(rest), steps.length === 2 && steps[0].text === 'FRANCESCA' && steps[1].text === rest, JSON.stringify(steps));
+}
+for (const [spoken, name, rest] of [
+  ['Maria Grazia è tardi.', 'MARIA GRAZIA', 'è tardi.'],
+  ['Francecsa è tardi.', 'FRANCESCA', 'è tardi.'],
+  ['Maria Grasia ha ragione.', 'MARIA', 'Grasia ha ragione.'],
+  ['Maria è qui.', 'MARIA', 'è qui.']
+]) {
+  const steps = await t.page.evaluate(spoken => window.DraftDictation.parse('Personaggio ' + spoken, { names: ['FRANCESCA', 'MARIA', 'MARIA GRAZIA'] }), spoken);
+  t.check('character recognises ' + spoken, steps.length === 2 && steps[0].text === name && steps[1].text === rest, JSON.stringify(steps));
+}
+const compound = await t.page.evaluate(() => window.DraftDictation.parse('Personaggio Maria Grasia ha ragione.', { names: ['MARIA GRAZIA'] }));
+t.check('compound typo still recognised without a shorter exact name', compound[0].text === 'MARIA GRAZIA' && compound[1].text === 'ha ragione.', JSON.stringify(compound));
+t.report(); await t.close();
+
 // Late speech must never cross a document or a recogniser boundary.
 for (const phone of [false, true]) {
   t = await open(phone ? { width: 390, height: 844, hasTouch: true, isMobile: true } : {});

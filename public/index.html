@@ -3366,7 +3366,7 @@ const DraftSearch = (() => {
     return [prefix + (place ? ' ' + place : ''), time].filter(Boolean).join(' - ');
   }
   // The name after "personaggio": the longest known character among the
-  // next words (spelled close enough), else the first word.
+  // next words, then a spelling correction with the same word count.
   function distance(a, b) {
     const d = Array.from({ length: a.length + 1 }, (_, i) => [i, ...Array(b.length).fill(0)]);
     for (let j = 1; j <= b.length; j++) d[0][j] = j;
@@ -3374,12 +3374,16 @@ const DraftSearch = (() => {
     return d[a.length][b.length];
   }
   function characterName(list, i, names) {
-    const known = (names || []).map(n => ({ name: n, key: n.split(/\s+/).map(fold).join(' ') }));
-    for (let take = Math.min(3, list.length - i); take >= 1; take--) {
-      const spoken = list.slice(i, i + take).map(w => w.key).join(' ');
-      const best = known.map(k => ({ ...k, d: distance(spoken, k.key) })).filter(k => k.d <= Math.max(1, Math.floor(k.key.length / 4))).sort((a, b) => a.d - b.d)[0];
-      if (best) return { name: best.name, length: take };
-    }
+    const known = (names || []).map(name => {
+      const keys = name.trim().split(/\s+/).map(fold);
+      return { name, keys, key: keys.join(' ') };
+    }).sort((a, b) => b.keys.length - a.keys.length);
+    // Exact names win before any fuzzy match can consume dialogue words.
+    for (const k of known) if (k.keys.every((word, j) => list[i + j]?.key === word)) return { name: k.name, length: k.keys.length };
+    const best = known.filter(k => i + k.keys.length <= list.length).map(k => ({
+      ...k, d: distance(list.slice(i, i + k.keys.length).map(w => w.key).join(' '), k.key)
+    })).filter(k => k.d <= Math.max(1, Math.floor(k.key.length / 4))).sort((a, b) => a.d - b.d)[0];
+    if (best) return { name: best.name, length: best.keys.length };
     return list[i] ? { name: list[i].raw.replace(/[.,;:!?]+$/, '').toLocaleUpperCase('it'), length: 1 } : null;
   }
   function parse(text, options = {}) {
