@@ -134,6 +134,15 @@ await t.press('Enter');
 const afterHeading = await caps();
 t.check('keyboard capitals: name and heading yes, after Enter no', onCue === 'characters' && onDialogue === 'sentences' && onHeading === 'characters' && afterHeading === 'sentences', JSON.stringify({ onCue, onDialogue, onHeading, afterHeading }));
 
+// Blank lines inside a speech (rows of spaces) go away with Backspace, and so
+// does the empty page they made.
+await t.load('Title\n\nINT. CASA - GIORNO\n\n' + Array.from({ length: 25 }, (_, i) => `Azione numero ${i + 1} che riempie la pagina.`).join('\n\n') + '\n\nMARTA\nCiao.');
+await t.caret((await t.src()).length); await t.press('Shift+Enter', 40);
+const grown = await t.page.evaluate(() => document.querySelectorAll('.script-page').length);
+await t.press('Backspace', 40);
+const shrunk = await t.page.evaluate(() => document.querySelectorAll('.script-page').length);
+t.check('Backspace removes blank dialogue lines and the empty page', grown === 2 && shrunk === 1 && (await t.src()).trimEnd().endsWith('MARTA\nCiao.'), JSON.stringify({ grown, shrunk, tail: (await t.src()).slice(-20) }));
+
 // Find and replace keeps a leading capital and all-caps occurrences.
 const replaced = await t.page.evaluate(() => {
   const src = 'Title\n\nINT. CASA - GIORNO\n\nGiraffa entra. Una giraffa beve. LA GIRAFFA dorme.\n\n';

@@ -1426,6 +1426,16 @@ const DraftEditing = (() => {
   }
   function erase(source, start, end, doc, part, direction, word = false) {
     if (start !== end) return removeSelection(source, start, end, doc);
+    // A blank line inside a speech is stored as a row of spaces (an empty row
+    // would end the speech). Backspace removes that whole row at once, so
+    // repeated blank lines, and the empty page they made, can be deleted.
+    if (direction < 0) {
+      const rowStart = source.lastIndexOf('\n', start - 1) + 1, rowBreak = source.indexOf('\n', start);
+      const row = source.slice(rowStart, rowBreak < 0 ? source.length : rowBreak);
+      if (rowStart > 0 && row.length && !row.trim() && start <= rowStart + row.length) {
+        return replace(source, rowStart - 1, rowStart + row.length, '');
+      }
+    }
     // Migrated plain paragraphs keep each source newline editable. Crossing an
     // empty row deletes that separator immediately instead of only moving focus.
     if (part?.literal) {
