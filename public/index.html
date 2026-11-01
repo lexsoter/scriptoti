@@ -3588,8 +3588,13 @@ const DraftSearch = (() => {
       if (!current || current.project !== id()) return hide();
       const value = current;
       if (editor.replaceText(value.start, value.end, item.value, value.source, value.document)) {
-        dismissed = ''; hide(); editor.selectAbsolute({ anchor: value.start + item.value.length, focus: value.start + item.value.length, kind: item.kind === 'character' ? 'character' : 'scene' });
+        dismissed = ''; hide(); editor.selectAbsolute({ anchor: value.start + item.value.length, focus: value.start + item.value.length, kind: item.kind === 'character' ? 'character' : 'scene' }); return true;
       } else { hide(); editor.toast('Il testo è cambiato: scegli di nuovo il suggerimento.'); }
+    }
+    function acceptCharacter() {
+      const selection = editor.state().selection, item = current?.items[index];
+      if (popup.hidden || item?.kind !== 'character' || !selection || selection.anchor !== selection.focus || selection.focus < current.end) return false;
+      return accept(item);
     }
     // Page and scene of a character's last appearance, from the current
     // pagination, so the hint follows every edit, lock and renumbering.
@@ -3666,7 +3671,9 @@ const DraftSearch = (() => {
       } else if (event.key === 'Enter' && !event.shiftKey) {
         const selection = editor.state().selection;
         if (!selection || selection.anchor !== selection.focus || selection.focus < current.end) { hide(); return; }
-        event.preventDefault(); event.stopImmediatePropagation(); accept(current.items[index]);
+        event.preventDefault(); event.stopImmediatePropagation();
+        const item = current.items[index], phone = document.activeElement.closest('#phoneWriter');
+        if (accept(item) && phone && item.kind === 'character') phone.dispatchEvent(new InputEvent('beforeinput', { bubbles:true, cancelable:true, inputType:'insertParagraph' }));
       }
       else if (event.key === 'Escape') { event.preventDefault(); event.stopImmediatePropagation(); dismissed = current.signature; hide(); }
       else if (event.key === 'Tab') hide();
@@ -3677,7 +3684,7 @@ const DraftSearch = (() => {
     document.querySelector('#stage')?.addEventListener('scroll', () => { if (!popup.closest('#phoneSuggestions')) hide(); });
     window.addEventListener('resize', () => { if (!popup.closest('#phoneSuggestions')) hide(); });
     window.DraftCompletionUI = {
-      hide, refresh,
+      hide, refresh, acceptCharacter,
       descriptions(records, expectedSource, expectedId) {
         if (id() !== expectedId || editor.state().source !== expectedSource) return false;
         prefs().descriptions = records; save(); cache = null; refresh(); return true;
@@ -7706,7 +7713,7 @@ async function startUpgrade() {
   phoneWriter.setAttribute('role', 'textbox'); phoneWriter.setAttribute('aria-multiline', 'true');
   phoneWriter.setAttribute('aria-label', T('Scrittura sul telefono')); phoneWriter.spellcheck = true;
   stage.append(phoneWriter);
-  let phoneFont = 18, phoneIME = null, phoneIMECommit = null, phoneUiFrame = 0, phoneLastSource = '', phoneLastProject = null;
+  let phoneFont = 18, phoneIME = null, phoneIMECommit = null, phoneIMEEnter = 0, phoneUiFrame = 0, phoneLastSource = '', phoneLastProject = null;
   const phoneLastEdits = new Map(), phoneIMEPreview = el('span', 'phone-composition'); phoneIMEPreview.hidden = true;
   phoneIMEPreview.setAttribute('aria-hidden', 'true'); document.body.append(phoneIMEPreview);
   try { const size = Number(localStorage.getItem('scriptoti-phone-size')); if (size >= 14 && size <= 26) phoneFont = size; } catch {}
@@ -7861,13 +7868,23 @@ async function startUpgrade() {
     schedulePhoneCaret(true);
     if (!phoneIME && (event.isComposing || event.inputType === 'insertCompositionText')) phoneWriter.dispatchEvent(new CompositionEvent('compositionstart', { bubbles:true, data:'' }));
     if (phoneIME || event.isComposing || event.inputType === 'insertCompositionText') {
-      if (phoneIME && event.data !== null) { phoneIME.data = event.data; phoneIME.confirmed ||= event.inputType === 'insertFromComposition'; paintPhoneComposition(); }
+      if (phoneIME && ['insertParagraph','insertLineBreak'].includes(event.inputType)) phoneIME.enter = event.inputType;
+      else if (phoneIME && event.data !== null) { phoneIME.data = event.data; phoneIME.confirmed ||= event.inputType === 'insertFromComposition'; paintPhoneComposition(); }
       return;
     }
     if (event.inputType === 'insertFromComposition' && phoneIMECommit?.source === sourceText && phoneIMECommit.data === event.data && performance.now() - phoneIMECommit.time < 250 && readSelection()?.focus === phoneIMECommit.at) { phoneIMECommit = null; return; }
-    phoneIMECommit = null;
+    phoneIMECommit = null; cancelAnimationFrame(phoneIMEEnter); phoneIMEEnter = 0;
+    let inputType = event.inputType;
+    if (inputType === 'insertParagraph' || inputType === 'insertLineBreak') window.DraftCompletionUI?.acceptCharacter();
+    if (inputType === 'insertLineBreak') {
+      const selection = readSelection(), part = selection?.part;
+      if (selection && selection.start === selection.end && ['action','character'].includes(part?.kind) && selection.focus >= DraftEditing.bounds(part).end) {
+        const change = operation('insertParagraph', null, selection);
+        if (change?.kind === 'dialogue' || change?.empty?.kind === 'dialogue') inputType = 'insertParagraph';
+      }
+    }
     // Normalize cancelability; native DOM mutations are never a source of text.
-    beforeInput({ inputType:event.inputType, data:event.data, dataTransfer:event.dataTransfer, cancelable:true, isComposing:false, getTargetRanges:() => event.getTargetRanges?.() || [], preventDefault() {} });
+    beforeInput({ inputType, data:event.data, dataTransfer:event.dataTransfer, cancelable:true, isComposing:false, getTargetRanges:() => event.getTargetRanges?.() || [], preventDefault() {} });
   });
   for (const type of ['beforeinput','keydown','paste','cut','drop','compositionstart']) stage.addEventListener(type, event => {
     if (phoneMedia.matches && phoneMode === 'preview') { event.preventDefault(); event.stopImmediatePropagation(); }
@@ -7890,14 +7907,23 @@ async function startUpgrade() {
   }
   for (const type of ['compositionstart','compositionupdate','compositionend']) phoneWriter.addEventListener(type, event => {
     event.stopImmediatePropagation();
-    if (type === 'compositionstart') { phoneIME = { data:'' }; phoneIMECommit = null; }
+    if (type === 'compositionstart') { cancelAnimationFrame(phoneIMEEnter); phoneIMEEnter = 0; phoneIME = { data:'' }; phoneIMECommit = null; }
     else if (phoneIME && event.data) phoneIME.data = event.data;
+    const enter = type === 'compositionend' ? phoneIME?.enter : null;
     const data = type === 'compositionend' ? event.data || (phoneIME?.confirmed ? phoneIME.data : '') : event.data;
     if (type === 'compositionend') { phoneIME = null; phoneIMEPreview.hidden = true; ensurePhoneDocument(true); }
     // Delegate to the unchanged composition transaction, with its source snapshot.
     editor.dispatchEvent(new CompositionEvent(type, { bubbles:true, data }));
     if (type === 'compositionupdate') paintPhoneComposition();
-    if (type === 'compositionend') { phoneIMECommit = { data, source:sourceText, at:remembered?.focus, time:performance.now() }; schedulePhoneCaret(true); }
+    if (type === 'compositionend') {
+      const finished = phoneIMECommit = { data, source:sourceText, at:remembered?.focus, time:performance.now(), owner:window.DraftSafe?.activeId };
+      // A committed Return takes precedence over one queued during composition.
+      if (enter) phoneIMEEnter = requestAnimationFrame(() => {
+        phoneIMEEnter = 0;
+        if (phoneIMECommit === finished && sourceText === finished.source && readSelection()?.focus === finished.at && window.DraftSafe?.activeId === finished.owner) phoneWriter.dispatchEvent(new InputEvent('beforeinput', { bubbles:true, cancelable:true, inputType:enter }));
+      });
+      schedulePhoneCaret(true);
+    }
   });
   const phoneLocation = el('small', 'phone-file-status'), phoneShareLed = el('button', 'share-led phone-share-led'), phoneName = el('span', 'phone-name');
   phoneShareLed.id = 'phoneShareLed'; phoneShareLed.type = 'button'; phoneShareLed.hidden = true;
