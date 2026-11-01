@@ -3,7 +3,7 @@
 <head>
 <meta name="scriptoti-edition" content="online">
   <meta charset="utf-8">
-  <meta name="scriptoti-version" content="0.36.0">
+  <meta name="scriptoti-version" content="0.37.0">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -1925,9 +1925,9 @@ const DraftEditing = (() => {
   }
   const typeOrder = ['scene', 'action', 'character', 'parenthetical', 'dialogue', 'transition'];
   // The types Tab offers depend on where the caret is. Dialogue and
-  // parenthetical exist only under a character; on an empty line after a
-  // speech the likely next thing is a transition or a new scene, elsewhere a
-  // character. Each list is a cycle; Tab moves forward, Shift+Tab back.
+  // parenthetical exist only under a character; an empty action after a
+  // speech starts a new character, then transition and scene. Tab moves
+  // forward through each cycle, Shift+Tab back.
   function tabCycle(doc, part) {
     if (!part) return ['action', 'character', 'scene', 'transition'];
     const afterSpeech = ['action', 'character', 'transition', 'scene'];
