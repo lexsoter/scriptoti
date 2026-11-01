@@ -45,7 +45,7 @@ for (const [width, height] of [[390, 844], [844, 390]]) {
     for (const [type, data] of [['compositionstart', ''], ['compositionupdate', 'TA'], ['compositionend', 'TA']]) writer.dispatchEvent(new CompositionEvent(type, { bubbles: true, data }));
   });
   await input('insertFromComposition', 'TA'); await input('insertParagraph'); await dialogue('compositionend then Return');
-  for (const follows of [false, true]) {
+  for (const follows of [false, true, 'commit', 'late commit']) {
     await load('MAR');
     await t.page.evaluate(follows => {
       const writer = document.querySelector('#phoneWriter');
@@ -53,10 +53,15 @@ for (const [width, height] of [[390, 844], [844, 390]]) {
       writer.dispatchEvent(new CompositionEvent('compositionupdate', { bubbles: true, data: 'TA' }));
       writer.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertParagraph', isComposing: true }));
       writer.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: 'TA' }));
-      if (follows) writer.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertParagraph' }));
+      if (follows === true) writer.dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertParagraph' }));
+      if (follows === 'commit') {
+        const duplicate = new InputEvent('beforeinput', { bubbles: true, cancelable: true, data: 'TA' });
+        Object.defineProperty(duplicate, 'inputType', { value: 'insertFromComposition' }); writer.dispatchEvent(duplicate);
+      }
     }, follows);
-    await t.page.waitForTimeout(150);
-    await dialogue('Return during composition' + (follows ? ' followed by committed Return' : ''));
+    await t.page.waitForTimeout(100);
+    if (follows === 'late commit') await input('insertFromComposition', 'TA');
+    await dialogue('Return during composition (' + String(follows) + ')');
   }
   await load('marta'); await t.page.evaluate(() => document.querySelector('#phoneTab').click());
   await input('insertLineBreak'); await dialogue('lowercase name forced by SmartTab');

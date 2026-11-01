@@ -7873,7 +7873,8 @@ async function startUpgrade() {
       else if (phoneIME && event.data !== null) { phoneIME.data = event.data; phoneIME.confirmed ||= event.inputType === 'insertFromComposition'; paintPhoneComposition(); }
       return;
     }
-    if (event.inputType === 'insertFromComposition' && phoneIMECommit?.source === sourceText && phoneIMECommit.data === event.data && performance.now() - phoneIMECommit.time < 250 && readSelection()?.focus === phoneIMECommit.at) { phoneIMECommit = null; return; }
+    if (event.inputType === 'insertFromComposition' && phoneIMECommit?.source === sourceText && phoneIMECommit.data === event.data && performance.now() - phoneIMECommit.time < 250 && readSelection()?.focus === phoneIMECommit.at) { if (!phoneIMEEnter) phoneIMECommit = null; return; }
+    const finished = phoneIMECommit, before = sourceText, at = readSelection()?.focus;
     phoneIMECommit = null; cancelAnimationFrame(phoneIMEEnter); phoneIMEEnter = 0;
     let inputType = event.inputType;
     if (inputType === 'insertParagraph' || inputType === 'insertLineBreak') window.DraftCompletionUI?.acceptCharacter();
@@ -7886,6 +7887,8 @@ async function startUpgrade() {
     }
     // Normalize cancelability; native DOM mutations are never a source of text.
     beforeInput({ inputType, data:event.data, dataTransfer:event.dataTransfer, cancelable:true, isComposing:false, getTargetRanges:() => event.getTargetRanges?.() || [], preventDefault() {} });
+    // Some keyboards repeat the composition's text after its Return.
+    if (finished && ['insertParagraph','insertLineBreak'].includes(inputType) && finished.source === before && finished.at === at && performance.now() - finished.time < 250) phoneIMECommit = { ...finished, source:sourceText, at:readSelection()?.focus };
   });
   for (const type of ['beforeinput','keydown','paste','cut','drop','compositionstart']) stage.addEventListener(type, event => {
     if (phoneMedia.matches && phoneMode === 'preview') { event.preventDefault(); event.stopImmediatePropagation(); }
