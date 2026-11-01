@@ -85,6 +85,14 @@ const panel = await t.page.evaluate(() => {
   return { rows: new Set(buttons.map(b => b.top)).size, fit: buttons.every(b => b.left >= 0 && b.right <= innerWidth && b.height >= 44) };
 });
 t.check('phone: dictation controls fit in two touch-sized rows', panel.rows === 2 && panel.fit, JSON.stringify(panel));
+await t.load(Array.from({ length: 130 }, (_, i) => '!Paragrafo ' + i + '. Una riga lunga da rileggere con calma.').join('\n\n') + '\n');
+await t.caret((await t.src()).trimEnd().length); await say(t, 'Una frase finale da vedere.');
+await t.page.waitForTimeout(350);
+const visible = await t.page.evaluate(() => {
+  const selection = getSelection(), rect = selection.getRangeAt(0).getBoundingClientRect();
+  return { top: rect.top, bottom: rect.bottom, height: rect.height, panel: document.querySelector('#dictatePanel').getBoundingClientRect().top, stage: document.querySelector('#stage').getBoundingClientRect().top };
+});
+t.check('phone: dictated caret stays above the panel in a long document', visible.height > 0 && visible.top >= visible.stage && visible.bottom < visible.panel, JSON.stringify(visible));
 await t.page.locator('.dictate-keyboard').tap(); await t.page.waitForTimeout(200);
 t.check('phone: Tastiera stops dictation and gives the keyboard back', !(await t.page.locator('#dictatePanel').isVisible()) && await t.page.evaluate(() => !document.querySelector('#phoneWriter').hasAttribute('inputmode')));
 t.check('phone: no page errors', !t.errors.length, JSON.stringify(t.errors));
