@@ -44,7 +44,9 @@ try {
     }
     return false;
   });
-  const waiting = await snapshot();
+  // Under load the new cache can still be filling: read it until it holds B.
+  let waiting = await snapshot();
+  for (let i = 0; i < 100 && !Object.values(waiting.shells).some(s => s.includes('name="update-test" content="B"')); i++) { await t.page.waitForTimeout(100); waiting = await snapshot(); }
   t.check('same-version publication prepares a different cache', waiting.version === first.version && waiting.keys.length === 3 && Object.values(waiting.shells).some(s => s.includes('name="update-test" content="B"')), JSON.stringify({ keys: waiting.keys, markers: Object.values(waiting.shells).map(s => s.match(/name="update-test" content="[^"]*/)?.[0]) }));
   t.check('waiting update leaves the active cache byte-for-byte unchanged', waiting.shells[active] === first.shells[active]);
   await t.page.waitForFunction(() => !document.querySelector('#updateBanner').hidden);
