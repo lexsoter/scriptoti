@@ -165,5 +165,22 @@
       "- **«collegamento…»** a lungo: la prima apertura su un computer richiede internet.",
       "- **«Condivisione non più disponibile»**: il documento non è più condiviso sul server; il file resta una copia normale."
     ]
+  },
+  "dettatura": {
+    "title": "Dettatura",
+    "short": "Tocca il microfono (sul telefono il pulsante tondo in basso, sul computer quello nella barra degli strumenti) e parla: il testo entra dove c’è il cursore. Puoi dettare anche comandi come «a capo», «personaggio Marta», «nuova scena interno cucina notte».",
+    "body": [
+      "Tocca il **microfono**: sul telefono il pulsante tondo in basso a destra, sul computer quello accanto a Condividi nella barra degli strumenti. Parla normalmente: il testo compare in grigio mentre parli ed entra nel documento dove c’è il cursore appena fai una pausa. Sul telefono la tastiera resta chiusa, così vedi il testo.",
+      "La lingua è quella di **Ortografia** (italiano o inglese). Il riconoscimento è quello del browser: Apple su iPhone e Safari, Google su Chrome. Serve internet e il permesso di usare il microfono; in Firefox la dettatura non c’è.",
+      "## Comandi",
+      "- «**a capo**» o «nuova riga»: nuovo paragrafo.",
+      "- «**nuova scena** interno cucina notte»: diventa `INT. CUCINA - NOTTE`. Anche «esterno» (EST.) e i momenti del giorno: giorno, notte, sera, alba…",
+      "- «**personaggio** Marta»: il nome diventa un personaggio e quello che dici dopo è la sua battuta. Se il riconoscimento storpia il nome, ScripToti usa quello dei personaggi del documento.",
+      "- «**parentesi** sottovoce»: una parentetica nella battuta. Si chiude alla prima pausa, o dicendo «chiudi parentesi».",
+      "- «**stacco**», «dissolvenza a», «fade out»: una transizione.",
+      "- «**annulla**» detto da solo: toglie l’ultimo passo. «**stop dettatura**»: smette di ascoltare.",
+      "In inglese: «new line», «new scene interior kitchen night», «character Marta», «parenthetical», «cut to», «undo», «stop dictation».",
+      "Nel pannello trovi anche **Tipo ⇥** (come il Tab), **Annulla**, **Tastiera** (sul telefono: smette di dettare e apre la tastiera per correggere) e **Fine**."
+    ]
   }
 }

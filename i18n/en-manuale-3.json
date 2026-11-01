@@ -186,5 +186,30 @@
       "- **“connecting…”** for a long time: the first time you open a shared document on a computer, you need internet.",
       "- **“Sharing no longer available”**: the document is no longer shared on the server. Your file remains an ordinary copy."
     ]
+  },
+  "dettatura": {
+    "title": "Dictation",
+    "short": "Tap the microphone (on a phone the round button at the bottom, on a computer the one in the toolbar) and speak: the text goes in where the cursor is. You can also say commands such as “new line”, “character Marta”, “new scene interior kitchen night”.",
+    "body": [
+      "Tap the **microphone**: on a phone the round button at the bottom right, on a computer the one next to Share in the toolbar. Speak normally: the text appears in grey while you talk and goes into the document at the cursor as soon as you pause. On a phone the keyboard stays closed, so you can see the text.",
+      "The language is the one set in **Spellcheck** (Italian or English). Recognition is the browser’s: Apple on iPhone and Safari, Google in Chrome. It needs an internet connection and permission to use the microphone; Firefox has no dictation.",
+      "## Commands",
+      "- “**new line**”: a new paragraph.",
+      "- “**new scene** interior kitchen night”: becomes `INT. KITCHEN - NIGHT`. “Exterior” (EXT.) and times of day work too: day, night, morning, evening, dawn…",
+      "- “**character** Marta”: the name becomes a character cue and what you say next is the line. If recognition mangles the name, ScripToti uses the matching character of the document.",
+      "- “**parenthetical** quietly”: a parenthetical in the speech. It ends at the first pause, or when you say “close parenthesis”.",
+      "- “**cut to**”, “dissolve to”, “fade out”: a transition.",
+      "- “**undo**” said on its own: takes back the last step. “**stop dictation**”: stops listening.",
+      "In Italian: «a capo», «nuova scena interno cucina notte», «personaggio Marta», «parentesi», «stacco», «annulla», «stop dettatura».",
+      "The panel also has **Type ⇥** (like Tab), **Undo**, **Keyboard** (on a phone: stops dictating and opens the keyboard to correct) and **Done**."
+    ],
+    "keys": "dictation dictate voice microphone speak spoken commands new line new scene character parenthetical cut to undo",
+    "q": [
+      "how do I dictate",
+      "how do I use the microphone",
+      "voice commands",
+      "how do I dictate a character",
+      "how do I dictate a new scene"
+    ]
   }
 }

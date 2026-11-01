@@ -117,5 +117,14 @@
   "Revisioni visibili": "Revision highlights",
   "Chiudi l'anteprima": "Close preview",
   "Esporta PDF (stampa o salva)": "Export PDF (print or save)",
-  "[[Tab]] cambia il tipo del paragrafo e propone prima quello più probabile (dopo un’azione il personaggio, dopo una battuta la transizione); [[Shift+Tab]] all’indietro; tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] changes the paragraph type and offers the most likely one first (after an action a character, after dialogue a transition); [[Shift+Tab]] goes back; hold it to choose from the list. The symbols at the start of the line stay in the file but are not shown."
+  "[[Tab]] cambia il tipo del paragrafo e propone prima quello più probabile (dopo un’azione il personaggio, dopo una battuta la transizione); [[Shift+Tab]] all’indietro; tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] changes the paragraph type and offers the most likely one first (after an action a character, after dialogue a transition); [[Shift+Tab]] goes back; hold it to choose from the list. The symbols at the start of the line stay in the file but are not shown.",
+  "Detta": "Dictate",
+  "Dettatura": "Dictation",
+  "Sto ascoltando…": "Listening…",
+  "Parla: il testo entra dove c’è il cursore.": "Speak: the text goes in where the cursor is.",
+  "Tipo ⇥": "Type ⇥",
+  "Tastiera": "Keyboard",
+  "Microfono non autorizzato: consenti l’uso del microfono a questo sito nelle impostazioni del browser.": "Microphone not allowed: let this site use the microphone in the browser settings.",
+  "Il microfono è usato da un’altra app o pagina: chiudila e riprova.": "The microphone is in use by another app or page: close it and try again.",
+  "La dettatura ha bisogno di internet.": "Dictation needs an internet connection."
 }

@@ -117,5 +117,14 @@
   "Revisioni visibili": "Revisioni visibili",
   "Chiudi l'anteprima": "Chiudi l'anteprima",
   "Esporta PDF (stampa o salva)": "Esporta PDF (stampa o salva)",
-  "[[Tab]] cambia il tipo del paragrafo e propone prima quello più probabile (dopo un’azione il personaggio, dopo una battuta la transizione); [[Shift+Tab]] all’indietro; tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] cambia il tipo del paragrafo e propone prima quello più probabile (dopo un’azione il personaggio, dopo una battuta la transizione); [[Shift+Tab]] all’indietro; tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono."
+  "[[Tab]] cambia il tipo del paragrafo e propone prima quello più probabile (dopo un’azione il personaggio, dopo una battuta la transizione); [[Shift+Tab]] all’indietro; tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] cambia il tipo del paragrafo e propone prima quello più probabile (dopo un’azione il personaggio, dopo una battuta la transizione); [[Shift+Tab]] all’indietro; tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.",
+  "Detta": "Detta",
+  "Dettatura": "Dettatura",
+  "Sto ascoltando…": "Sto ascoltando…",
+  "Parla: il testo entra dove c’è il cursore.": "Parla: il testo entra dove c’è il cursore.",
+  "Tipo ⇥": "Tipo ⇥",
+  "Tastiera": "Tastiera",
+  "Microfono non autorizzato: consenti l’uso del microfono a questo sito nelle impostazioni del browser.": "Microfono non autorizzato: consenti l’uso del microfono a questo sito nelle impostazioni del browser.",
+  "Il microfono è usato da un’altra app o pagina: chiudila e riprova.": "Il microfono è usato da un’altra app o pagina: chiudila e riprova.",
+  "La dettatura ha bisogno di internet.": "La dettatura ha bisogno di internet."
 }
