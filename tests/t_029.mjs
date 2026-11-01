@@ -157,8 +157,8 @@ await t.press('ArrowDown'); await t.press('ArrowDown'); await t.press('ArrowDown
 const chosen = await kindNow(), closed = await t.page.evaluate(() => document.querySelector('.type-picker').hidden);
 await t.page.keyboard.press(process.platform === 'darwin' ? 'Meta+z' : 'Control+z'); await t.page.waitForTimeout(150);
 t.check('short Tab changes the type on release', afterShort === 'character', afterShort);
-t.check('held Tab opens the list with the current type marked', list === 'Scena,Azione*,Personaggio,Parentesi,Dialogo,Transizione', list);
-t.check('arrows + Enter choose a type and close the list', chosen === 'dialogue' && closed, chosen);
+t.check('held Tab opens the list with the current type marked', list === 'Azione*,Personaggio,Scena,Transizione', list);
+t.check('arrows + Enter choose a type and close the list', chosen === 'transition' && closed, chosen);
 t.check('one Undo restores the text after a direct choice', (await t.src()) === typedBefore, JSON.stringify((await t.src()).slice(-30)));
 
 // A page break ("===") at the end: Backspace on the empty page removes the

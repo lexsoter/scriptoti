@@ -68,8 +68,8 @@
       "- **Zoom** in basso a destra, dal 50% al 200%.",
       "- **Vista → Tema scuro** ([[Alt+Shift+D]]); il PDF è sempre bianco.",
       "- **Vista → Ortografia**: lingua del correttore del browser (italiano o inglese).",
-      "- **Vista → Lingua / Language**: la lingua del programma, italiano o inglese. Di base segue la lingua del browser. Cambia solo menu, messaggi e manuale: il copione resta com’è.",
-      "- In basso a sinistra: la **pagina** che stai guardando sul totale («Pagina 3 di 12», «Title page» sulla pagina del titolo): cliccaci sopra, scrivi un numero di pagina e premi [[Invio]] per andarci; se la pagina non esiste compare «Pagina non trovata». Poi **parole e caratteri** del copione. Se selezioni del testo compare «Selezione» con parole e caratteri della sola parte selezionata."
+      "- **Vista → Lingua / Language**: la lingua del programma, italiano o inglese. Di base segue la lingua del browser. Cambia solo menu, messaggi e manuale: il documento resta com’è.",
+      "- In basso a sinistra: la **pagina** che stai guardando sul totale («Pagina 3 di 12», «Title page» sulla pagina del titolo): cliccaci sopra, scrivi un numero di pagina e premi [[Invio]] per andarci; se la pagina non esiste compare «Pagina non trovata». Poi **parole e caratteri** del documento. Se selezioni del testo compare «Selezione» con parole e caratteri della sola parte selezionata."
     ]
   },
   "revisioni": {
@@ -95,7 +95,7 @@
       "- **Giri di revisione**: quando riaccendi l’interruttore e ci sono già evidenziazioni, ScripToti chiede se **continuare il giro** o **iniziarne uno nuovo**. Un giro corrisponde a una versione consegnata (in produzione di solito ha anche un colore di pagina: blu, rosa, giallo…). Con un nuovo giro le evidenziazioni di prima spariscono e si segnano solo le modifiche da quel momento; numeri di pagina e di scena restano bloccati.",
       "- **Revisione → Chiudi le revisioni e sblocca la numerazione** toglie tutte le evidenziazioni e libera pagine e scene, quando la fase di revisione è finita. [[Mod+Z]] rimette evidenziazioni e numerazione; per registrare di nuovo riaccendi l’interruttore.",
       "- **File → Esporta PDF · sole pagine segnate** stampa solo le pagine con modifiche.",
-      "Registra revisioni blocca da solo pagine e scene (vedi la voce successiva). Nei copioni condivisi le revisioni non sono ancora disponibili."
+      "Registra revisioni blocca da solo pagine e scene (vedi la voce successiva). Nei documenti condivisi le revisioni non sono ancora disponibili."
     ]
   },
   "blocco": {
@@ -140,8 +140,8 @@
     "short": "Seleziona il testo e usa Commenti → Aggiungi commento ([[Mod+Alt+M]]). Commenti → Visualizza ([[Alt+Shift+C]]) apre il pannello con risposte e «Risolvi».",
     "body": [
       "Seleziona il testo e scegli **Commenti → Aggiungi commento** ([[Mod+Alt+M]]). Il testo commentato viene sottolineato.",
-      "**Commenti → Visualizza commenti** ([[Alt+Shift+C]]) apre il pannello: puoi rispondere, risolvere o riaprire una discussione; cliccando la citazione vai al punto del copione.",
-      "I commenti restano nel file e non vengono stampati. Nei copioni condivisi compaiono a tutti con il nome di chi li ha scritti."
+      "**Commenti → Visualizza commenti** ([[Alt+Shift+C]]) apre il pannello: puoi rispondere, risolvere o riaprire una discussione; cliccando la citazione vai al punto del documento.",
+      "I commenti restano nel file e non vengono stampati. Nei documenti condivisi compaiono a tutti con il nome di chi li ha scritti."
     ]
   },
   "cerca": {
@@ -158,7 +158,7 @@
       "- [[Mod+Alt+F]] apre **Trova e sostituisci**, con «Sostituisci» e «Sostituisci tutto».",
       "- Opzioni: maiuscole/minuscole, parole intere.",
       "La sostituzione rispetta le maiuscole di ogni punto: se cambi «giraffa» in «elefante», «Giraffa» a inizio frase diventa «Elefante» e «GIRAFFA» diventa «ELEFANTE».",
-      "Nei nomi dei personaggi, nelle scene e nelle transizioni il testo sostitutivo resta in maiuscolo. Per cambiare il nome di un personaggio in tutto il copione è meglio «Cambia nome personaggio»."
+      "Nei nomi dei personaggi, nelle scene e nelle transizioni il testo sostitutivo resta in maiuscolo. Per cambiare il nome di un personaggio in tutto il documento è meglio «Cambia nome personaggio»."
     ]
   },
   "rinomina": {
@@ -184,12 +184,12 @@
       "completamento automatico dei nomi",
       "mi suggerisce un nome sbagliato"
     ],
-    "short": "Mentre scrivi una scena o un nome, ScripToti propone solo luoghi e personaggi già presenti nel copione. [[Invio]] o un clic per accettare, [[Esc]] per ignorare.",
+    "short": "Mentre scrivi una scena o un nome, ScripToti propone solo luoghi e personaggi già presenti nel documento. [[Invio]] o un clic per accettare, [[Esc]] per ignorare.",
     "body": [
-      "Scrivendo un’intestazione, ScripToti propone i **luoghi** già usati, poi il **momento** della giornata nella lingua del copione (GIORNO, NOTTE… oppure DAY, NIGHT…). Scrivendo un nome in maiuscolo propone i **personaggi** del copione, segnala i possibili refusi (RUTA → RITA) e, per chi non compare da almeno tre scene, ricorda dove è apparso l’ultima volta («Ultima volta a pag. 3 scena 2»). L’indicazione segue ogni modifica; per i personaggi delle scene vicine non compare.",
+      "Scrivendo un’intestazione, ScripToti propone i **luoghi** già usati, poi il **momento** della giornata nella lingua del documento (GIORNO, NOTTE… oppure DAY, NIGHT…). Scrivendo un nome in maiuscolo propone i **personaggi** del documento, segnala i possibili refusi (RUTA → RITA) e, per chi non compare da almeno tre scene, ricorda dove è apparso l’ultima volta («Ultima volta a pag. 3 scena 2»). L’indicazione segue ogni modifica; per i personaggi delle scene vicine non compare.",
       "- [[↑]] [[↓]] per scegliere, [[Invio]] o clic per accettare, [[Esc]] per ignorare.",
       "- Un nome simile a un altro ma voluto si può tenere come personaggio distinto.",
-      "Non viene inventato niente: i suggerimenti arrivano solo dal copione aperto."
+      "Non viene inventato niente: i suggerimenti arrivano solo dal documento aperto."
     ]
   },
   "salvare": {
@@ -204,7 +204,7 @@
       "recuperare una versione",
       "su safari scarica il file"
     ],
-    "short": "Apri o salva il copione come file: in Chrome/Edge ScripToti poi lo aggiorna da solo (autosave) e con [[Mod+S]]. File → Recupero… conserva le versioni precedenti nel browser. In Safari e su iPhone Salva scarica una copia.",
+    "short": "Apri o salva il documento come file: in Chrome/Edge ScripToti poi lo aggiorna da solo (autosave) e con [[Mod+S]]. File → Recupero… conserva le versioni precedenti nel browser. In Safari e su iPhone Salva scarica una copia.",
     "body": [
       "In **Chrome ed Edge** il file aperto con **File → Apri…** resta collegato: ScripToti lo aggiorna da solo dopo pochi secondi e con [[Mod+S]]. [[Mod+Shift+S]] è **Salva con nome** (l’estensione `.fountain` viene aggiunta da sola).",
       "Il browser può chiedere il permesso di modificare il file: in quel caso premi Salva e consenti. Lo stato del salvataggio è in alto a destra.",
@@ -240,11 +240,11 @@
     "body": [
       "Se il file viene modificato da un altro programma (o da un’altra finestra) mentre è aperto, ScripToti si ferma e mostra **Conflitto sul file**: non sovrascrive mai la versione sul disco.",
       "**File → Confronta versioni…** mostra le due versioni affiancate: «Continua con la copia locale» o «Apri la versione del file». Entrambe restano in Recupero.",
-      "Per i copioni condivisi tenuti in una cartella Drive condivisa il conflitto non compare: le copie della stessa condivisione vengono unite da sole."
+      "Per i documenti condivisi tenuti in una cartella Drive condivisa il conflitto non compare: le copie della stessa condivisione vengono unite da sole."
     ]
   },
   "condividere": {
-    "title": "Condividere un copione",
+    "title": "Condividere un documento",
     "keys": "condividi condivisione collaboratori collaborare insieme tempo reale link file per collaboratori nome scrivere insieme",
     "q": [
       "come condivido un copione",
@@ -262,7 +262,7 @@
       "- **Copia link** per un’apertura al volo dal browser.",
       "Mentre scrivete vedete i cursori e i nomi degli altri; i commenti mostrano chi li ha scritti; [[Mod+Z]] annulla solo le tue modifiche. Il tuo nome si cambia nello stesso dialogo con **Salva nome**.",
       "Il testo viaggia cifrato: senza il file o il link nessuno può leggerlo, nemmeno il server. Chi ha il file può modificare. **Scollega questo file** trasforma la tua copia in un file normale.",
-      "Registra revisioni e blocco delle pagine non sono ancora disponibili nei copioni condivisi."
+      "Registra revisioni e blocco delle pagine non sono ancora disponibili nei documenti condivisi."
     ]
   },
   "led": {
@@ -277,7 +277,7 @@
     ],
     "short": "Verde: in linea. Giallo: collegamento in corso o connessione instabile. Rosso: non in linea; le modifiche restano in attesa e partono da sole. Con alcune VPN il firewall del sito blocca la rete: spegni la VPN o escludi il sito.",
     "body": [
-      "Nei copioni condivisi, in alto a destra:",
+      "Nei documenti condivisi, in alto a destra:",
       "- **verde**: in linea;",
       "- **giallo**: collegamento in corso, oppure connessione instabile negli ultimi 30 secondi;",
       "- **rosso**: non in linea. Puoi continuare a scrivere: le modifiche restano in attesa (anche nel file) e partono appena torna la rete.",
@@ -293,9 +293,9 @@
       "aprire il file da drive in due",
       "dropbox"
     ],
-    "short": "Sì: tenete il copione condiviso in una cartella Drive condivisa e apritelo da lì. ScripToti riconosce le copie della stessa condivisione e le unisce senza conflitti. Imposta la cartella come «Disponibile offline».",
+    "short": "Sì: tenete il documento condiviso in una cartella Drive condivisa e apritelo da lì. ScripToti riconosce le copie della stessa condivisione e le unisce senza conflitti. Imposta la cartella come «Disponibile offline».",
     "body": [
-      "Un copione condiviso può stare in una cartella Drive (o Dropbox) condivisa: aprite tutti lo stesso file con **File → Apri…**.",
+      "Un documento condiviso può stare in una cartella Drive (o Dropbox) condivisa: aprite tutti lo stesso file con **File → Apri…**.",
       "- ScripToti riconosce le copie della stessa condivisione e non si ferma con «Conflitto sul file».",
       "- Le modifiche viaggiano in un secondo attraverso ScripToti; Drive porta a ciascuno il file aggiornato.",
       "- Se qualcuno modifica il file con un altro programma vale la versione condivisa; l’altra resta in Recupero.",
@@ -322,7 +322,7 @@
       "- un paragrafo che inizia con «Il giorno dopo», «Più tardi», «Nel frattempo»… dentro una scena già avviata: di solito serve una nuova intestazione;",
       "- (MORE) scritto a mano; doppio dialogo (^) senza una battuta prima.",
       "Non vengono segnalati, perché sono corretti: (CONT’D) scritto a mano, le varie grafie delle estensioni ((VO), (voce fuori campo), (F.C.)…), intestazioni senza momento della giornata o senza INT./EST., intestazioni una dopo l’altra, parentetiche lunghe, V.O. di un personaggio presente in scena.",
-      "Le parti interessate vengono sottolineate. Il pannello **Avvisi** (Aiuto → Controllo della sintassi: avvisi…) spiega ogni problema: **Vai** porta al punto, **Correggi** applica la soluzione (si annulla con [[Mod+Z]]), **Ignora** lo nasconde per questo copione."
+      "Le parti interessate vengono sottolineate. Il pannello **Avvisi** (Aiuto → Controllo della sintassi: avvisi…) spiega ogni problema: **Vai** porta al punto, **Correggi** applica la soluzione (si annulla con [[Mod+Z]]), **Ignora** lo nasconde per questo documento."
     ]
   }
 }

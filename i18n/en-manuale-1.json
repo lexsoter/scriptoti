@@ -40,12 +40,12 @@
       "can I open more than one script",
       "open recent files"
     ],
-    "short": "File → New document creates a blank script; File → Open… ([[Mod+O]]) opens a .fountain file. Each project has its own tab below the menus; click its × to close it.",
+    "short": "File → New document creates a blank document; File → Open… ([[Mod+O]]) opens a .fountain file. Each project has its own tab below the menus; click its × to close it.",
     "body": [
-      "**File → New document** creates a blank script. **File → Open…** ([[Mod+O]]) opens a `.fountain` or `.txt` file from your computer.",
-      "Each open script has a tab below the menu bar. Click a tab to switch projects. Each tab keeps its own text, cursor position, undo history, search, and comments.",
-      "**File → Close project** ([[Alt+Shift+W]]) or the × on the tab closes the script. If you have unsaved changes, ScripToti asks you to choose Save, Don't Save, or Cancel.",
-      "**File → Open recent…** shows your last 20 scripts. “Open file” reads the original file again; “Open copy” opens the copy stored in your browser.",
+      "**File → New document** creates a blank document. **File → Open…** ([[Mod+O]]) opens a `.fountain` or `.txt` file from your computer.",
+      "Each open document has a tab below the menu bar. Click a tab to switch projects. Each tab keeps its own text, cursor position, undo history, search, and comments.",
+      "**File → Close project** ([[Alt+Shift+W]]) or the × on the tab closes the document. If you have unsaved changes, ScripToti asks you to choose Save, Don't Save, or Cancel.",
+      "**File → Open recent…** shows your last 20 documents. “Open file” reads the original file again; “Open copy” opens the copy stored in your browser.",
       "Projects you leave open return when you reopen the app. Projects you close do not."
     ]
   },
@@ -60,8 +60,8 @@
     "short": "Click the file name at the top center, enter a new name, and press Enter (Esc cancels). You can also use File → Rename….",
     "body": [
       "As in Google Docs, click the **file name at the top center**, enter a new name, and press **Enter**. **Esc** leaves the name unchanged. You can also use **File → Rename…**.",
-      "If the script is linked to a file on your computer, that file is renamed in the same folder. Your script keeps saving under the new name. If your browser asks for permission to change the file, allow it.",
-      "For safety, ScripToti will not accept the name of another script you have opened in ScripToti. This prevents it from replacing another file. To make a copy with a different name, use **File → Save As…**."
+      "If the document is linked to a file on your computer, that file is renamed in the same folder. Your document keeps saving under the new name. If your browser asks for permission to change the file, allow it.",
+      "For safety, ScripToti will not accept the name of another document you have opened in ScripToti. This prevents it from replacing another file. To make a copy with a different name, use **File → Save As…**."
     ]
   },
   "installare": {
@@ -118,13 +118,13 @@
       "> INT. ANNA'S KITCHEN - NIGHT",
       "- **INT.** means interior, **EXT.** means exterior, and **INT./EXT.** or **I/E** means both. ScripToti also recognizes the Italian forms **EST.** and INT./EST.",
       "- Next comes the **location**, from general to specific: `EXT. ROSSI VILLA - GARDEN`.",
-      "- After a dash, add the **time**: DAY, NIGHT, DAWN, SUNSET, CONTINUOUS, LATER. Suggestions follow the script's language: GIORNO/NOTTE for Italian scene headings, DAY/NIGHT for English ones.",
+      "- After a dash, add the **time**: DAY, NIGHT, DAWN, SUNSET, CONTINUOUS, LATER. Suggestions follow the document's language: GIORNO/NOTTE for Italian scene headings, DAY/NIGHT for English ones.",
       "Just type `int.` at the start of a line: ScripToti recognizes it and makes it uppercase. Both the Italian `MONTAGGIO` and English `MONTAGE` are treated as scene headings because they mark a change of situation. When you press [[Enter]], ScripToti adds the hidden period automatically (`.MONTAGGIO` for the Italian form), so other Fountain programs also read it as a scene heading. Shots such as `ANGLE ON` or the Italian `SU MARTA` do not start new scenes: see **Shots**. For a different heading, such as “ANNA'S DREAM,” put a period in front: `.ANNA'S DREAM`.",
       "## When to start a new scene",
       "Every change of **location** or **time** (the next day, later, that same evening) needs a new heading. Writing “The next day” inside Action instead is a common mistake. Syntax check flags it.",
       "## Scene numbers",
       "**View → Scene numbers** ([[Alt+Shift+N]]) shows them in the margins. To set a number yourself, put it between `#` signs at the end: `INT. KITCHEN - NIGHT #12A#`.",
-      "As you type, ScripToti suggests locations already used in the script. Press [[Enter]] or click to accept a suggestion; press [[Esc]] to ignore it."
+      "As you type, ScripToti suggests locations already used in the document. Press [[Enter]] or click to accept a suggestion; press [[Esc]] to ignore it."
     ]
   },
   "azione": {
@@ -166,7 +166,7 @@
       "- [[Backspace]] at the start of an Action paragraph below an uppercase name joins it to the name as dialogue.",
       "- A name with only one uppercase letter stays Action: it needs at least two letters.",
       "- If a name is not recognized, for example because it contains numbers or is lowercase, press [[Tab]] until you reach “Character” or put `@` in front: `@McQueen`.",
-      "As you type a name, ScripToti suggests characters already in the script, flags possible typos, and shows where each character first appears (“First appeared on page 3, scene 2”).",
+      "As you type a name, ScripToti suggests characters already in the document, flags possible typos, and shows where each character first appears (“First appeared on page 3, scene 2”).",
       "When a character speaks again after an Action paragraph, ScripToti adds (CONT’D) automatically. When dialogue continues onto the next page, it adds (MORE) and (CONT’D)."
     ]
   },
@@ -211,7 +211,7 @@
       "- **(V.O.)** means voice-over: the voice **comes from outside the location** of the scene. Use it for narration, thoughts, memories, voices on the phone or radio, and recorded messages.",
       "- **(O.S.)** means off-screen: the character **is at the location** but not in the shot. They might be speaking from the next room or behind a door.",
       "- **(O.C.)** means off-camera: another term for O.S., used in television.",
-      "- In Italian scripts, you may also see **(F.C.)**, fuori campo (= O.S.), and **(V.F.C.)**, voce fuori campo (= V.O.).",
+      "- In Italian documents, you may also see **(F.C.)**, fuori campo (= O.S.), and **(V.F.C.)**, voce fuori campo (= V.O.).",
       "## A quick way to choose",
       "Ask yourself: **could they enter the shot?** If yes (they are there, behind the door), use O.S. If not (they are elsewhere, it is a thought, or they are on the phone), use V.O.",
       "## Automatic additions",
@@ -237,7 +237,7 @@
       "- Recognized English forms: CUT TO:, SMASH CUT TO:, MATCH CUT TO:, JUMP CUT TO:, DISSOLVE TO:, FADE TO:, FADE OUT., and FADE TO BLACK. ScripToti also recognizes these Italian forms: STACCO SU:, STACCO NETTO:, TAGLIO SU:, DISSOLVENZA A:, DISSOLVENZA INCROCIATA:, DISSOLVENZA IN NERO., DISSOLVENZA IN CHIUSURA., and CHIUSURA IN NERO.",
       "- For a different transition, put `>` in front yourself: `> FADE TO WHITE:`.",
       "- ScripToti leaves a blank line after the transition. If other text follows immediately, the transition is mistaken for a character cue.",
-      "- `FADE IN:` (or the Italian `DISSOLVENZA IN APERTURA:`) at the start of the script and `FINE FLASHBACK` (Italian for `END FLASHBACK`, also recognized as `TORNA AL PRESENTE`) are not transitions. They stay on the **left**, as Action. Pressing [[Enter]] makes these uppercase automatically too.",
+      "- `FADE IN:` (or the Italian `DISSOLVENZA IN APERTURA:`) at the start of the document and `FINE FLASHBACK` (Italian for `END FLASHBACK`, also recognized as `TORNA AL PRESENTE`) are not transitions. They stay on the **left**, as Action. Pressing [[Enter]] makes these uppercase automatically too.",
       "Use transitions sparingly: a cut between scenes is implied.",
       "Syntax check recognizes transitions written without `>` and can fix them with one click."
     ]
@@ -257,11 +257,11 @@
       "A shot shifts the view **within the same scene**. It has no scene number and uses the location and time from the last scene heading. In standard screenplay format and Fountain, it is **Action**.",
       "> angle on Tim reading a book",
       "Press [[Enter]] at the end of the line to turn it into `ANGLE ON Tim reading a book`: only the keyword becomes uppercase. This works for ANGLE ON, CLOSE ON, WIDE ON, INSERT, and POV.",
-      "- ScripToti also recognizes the Italian **SU**, which is a common word meaning “on” (“su un tavolo…” means “on a table…”). It becomes a shot only when followed by a character from the script. “su marta” becomes `SU MARTA`.",
+      "- ScripToti also recognizes the Italian **SU**, which is a common word meaning “on” (“su un tavolo…” means “on a table…”). It becomes a shot only when followed by a character from the document. “su marta” becomes `SU MARTA`.",
       "- The standard form is an uppercase shot heading with the description below. When the whole line is uppercase, ScripToti puts `!` in front (hidden on the page). Otherwise, text immediately below would make it read as a character cue.",
       "> ANGLE ON TIM\n>\n> Tim reads a book.",
       "- Syntax check flags shots read as character cues and can fix them with one click.",
-      "If scene numbers are locked and the script previously used ANGLE ON as a scene heading, that scene is now marked **omitted**. The other scenes keep their numbers."
+      "If scene numbers are locked and the document previously used ANGLE ON as a scene heading, that scene is now marked **omitted**. The other scenes keep their numbers."
     ]
   },
   "altri-tipi": {
@@ -277,14 +277,14 @@
     ],
     "short": "Centered text: > TEXT <. Lyrics: start with ~. Dual dialogue: ^ after the second name. Hidden notes: [[nota]]. New page: === on its own line.",
     "body": [
-      "- **Centered text**: `> THE END <`. For titles and subtitles within the script, you can also use Format → Center on Action, together with bold.",
+      "- **Centered text**: `> THE END <`. For titles and subtitles within the document, you can also use Format → Center on Action, together with bold.",
       "- **Lyrics, songs**: put `~` at the start of each line; the text appears in italics.",
       "- **Dual dialogue** (two characters speaking at the same time): write the speeches one after the other and put `^` after the second name:",
       "> ANNA\n> Yes!\n>\n> MARCO ^\n> No!",
       "- **A note that does not print**: `[[da controllare]]`.",
       "- **Excluded text** (boneyard): anything between `/*` and `*/` stays in the file but does not appear on the page.",
       "- **Page break**: `===` on its own line.",
-      "- Lines starting with `#` (sections) or `=` (synopses) help you organize the script and are not printed."
+      "- Lines starting with `#` (sections) or `=` (synopses) help you organize the document and are not printed."
     ]
   },
   "forzare": {
@@ -298,9 +298,13 @@
       "Fountain symbols",
       "the exclamation mark is visible"
     ],
-    "short": "[[Tab]] changes the paragraph type (Scene heading → Action → Character → Parenthetical → Dialogue → Transition); [[Shift+Tab]] cycles backward. You can also use a leading symbol: . scene heading, ! action, @ character cue, > transition, ~ lyrics.",
+    "short": "[[Tab]] changes the paragraph type and offers the most likely one first: after an action a character, after a line of dialogue a transition; dialogue and parenthetical only under a character. [[Shift+Tab]] goes back. You can also use a leading symbol: . scene heading, ! action, @ character cue, > transition, ~ lyrics.",
     "body": [
-      "[[Tab]] cycles through the types for the paragraph containing the cursor: **Scene heading → Action → Character → Parenthetical → Dialogue → Transition**. [[Shift+Tab]] cycles in reverse. The new type's name appears briefly in the paragraph.",
+      "[[Tab]] changes the type of the paragraph containing the cursor and follows the context:",
+      "- on an action, or an empty line after an action: **Character → Scene heading → Transition → Action**;",
+      "- on an empty line after dialogue: **Transition → Scene heading → Character → Action** (like pressing Enter again);",
+      "- under a character and inside dialogue: **Parenthetical ↔ Dialogue**. Dialogue and parenthetical never appear without a character above.",
+      "[[Shift+Tab]] goes round the same cycle backwards. The new type's name appears briefly in the paragraph.",
       "Hold [[Tab]] for a moment and the list of types appears beside the caret: choose with the arrows and [[Enter]] (or a click), [[Esc]] to close. On a phone, hold the type button in the bar above the keyboard.",
       "You can also type a symbol at the start of the line. The symbol stays in the file but is hidden on the page:",
       "- `.` scene heading: `.ANNA'S DREAM`",
@@ -325,7 +329,7 @@
     "short": "[[Mod+B]] for bold, [[Mod+I]] for italic, [[Mod+U]] for underline. [[Mod+Shift+K]] switches between UPPERCASE and lowercase while preserving proper names. In the file, these become **text**, *text*, _text_.",
     "body": [
       "- [[Mod+B]] **bold**, [[Mod+I]] italic, [[Mod+U]] underline: apply them to selected text or to the text you type next.",
-      "- [[Mod+Shift+K]] switches between UPPERCASE and smart lowercase. It respects character names, proper names already in the script, sentence capitals, and some acronyms.",
+      "- [[Mod+Shift+K]] switches between UPPERCASE and smart lowercase. It respects character names, proper names already in the document, sentence capitals, and some acronyms.",
       "In a Fountain file, emphasis uses symbols: `**bold**`, `*italic*`, `_underline_`. To type a literal asterisk, use `\\*`."
     ]
   }

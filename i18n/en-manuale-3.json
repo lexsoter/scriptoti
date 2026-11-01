@@ -12,12 +12,12 @@
     "body": [
       "On your phone, text wraps to fit the screen. Fountain types and bold, italic and underline stay visible. Formatting symbols stay hidden. **PAGE** dividers show where the PDF pages begin, including lettered pages such as 12A.",
       "Above the keyboard you see the current text type: tap to cycle to the next type, or press and hold to choose one. ⇤ goes to the previous type. The arrows in the “Move the caret” group move your writing position. You also have Undo, Redo and parentheses. Tap a suggestion to complete a character name or location.",
-      "**Go to** lists Scenes, Pages and Characters. Type `page 12A`, `scene 7` or a word, then press Enter. Start, Last edit and End take you to useful places in the script.",
+      "**Go to** lists Scenes, Pages and Characters. Type `page 12A`, `scene 7` or a word, then press Enter. Start, Last edit and End take you to useful places in the document.",
       "**Preview** shows the actual printed pages and does not let you edit the text. Scroll between pages and pinch with two fingers to zoom. **Write** takes you back to the text. Export PDF and Send file are at the bottom.",
-      "The top menu opens New script, Open another script, Title page, Preview, Export PDF, Send file, Find and replace, and Comments. The gear opens **Settings**: text size from 14 to 26 px, dark theme, language and the manual. Your text size is remembered on this device and does not change the PDF.",
-      "**Title page** opens a form with title, credit, author, draft, date and contact fields. Save to apply the fields and return to your script.",
+      "The top menu opens New document, Open another document, Title page, Preview, Export PDF, Send file, Find and replace, and Comments. The gear opens **Settings**: text size from 14 to 26 px, dark theme, language and the manual. Your text size is remembered on this device and does not change the PDF.",
+      "**Title page** opens a form with title, credit, author, draft, date and contact fields. Save to apply the fields and return to your document.",
       "**Export PDF** lets you include the title page and choose all pages or a range, using the actual labels, such as 12A. If there are revisions, you can choose marked pages only. These options also work on the computer and with [[Mod+P]].",
-      "Saving follows the same rules as on the computer: check the status below the file name. **Send file** prepares a Fountain copy with the script information. It uses your device’s share sheet, or downloads the copy if sharing is unavailable."
+      "Saving follows the same rules as on the computer: check the status below the file name. **Send file** prepares a Fountain copy with the document information. It uses your device’s share sheet, or downloads the copy if sharing is unavailable."
     ]
   },
   "segnala": {
@@ -34,7 +34,7 @@
     "body": [
       "**Help → Contact the developer…** opens a short form. Choose whether you are reporting a problem, making a suggestion, or asking a question. Describe what happened, what you expected, and, if possible, the steps to reproduce it.",
       "- Your **email is optional**. Include it only if you want to be contacted for more details or a reply.",
-      "- If you choose, the report includes **technical details** (version, browser, and system). Your script text is never sent.",
+      "- If you choose, the report includes **technical details** (version, browser, and system). Your document text is never sent.",
       "- If you are offline, the report is saved and sent automatically when possible.",
       "Reports go to the salvatorefrisina.com server and are not shared with anyone else."
     ]
@@ -167,7 +167,7 @@
     "short": "Allow your browser to change the file when it asks. Choose “Allow on every visit” if available. The file reconnects automatically when you reopen the app. If permission is needed, the browser asks when you first type or click. Meanwhile, your text is kept in browser recovery.",
     "body": [
       "For safety, your browser asks for permission to change a file. If you choose **Allow on every visit** in Chrome's prompt, files reconnect automatically when you reopen ScripToti, without further prompts.",
-      "If permission has expired, the browser asks when you first type or click in the script. Choose **Allow**. You can also click **Save** ([[Mod+S]]) when the top-right status says “press Save to grant access” or “needs reconnecting.”",
+      "If permission has expired, the browser asks when you first type or click in the document. Choose **Allow**. You can also click **Save** ([[Mod+S]]) when the top-right status says “press Save to grant access” or “needs reconnecting.”",
       "Your text is not lost: it is kept in browser recovery while you wait (File → Recovery…)."
     ]
   },
@@ -183,8 +183,8 @@
     "body": [
       "- **Red, offline**: there is no connection. Changes will be sent automatically.",
       "- **“the site is blocking this network (VPN?)”**: turn off the VPN or exclude the site from it.",
-      "- **“connecting…”** for a long time: the first time you open a shared script on a computer, you need internet.",
-      "- **“Sharing no longer available”**: the script is no longer shared on the server. Your file remains an ordinary copy."
+      "- **“connecting…”** for a long time: the first time you open a shared document on a computer, you need internet.",
+      "- **“Sharing no longer available”**: the document is no longer shared on the server. Your file remains an ordinary copy."
     ]
   }
 }

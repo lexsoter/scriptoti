@@ -13,7 +13,7 @@
     "body": [
       "**Aiuto → Scrivi allo sviluppatore…** apre un breve modulo: scegli se è un problema, un suggerimento o una domanda e descrivi cosa è successo, cosa ti aspettavi e, se puoi, i passaggi per ripeterlo.",
       "- L’**email è facoltativa**: lasciala solo se vuoi essere ricontattato per chiarimenti o per una risposta.",
-      "- Vengono allegati, se vuoi, i **dati tecnici** (versione, browser, sistema). Il testo dei copioni non viene mai inviato.",
+      "- Vengono allegati, se vuoi, i **dati tecnici** (versione, browser, sistema). Il testo dei documenti non viene mai inviato.",
       "- Senza connessione la segnalazione resta salvata e parte da sola appena possibile.",
       "Le segnalazioni arrivano al server di salvatorefrisina.com e non vengono condivise con altri."
     ]
@@ -146,7 +146,7 @@
     "short": "Consenti al browser di modificare il file quando te lo chiede, meglio con «Consenti a ogni visita». Alla riapertura il file si ricollega da solo; se serve il permesso, il browser lo chiede al primo tasto o clic. Il testo intanto è al sicuro nel recupero del browser.",
     "body": [
       "Per sicurezza il browser chiede il permesso di modificare un file. Se nel messaggio di Chrome scegli **Consenti a ogni visita**, alla riapertura di ScripToti i file si ricollegano da soli, senza domande.",
-      "Se il permesso non c’è più, il browser lo chiede al primo tasto o clic nel copione: rispondi **Consenti**. Puoi anche premere **Salva** ([[Mod+S]]) quando in alto a destra compare «premi Salva per autorizzare» o «da riconnettere».",
+      "Se il permesso non c’è più, il browser lo chiede al primo tasto o clic nel documento: rispondi **Consenti**. Puoi anche premere **Salva** ([[Mod+S]]) quando in alto a destra compare «premi Salva per autorizzare» o «da riconnettere».",
       "Il testo non si perde: intanto è conservato nel recupero del browser (File → Recupero…)."
     ]
   },
@@ -163,7 +163,7 @@
       "- **Rosso, non in linea**: manca la connessione; le modifiche partiranno da sole.",
       "- **«il sito blocca questa rete (VPN?)»**: spegni la VPN o escludi il sito.",
       "- **«collegamento…»** a lungo: la prima apertura su un computer richiede internet.",
-      "- **«Condivisione non più disponibile»**: il copione non è più condiviso sul server; il file resta una copia normale."
+      "- **«Condivisione non più disponibile»**: il documento non è più condiviso sul server; il file resta una copia normale."
     ]
   }
 }

@@ -14,8 +14,8 @@
   "Pagine non valide.": "Invalid pages.",
   "Vai a": "Go to",
   "Anteprima": "Preview",
-  "Nuovo copione": "New script",
-  "Apri altro copione": "Open another script",
+  "Nuovo documento": "New document",
+  "Apri altro documento": "Open another document",
   "Invia il file": "Send file",
   "Cerca e sostituisci": "Find and replace",
   "Impostazioni": "Settings",
@@ -48,7 +48,7 @@
   "Inserisci parentesi": "Insert parenthesis",
   "Scena": "Scene heading",
   "Mostra menu e strumenti": "Show menus and tools",
-  "Testo del copione; esclusi Title page, note e metadati nascosti": "Script text; title page, notes and hidden metadata excluded",
+  "Testo del documento; esclusi Title page, note e metadati nascosti": "Document text; title page, notes and hidden metadata excluded",
   "Spazi e a capo inclusi; esclusi Title page, marcatori di formattazione, note e metadati nascosti": "Spaces and line breaks included; title page, formatting marks, notes and hidden metadata excluded",
   "Pagina visualizzata e pagine del documento; Title page escluso.": "Page shown and pages in the document; title page excluded.",
   "Pagina visualizzata e pagine fisiche con riferimenti bloccati; Title page escluso.": "Page shown and physical pages with locked references; title page excluded.",
@@ -87,7 +87,7 @@
   "Condiviso · collegamento…": "Shared · connecting…",
   "Condiviso · invio…": "Shared · sending…",
   "Come ti chiami?": "What is your name?",
-  "Il copione resta un normale file Fountain. Ricevi un file di condivisione da mandare ai collaboratori: ognuno lo salva dove vuole e lo apre con ScripToti. Scrivete e commentate insieme; il file di ognuno si aggiorna.": "The script stays a normal Fountain file. You get a sharing file to send to your collaborators: each of them saves it wherever they like and opens it with ScripToti. You write and comment together, and everyone's file stays up to date.",
+  "Il documento resta un normale file Fountain. Ricevi un file di condivisione da mandare ai collaboratori: ognuno lo salva dove vuole e lo apre con ScripToti. Scrivete e commentate insieme; il file di ognuno si aggiorna.": "The document stays a normal Fountain file. You get a sharing file to send to your collaborators: each of them saves it wherever they like and opens it with ScripToti. You write and comment together, and everyone's file stays up to date.",
   "Link copiato.": "Link copied.",
   "Originale aperto": "Original opened",
   "Sul dispositivo": "On this device",
@@ -111,6 +111,6 @@
   "righe per pagina": "lines per page",
   "Questa riga sembra una transizione ma viene letta come Azione. Riscrivila su una riga da sola e premi Invio, oppure correggila qui: ScripToti mette «>» davanti e la porta a destra.": "This line looks like a transition but is read as Action. Write it again on its own line and press Enter, or fix it here: ScripToti puts «>» in front and moves it to the right.",
   "in linea": "online",
-  "[[Tab]] cambia il tipo del paragrafo: Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione ([[Shift+Tab]] all’indietro); tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] changes the paragraph type: Scene → Action → Character → Parenthetical → Dialogue → Transition ([[Shift+Tab]] goes back); hold it to choose from the list. The symbols at the start of the line stay in the file but are not shown.",
-  "Tre segni uguale su una riga, oppure Cmd/Ctrl+Invio": "Three equals signs on a line, or Cmd/Ctrl+Enter"
+  "Tre segni uguale su una riga, oppure Cmd/Ctrl+Invio": "Three equals signs on a line, or Cmd/Ctrl+Enter",
+  "[[Tab]] cambia il tipo del paragrafo e propone prima quello più probabile (dopo un’azione il personaggio, dopo una battuta la transizione); [[Shift+Tab]] all’indietro; tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] changes the paragraph type and offers the most likely one first (after an action a character, after dialogue a transition); [[Shift+Tab]] goes back; hold it to choose from the list. The symbols at the start of the line stay in the file but are not shown."
 }

@@ -14,8 +14,8 @@
   "Pagine non valide.": "Pagine non valide.",
   "Vai a": "Vai a",
   "Anteprima": "Anteprima",
-  "Nuovo copione": "Nuovo copione",
-  "Apri altro copione": "Apri altro copione",
+  "Nuovo documento": "Nuovo documento",
+  "Apri altro documento": "Apri altro documento",
   "Invia il file": "Invia il file",
   "Cerca e sostituisci": "Cerca e sostituisci",
   "Impostazioni": "Impostazioni",
@@ -48,7 +48,7 @@
   "Inserisci parentesi": "Inserisci parentesi",
   "Scena": "Scena",
   "Mostra menu e strumenti": "Mostra menu e strumenti",
-  "Testo del copione; esclusi Title page, note e metadati nascosti": "Testo del copione; esclusi Title page, note e metadati nascosti",
+  "Testo del documento; esclusi Title page, note e metadati nascosti": "Testo del documento; esclusi Title page, note e metadati nascosti",
   "Spazi e a capo inclusi; esclusi Title page, marcatori di formattazione, note e metadati nascosti": "Spazi e a capo inclusi; esclusi Title page, marcatori di formattazione, note e metadati nascosti",
   "Pagina visualizzata e pagine del documento; Title page escluso.": "Pagina visualizzata e pagine del documento; Title page escluso.",
   "Pagina visualizzata e pagine fisiche con riferimenti bloccati; Title page escluso.": "Pagina visualizzata e pagine fisiche con riferimenti bloccati; Title page escluso.",
@@ -87,7 +87,7 @@
   "Condiviso · collegamento…": "Condiviso · collegamento…",
   "Condiviso · invio…": "Condiviso · invio…",
   "Come ti chiami?": "Come ti chiami?",
-  "Il copione resta un normale file Fountain. Ricevi un file di condivisione da mandare ai collaboratori: ognuno lo salva dove vuole e lo apre con ScripToti. Scrivete e commentate insieme; il file di ognuno si aggiorna.": "Il copione resta un normale file Fountain. Ricevi un file di condivisione da mandare ai collaboratori: ognuno lo salva dove vuole e lo apre con ScripToti. Scrivete e commentate insieme; il file di ognuno si aggiorna.",
+  "Il documento resta un normale file Fountain. Ricevi un file di condivisione da mandare ai collaboratori: ognuno lo salva dove vuole e lo apre con ScripToti. Scrivete e commentate insieme; il file di ognuno si aggiorna.": "Il documento resta un normale file Fountain. Ricevi un file di condivisione da mandare ai collaboratori: ognuno lo salva dove vuole e lo apre con ScripToti. Scrivete e commentate insieme; il file di ognuno si aggiorna.",
   "Link copiato.": "Link copiato.",
   "Originale aperto": "Originale aperto",
   "Sul dispositivo": "Sul dispositivo",
@@ -111,6 +111,6 @@
   "righe per pagina": "righe per pagina",
   "Questa riga sembra una transizione ma viene letta come Azione. Riscrivila su una riga da sola e premi Invio, oppure correggila qui: ScripToti mette «>» davanti e la porta a destra.": "Questa riga sembra una transizione ma viene letta come Azione. Riscrivila su una riga da sola e premi Invio, oppure correggila qui: ScripToti mette «>» davanti e la porta a destra.",
   "in linea": "in linea",
-  "[[Tab]] cambia il tipo del paragrafo: Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione ([[Shift+Tab]] all’indietro); tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] cambia il tipo del paragrafo: Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione ([[Shift+Tab]] all’indietro); tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.",
-  "Tre segni uguale su una riga, oppure Cmd/Ctrl+Invio": "Tre segni uguale su una riga, oppure Cmd/Ctrl+Invio"
+  "Tre segni uguale su una riga, oppure Cmd/Ctrl+Invio": "Tre segni uguale su una riga, oppure Cmd/Ctrl+Invio",
+  "[[Tab]] cambia il tipo del paragrafo e propone prima quello più probabile (dopo un’azione il personaggio, dopo una battuta la transizione); [[Shift+Tab]] all’indietro; tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] cambia il tipo del paragrafo e propone prima quello più probabile (dopo un’azione il personaggio, dopo una battuta la transizione); [[Shift+Tab]] all’indietro; tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono."
 }

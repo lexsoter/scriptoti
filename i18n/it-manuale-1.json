@@ -40,12 +40,12 @@
       "posso aprire più copioni",
       "apri recenti"
     ],
-    "short": "File → Nuovo documento crea un copione vuoto; File → Apri… ([[Mod+O]]) apre un .fountain. Ogni progetto ha la sua scheda sotto i menu; la × la chiude.",
+    "short": "File → Nuovo documento crea un documento vuoto; File → Apri… ([[Mod+O]]) apre un .fountain. Ogni progetto ha la sua scheda sotto i menu; la × la chiude.",
     "body": [
-      "**File → Nuovo documento** crea un copione vuoto. **File → Apri…** ([[Mod+O]]) apre un file `.fountain` o `.txt` dal computer.",
-      "Ogni copione aperto ha una scheda sotto la barra dei menu: cliccala per passare da un progetto all’altro. Testo, cursore, annulla, ricerca e commenti restano separati per ogni scheda.",
-      "**File → Chiudi progetto** ([[Alt+Shift+W]]) o la × sulla scheda chiude il copione. Se ci sono modifiche non salvate ScripToti chiede: Salva, Non salvare o Annulla.",
-      "**File → Apri recenti…** mostra gli ultimi 20 copioni. «Apri file» rilegge il file originale; «Apri copia» riapre la copia conservata nel browser.",
+      "**File → Nuovo documento** crea un documento vuoto. **File → Apri…** ([[Mod+O]]) apre un file `.fountain` o `.txt` dal computer.",
+      "Ogni documento aperto ha una scheda sotto la barra dei menu: cliccala per passare da un progetto all’altro. Testo, cursore, annulla, ricerca e commenti restano separati per ogni scheda.",
+      "**File → Chiudi progetto** ([[Alt+Shift+W]]) o la × sulla scheda chiude il documento. Se ci sono modifiche non salvate ScripToti chiede: Salva, Non salvare o Annulla.",
+      "**File → Apri recenti…** mostra gli ultimi 20 documenti. «Apri file» rilegge il file originale; «Apri copia» riapre la copia conservata nel browser.",
       "I progetti lasciati aperti tornano alla riapertura dell’app; quelli chiusi no."
     ]
   },
@@ -60,8 +60,8 @@
     "short": "Clicca il nome del file in alto al centro, scrivi il nuovo nome e premi Invio (Esc annulla). Oppure File → Rinomina….",
     "body": [
       "Come in Google Docs: clicca il **nome del file in alto al centro**, scrivi il nuovo nome e premi **Invio**. **Esc** lascia il nome com’era. Lo stesso si fa da **File → Rinomina…**.",
-      "Se il copione è un file sul computer, viene rinominato anche lì, nella stessa cartella, e continua a salvarsi con il nuovo nome. Il browser può chiedere il permesso di modificare il file: consenti.",
-      "Per sicurezza ScripToti non accetta il nome di un altro copione che hai aperto con ScripToti: così nessun file viene mai sostituito. Per una copia con un altro nome usa **File → Salva con nome…**."
+      "Se il documento è un file sul computer, viene rinominato anche lì, nella stessa cartella, e continua a salvarsi con il nuovo nome. Il browser può chiedere il permesso di modificare il file: consenti.",
+      "Per sicurezza ScripToti non accetta il nome di un altro documento che hai aperto con ScripToti: così nessun file viene mai sostituito. Per una copia con un altro nome usa **File → Salva con nome…**."
     ]
   },
   "installare": {
@@ -118,13 +118,13 @@
       "> INT. CUCINA DI ANNA - NOTTE",
       "- **INT.** interno, **EST.** (o **EXT.**) esterno, **INT./EST.** o **I/E** quando è entrambe le cose.",
       "- Poi il **luogo**, dal generale al particolare: `EST. VILLA ROSSI - GIARDINO`.",
-      "- Poi, dopo un trattino, il **momento**: GIORNO, NOTTE, ALBA, TRAMONTO, CONTINUO, PIÙ TARDI. I suggerimenti seguono la lingua del copione: GIORNO/NOTTE se le scene sono in italiano, DAY/NIGHT se sono in inglese.",
+      "- Poi, dopo un trattino, il **momento**: GIORNO, NOTTE, ALBA, TRAMONTO, CONTINUO, PIÙ TARDI. I suggerimenti seguono la lingua del documento: GIORNO/NOTTE se le scene sono in italiano, DAY/NIGHT se sono in inglese.",
       "Basta scrivere `int.` all’inizio della riga: ScripToti la riconosce e la mette in maiuscolo. Anche `MONTAGGIO` e `MONTAGE` sono intestazioni, perché segnano un cambio di situazione: quando premi [[Invio]] ScripToti aggiunge da solo il punto nascosto (`.MONTAGGIO`), così anche gli altri programmi Fountain la leggono come scena. Le inquadrature come `ANGLE ON` o `SU MARTA` invece non sono scene nuove: vedi **Inquadrature**. Per un’intestazione diversa (per esempio «SOGNO DI ANNA») metti un punto davanti: `.SOGNO DI ANNA`.",
       "## Quando serve una nuova scena",
       "Ogni volta che cambia il **luogo** o il **tempo** (il giorno dopo, più tardi, la sera stessa) serve una nuova intestazione. «Il giorno dopo» scritto dentro l’Azione è un errore frequente: il Controllo della sintassi lo segnala.",
       "## Numeri di scena",
       "**Vista → Numeri di scena** ([[Alt+Shift+N]]) li mostra ai margini. Per fissare un numero a mano scrivilo tra `#` in fondo: `INT. CUCINA - NOTTE #12A#`.",
-      "Mentre scrivi, ScripToti suggerisce i luoghi già usati nel copione: [[Invio]] o un clic per accettare, [[Esc]] per ignorare."
+      "Mentre scrivi, ScripToti suggerisce i luoghi già usati nel documento: [[Invio]] o un clic per accettare, [[Esc]] per ignorare."
     ]
   },
   "azione": {
@@ -166,7 +166,7 @@
       "- [[Backspace]] all’inizio di un’Azione che sta sotto un nome in maiuscolo la unisce al nome: diventa la sua battuta.",
       "- Un nome con una sola lettera maiuscola resta Azione: servono almeno due lettere.",
       "- Se il nome non viene riconosciuto (per esempio contiene numeri o è in minuscolo), premi [[Tab]] fino a «Character» o scrivi `@` davanti: `@McQueen`.",
-      "Mentre scrivi il nome, ScripToti suggerisce i personaggi già presenti nel copione, segnala i possibili refusi e indica dove ognuno compare per la prima volta («Apparso prima a pag. 3 scena 2»).",
+      "Mentre scrivi il nome, ScripToti suggerisce i personaggi già presenti nel documento, segnala i possibili refusi e indica dove ognuno compare per la prima volta («Apparso prima a pag. 3 scena 2»).",
       "Quando lo stesso personaggio riprende a parlare dopo un’azione, ScripToti aggiunge da solo (CONT’D); quando una battuta prosegue alla pagina dopo, aggiunge (MORE) e (CONT’D)."
     ]
   },
@@ -237,7 +237,7 @@
       "- Riconosce: CUT TO:, SMASH CUT TO:, MATCH CUT TO:, JUMP CUT TO:, DISSOLVE TO:, FADE TO:, FADE OUT., FADE TO BLACK., STACCO SU:, STACCO NETTO:, TAGLIO SU:, DISSOLVENZA A:, DISSOLVENZA INCROCIATA:, DISSOLVENZA IN NERO., DISSOLVENZA IN CHIUSURA., CHIUSURA IN NERO.",
       "- Per una transizione diversa metti tu `>` davanti: `> SFUMA SU:`.",
       "- Dopo la transizione ScripToti lascia una riga vuota: se segue subito altro testo, la transizione viene scambiata per il nome di un personaggio.",
-      "- `FADE IN:` (o `DISSOLVENZA IN APERTURA:`) all’inizio del copione e `FINE FLASHBACK` (o `END FLASHBACK`, `TORNA AL PRESENTE`) non sono transizioni: restano a **sinistra**, come Azione. Anche queste, con [[Invio]], vanno in maiuscolo da sole.",
+      "- `FADE IN:` (o `DISSOLVENZA IN APERTURA:`) all’inizio del documento e `FINE FLASHBACK` (o `END FLASHBACK`, `TORNA AL PRESENTE`) non sono transizioni: restano a **sinistra**, come Azione. Anche queste, con [[Invio]], vanno in maiuscolo da sole.",
       "Usa le transizioni con parsimonia: tra una scena e l’altra lo stacco è implicito.",
       "Il Controllo della sintassi riconosce le transizioni scritte senza `>` e le corregge con un clic."
     ]
@@ -257,11 +257,11 @@
       "Un’inquadratura sposta lo sguardo **dentro la stessa scena**: non ha numero di scena e vale il luogo e il momento dell’ultima intestazione. Per lo standard, e per Fountain, è **Azione**.",
       "> angle on Tim reading a book",
       "Con [[Invio]] a fine riga diventa `ANGLE ON Tim reading a book`: in maiuscolo va solo la parola chiave. Vale per ANGLE ON, CLOSE ON, WIDE ON, INSERT e POV.",
-      "- **SU** è anche una parola comune («su un tavolo…»): diventa inquadratura solo se dopo c’è un personaggio del copione. «su marta» diventa `SU MARTA`.",
+      "- **SU** è anche una parola comune («su un tavolo…»): diventa inquadratura solo se dopo c’è un personaggio del documento. «su marta» diventa `SU MARTA`.",
       "- La forma da manuale è l’inquadratura tutta in maiuscolo, con la descrizione sotto. Quando la riga è tutta in maiuscolo ScripToti aggiunge `!` davanti (in pagina non si vede), perché altrimenti con del testo subito sotto verrebbe letta come il nome di un personaggio.",
       "> ANGLE ON TIM\n>\n> Tim legge un libro.",
       "- Il Controllo della sintassi segnala le inquadrature lette come personaggio e le corregge con un clic.",
-      "Se il copione ha i numeri di scena bloccati e usava ANGLE ON come scena, quella scena ora risulta **omessa**: le altre tengono il loro numero."
+      "Se il documento ha i numeri di scena bloccati e usava ANGLE ON come scena, quella scena ora risulta **omessa**: le altre tengono il loro numero."
     ]
   },
   "altri-tipi": {
@@ -298,7 +298,7 @@
       "simboli fountain",
       "il punto esclamativo si vede"
     ],
-    "short": "[[Tab]] cambia il tipo del paragrafo (Scena → Azione → Personaggio → Parentetica → Dialogo → Transizione); [[Shift+Tab]] torna indietro. In alternativa un simbolo davanti: . scena, ! azione, @ personaggio, > transizione, ~ versi.",
+    "short": "[[Tab]] cambia il tipo del paragrafo e propone prima quello più probabile: dopo un’azione il personaggio, dopo una battuta la transizione; dialogo e parentetica solo sotto un personaggio. [[Shift+Tab]] torna indietro. In alternativa un simbolo davanti: . scena, ! azione, @ personaggio, > transizione, ~ versi.",
     "body": [
       "[[Tab]] fa ruotare il tipo del paragrafo in cui si trova il cursore: **Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione**. [[Shift+Tab]] va nel senso opposto. Il nome del nuovo tipo compare per un attimo nel paragrafo.",
       "Tieni premuto [[Tab]] per un attimo e accanto al cursore compare l’elenco dei tipi: scegli con le frecce e [[Invio]] (o con un clic), [[Esc]] per chiudere. Sul telefono tieni premuto il pulsante del tipo nella barra sopra la tastiera.",
@@ -325,7 +325,7 @@
     "short": "[[Mod+B]] grassetto, [[Mod+I]] corsivo, [[Mod+U]] sottolineato. [[Mod+Shift+K]] alterna MAIUSCOLO e minuscolo rispettando i nomi propri. Nel file diventano **testo**, *testo*, _testo_.",
     "body": [
       "- [[Mod+B]] **grassetto**, [[Mod+I]] corsivo, [[Mod+U]] sottolineato: sul testo selezionato o su quello che scrivi dopo.",
-      "- [[Mod+Shift+K]] alterna MAIUSCOLO e minuscolo «intelligente»: rispetta i nomi dei personaggi, i nomi propri già scritti nel copione, le maiuscole di inizio frase e alcune sigle.",
+      "- [[Mod+Shift+K]] alterna MAIUSCOLO e minuscolo «intelligente»: rispetta i nomi dei personaggi, i nomi propri già scritti nel documento, le maiuscole di inizio frase e alcune sigle.",
       "Nel file Fountain l’enfasi è scritta con simboli: `**grassetto**`, `*corsivo*`, `_sottolineato_`. Per scrivere un asterisco vero usa `\\*`."
     ]
   }

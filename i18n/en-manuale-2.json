@@ -68,8 +68,8 @@
       "- **Zoom** is at the bottom right, from 50% to 200%.",
       "- **View → Dark theme** ([[Alt+Shift+D]]). The PDF always has a white background.",
       "- **View → Spellcheck** sets the browser's spellcheck language (Italian or English).",
-      "- **View → Lingua / Language**: the language of the program, Italian or English. By default it follows your browser's language. It changes only menus, messages and the manual: your script stays as it is.",
-      "- At the bottom left, the **page** you are viewing and total pages appear (“Page 3 of 12,” or “Title page” on the title page). Click the indicator, enter a page number, and press [[Enter]] to go there. If the page does not exist, you see “Page not found.” Next are the script's **word and character counts**. Select some text to see “Selection,” with counts for that selection only."
+      "- **View → Lingua / Language**: the language of the program, Italian or English. By default it follows your browser's language. It changes only menus, messages and the manual: your document stays as it is.",
+      "- At the bottom left, the **page** you are viewing and total pages appear (“Page 3 of 12,” or “Title page” on the title page). Click the indicator, enter a page number, and press [[Enter]] to go there. If the page does not exist, you see “Page not found.” Next are the document's **word and character counts**. Select some text to see “Selection,” with counts for that selection only."
     ]
   },
   "revisioni": {
@@ -95,7 +95,7 @@
       "- **Revision passes**: when you turn tracking back on and highlights already exist, ScripToti asks whether to **continue the pass** or **start a new one**. A pass corresponds to a delivered version. In production, it usually has a revision color too: blue, pink, yellow, and so on. Starting a new pass clears the old highlights and marks only changes made from that point. Page and scene numbers stay locked.",
       "- **Revisions → Close revisions and unlock numbering** removes all highlights and unlocks pages and scene numbers when the revision stage is over. [[Mod+Z]] restores the highlights and numbering. To track changes again, turn the switch back on.",
       "- **File → Export PDF · marked pages only** prints only pages with changes.",
-      "Track revisions automatically locks pages and scene numbers (see the next topic). Revisions are not yet available in shared scripts."
+      "Track revisions automatically locks pages and scene numbers (see the next topic). Revisions are not yet available in shared documents."
     ]
   },
   "blocco": {
@@ -140,8 +140,8 @@
     "short": "Select text and choose Comments → Add comment ([[Mod+Alt+M]]). Comments → Show ([[Alt+Shift+C]]) opens the panel, where you can reply or choose “Resolve.”",
     "body": [
       "Select text and choose **Comments → Add comment** ([[Mod+Alt+M]]). The commented text is underlined.",
-      "**Comments → Show comments** ([[Alt+Shift+C]]) opens the panel. You can reply, resolve a discussion, or reopen it. Click the quoted text to go to that point in the script.",
-      "Comments stay in the file and are not printed. In shared scripts, everyone can see them with the author's name."
+      "**Comments → Show comments** ([[Alt+Shift+C]]) opens the panel. You can reply, resolve a discussion, or reopen it. Click the quoted text to go to that point in the document.",
+      "Comments stay in the file and are not printed. In shared documents, everyone can see them with the author's name."
     ]
   },
   "cerca": {
@@ -158,7 +158,7 @@
       "- [[Mod+Alt+F]] opens **Find and replace**, with “Replace” and “Replace all.”",
       "- Options: match case, whole words.",
       "Replacement follows the capitalization at each match. If you replace “giraffe” with “elephant,” “Giraffe” at the start of a sentence becomes “Elephant,” and “GIRAFFE” becomes “ELEPHANT.”",
-      "In character cues, scene headings, and transitions, replacement text stays uppercase. To rename a character throughout the script, use “Change character name” instead."
+      "In character cues, scene headings, and transitions, replacement text stays uppercase. To rename a character throughout the document, use “Change character name” instead."
     ]
   },
   "rinomina": {
@@ -184,12 +184,12 @@
       "autocomplete character names",
       "it suggests the wrong name"
     ],
-    "short": "As you type a scene heading or name, ScripToti suggests only locations and characters already in the script. Press [[Enter]] or click to accept; press [[Esc]] to ignore.",
+    "short": "As you type a scene heading or name, ScripToti suggests only locations and characters already in the document. Press [[Enter]] or click to accept; press [[Esc]] to ignore.",
     "body": [
-      "When you write a scene heading, ScripToti suggests **locations** already used, then the **time** of day in the script's language (DAY, NIGHT… or the Italian GIORNO, NOTTE…). When you type an uppercase name, it suggests **characters** from the script and flags possible typos (RUTA → RITA). If a character has not appeared for at least three scenes, it reminds you where they last appeared (“Last seen on page 3, scene 2”). The reference updates after every edit. It is not shown for characters in nearby scenes.",
+      "When you write a scene heading, ScripToti suggests **locations** already used, then the **time** of day in the document's language (DAY, NIGHT… or the Italian GIORNO, NOTTE…). When you type an uppercase name, it suggests **characters** from the document and flags possible typos (RUTA → RITA). If a character has not appeared for at least three scenes, it reminds you where they last appeared (“Last seen on page 3, scene 2”). The reference updates after every edit. It is not shown for characters in nearby scenes.",
       "- Use [[↑]] [[↓]] to choose, [[Enter]] or a click to accept, and [[Esc]] to ignore.",
       "- If a similar name is intentional, you can keep it as a separate character.",
-      "Nothing is invented: suggestions come only from the open script."
+      "Nothing is invented: suggestions come only from the open document."
     ]
   },
   "salvare": {
@@ -204,7 +204,7 @@
       "recover an earlier version",
       "Safari downloads the file"
     ],
-    "short": "Open or save your script as a file. In Chrome/Edge, ScripToti then updates it automatically (autosave) and with [[Mod+S]]. File → Recovery… keeps earlier versions in your browser. In Safari and on iPhone, Save downloads a copy.",
+    "short": "Open or save your document as a file. In Chrome/Edge, ScripToti then updates it automatically (autosave) and with [[Mod+S]]. File → Recovery… keeps earlier versions in your browser. In Safari and on iPhone, Save downloads a copy.",
     "body": [
       "In **Chrome and Edge**, a file opened with **File → Open…** stays linked. ScripToti updates it automatically after a few seconds and with [[Mod+S]]. [[Mod+Shift+S]] is **Save As** (the `.fountain` extension is added automatically).",
       "Your browser may ask for permission to change the file. If it does, click Save and allow access. The save status is at the top right.",
@@ -240,11 +240,11 @@
     "body": [
       "If another program or window changes the file while it is open, ScripToti stops and shows **File conflict**. It never overwrites the version on disk.",
       "**File → Compare versions…** shows the versions side by side. Choose “Continue with the local copy” or “Open the file version.” Both stay in Recovery.",
-      "For shared scripts stored in a shared Drive folder, this conflict does not appear. Copies belonging to the same sharing session are merged automatically."
+      "For shared documents stored in a shared Drive folder, this conflict does not appear. Copies belonging to the same sharing session are merged automatically."
     ]
   },
   "condividere": {
-    "title": "Sharing a script",
+    "title": "Sharing a document",
     "keys": "share sharing collaborators collaborate together real time link collaborator file name write together",
     "q": [
       "how do I share a script",
@@ -262,7 +262,7 @@
       "- **Copy link** to open it quickly in a browser.",
       "As you write, you see each other's cursors and names. Comments show who wrote them. [[Mod+Z]] undoes only your own changes. To change your name, use **Save name** in the same dialog.",
       "The text is encrypted in transit. Without the file or link, no one can read it, not even the server. Anyone with the file can edit. **Disconnect this file** turns your copy into an ordinary file.",
-      "Track revisions and locked pages are not yet available in shared scripts."
+      "Track revisions and locked pages are not yet available in shared documents."
     ]
   },
   "led": {
@@ -277,7 +277,7 @@
     ],
     "short": "Green: online. Yellow: connecting or an unstable connection. Red: offline; changes stay queued and are sent automatically. Some VPNs are blocked by the site's firewall. Turn off the VPN or exclude the site from it.",
     "body": [
-      "In shared scripts, look at the top right:",
+      "In shared documents, look at the top right:",
       "- **green**: online;",
       "- **yellow**: connecting, or the connection has been unstable in the last 30 seconds;",
       "- **red**: offline. You can keep writing. Changes stay queued, including in the file, and are sent when the connection returns.",
@@ -293,9 +293,9 @@
       "can two people open the file from Drive",
       "Dropbox"
     ],
-    "short": "Yes. Keep the shared script in a shared Drive folder and open it from there. ScripToti recognizes copies belonging to the same sharing session and merges them without conflicts. Set the folder to “Available offline.”",
+    "short": "Yes. Keep the shared document in a shared Drive folder and open it from there. ScripToti recognizes copies belonging to the same sharing session and merges them without conflicts. Set the folder to “Available offline.”",
     "body": [
-      "A shared script can be stored in a shared Drive or Dropbox folder. Everyone opens the same file with **File → Open…**.",
+      "A shared document can be stored in a shared Drive or Dropbox folder. Everyone opens the same file with **File → Open…**.",
       "- ScripToti recognizes copies belonging to the same sharing session and does not stop with a “File conflict.”",
       "- Changes reach others through ScripToti in a second. Drive delivers the updated file to each person.",
       "- If someone edits the file in another program, the shared version takes precedence. The other version stays in Recovery.",
@@ -322,7 +322,7 @@
       "- a paragraph starting with “The next day,” “Later,” or “Meanwhile” inside a scene already in progress: it usually needs a new heading;",
       "- (MORE) typed manually; dual dialogue (^) with no preceding speech.",
       "These are not flagged because they are valid: manually typed (CONT’D), alternative extension spellings ((VO), the Italian (voce fuori campo), (F.C.), and so on, headings without a time of day or INT./EXT. (INT./EST. in Italian), consecutive headings, long parentheticals, and V.O. for a character present in the scene.",
-      "The affected text is underlined. The **Warnings** panel (Help → Syntax check: warnings…) explains each issue. **Go to** takes you to it; **Fix** applies the correction (undo it with [[Mod+Z]]); **Ignore** hides it for this script."
+      "The affected text is underlined. The **Warnings** panel (Help → Syntax check: warnings…) explains each issue. **Go to** takes you to it; **Fix** applies the correction (undo it with [[Mod+Z]]); **Ignore** hides it for this document."
     ]
   }
 }
