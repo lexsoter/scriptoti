@@ -3,7 +3,7 @@
 <head>
 <meta name="scriptoti-edition" content="online">
   <meta charset="utf-8">
-  <meta name="scriptoti-version" content="0.32.3">
+  <meta name="scriptoti-version" content="0.33.0">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -446,7 +446,7 @@
 /* On a touch phone the zoom slider would sit on the iPhone home bar and could
    not be tapped: there the zoom is the two-finger pinch. The counters move
    down, clear of the home bar (placeBars sets bottom inline, hence !important). */
-@media (pointer:coarse) and (max-width:950px), (pointer:coarse) and (max-height:500px) {
+@media (pointer:coarse) and (max-width:700px), (pointer:coarse) and (max-height:500px) {
   .zoom-control { display:none!important; }
 }
 /* On a phone the zoom control covers the right of the bar: page and words stay. */
@@ -461,7 +461,7 @@
 
 /* Phone chrome stays outside the keyboard and page zoom. */
 #phoneMenuBtn { display:none; }
-@media screen and (pointer:coarse) {
+@media screen and (pointer:coarse) and (max-width:700px), screen and (pointer:coarse) and (max-height:500px) {
   .app { height:var(--phone-height,100dvh); margin-top:var(--phone-top,0px); touch-action:pan-x pan-y; }
   .topbar { padding-top:calc(6px + env(safe-area-inset-top)); padding-left:max(10px,env(safe-area-inset-left)); padding-right:max(10px,env(safe-area-inset-right)); }
   .workspace { padding:0 env(safe-area-inset-right) calc(34px + env(safe-area-inset-bottom)) env(safe-area-inset-left); }
@@ -503,7 +503,7 @@
   .phone-typing .topbar .menu-bar,.phone-typing .project-tabs,.phone-typing .editor-toolbar { display:none; }
 }
 .phone-menu,.phone-keyboard { display:none; }
-@media screen and (pointer:coarse) {
+@media screen and (pointer:coarse) and (max-width:700px), screen and (pointer:coarse) and (max-height:500px) {
   .phone-menu[open] { display:flex; flex-direction:column; position:fixed; top:var(--phone-top,0px); left:0; margin:0; width:100%; max-width:none; height:var(--phone-height,100dvh); max-height:none; padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); border:0; border-radius:0; user-select:none; -webkit-user-select:none; }
   .phone-menu-head { display:flex; flex:none; align-items:center; gap:8px; padding:6px; border-bottom:1px solid var(--line); }
   .phone-menu-head h2 { flex:1; margin:0; font-size:17px; }
@@ -540,7 +540,7 @@
 
 /* Phone writing reflows; printed pages keep their original DOM and metrics. */
 .phone-writer,.phone-file-status,.phone-preview-head,.phone-preview-foot,.phone-top-action,.phone-composition { display:none; }
-@media screen and (pointer:coarse) {
+@media screen and (pointer:coarse) and (max-width:700px), screen and (pointer:coarse) and (max-height:500px) {
   .topbar { grid-template-columns:44px minmax(0,1fr) auto auto; min-height:56px; padding-top:env(safe-area-inset-top); }
   .topbar .file-group { display:flex; flex-direction:column; align-items:center; gap:1px; }
   .topbar .menu-end,.project-tabs,.editor-toolbar { display:none!important; }
@@ -571,6 +571,8 @@
   .phone-composition:not([hidden]) { display:block; position:fixed; z-index:8; background:var(--bg); text-decoration:underline; font:var(--phone-font-size,18px)/1.45 "Courier Prime",monospace; pointer-events:none; }
   #titleDialog { position:fixed; top:var(--phone-top,0px); left:0; margin:0; width:100%; max-width:none; height:var(--phone-height,100dvh); max-height:none; border:0; border-radius:0; padding:20px max(18px,env(safe-area-inset-right)) 24px max(18px,env(safe-area-inset-left)); }
   .phone-preview #phoneWriter,.phone-preview .topbar,.phone-preview .stats { display:none!important; }
+  /* The preview shows the sheet as the PDF prints it: white, whatever the theme. */
+  .phone-preview .paper { --paper:#ffffff; --paper-ink:#111111; background:#ffffff; color:#111111; }
   .phone-preview #stage { position:fixed; inset:calc(var(--phone-top,0px) + 56px + env(safe-area-inset-top)) 0 calc(var(--phone-bottom,0px) + 56px + env(safe-area-inset-bottom)); z-index:27; display:flex; align-items:flex-start; padding:12px; background:var(--bg); }
   .phone-preview-head,.phone-preview-foot { position:fixed; left:0; right:0; z-index:28; display:none; align-items:center; justify-content:space-between; gap:10px; min-height:56px; padding:6px max(12px,env(safe-area-inset-right)) 6px max(12px,env(safe-area-inset-left)); background:var(--panel); }
   .phone-preview-head { top:var(--phone-top,0px); padding-top:calc(6px + env(safe-area-inset-top)); } .phone-preview-foot { bottom:var(--phone-bottom,0px); padding-bottom:calc(6px + env(safe-area-inset-bottom)); }
@@ -3345,7 +3347,7 @@ const DraftSearch = (() => {
       return T('Ultima volta a') + ' ' + where;
     }
     function paint() {
-      const phone = matchMedia('(pointer:coarse)').matches, dock = document.querySelector('#phoneSuggestions');
+      const phone = matchMedia('(pointer:coarse) and (max-width:700px), (pointer:coarse) and (max-height:500px)').matches, dock = document.querySelector('#phoneSuggestions');
       if (phone && (!dock || dock.closest('[hidden]'))) return hide();
       const parent = phone ? dock : document.body;
       if (popup.parentElement !== parent) parent.append(popup);
@@ -5957,8 +5959,10 @@ async function startUpgrade() {
   const parseSource = (source = sourceText, options = {}) => DraftEngine.parse(source, { editing: true, mode: documentState?.mode, paragraphs: documentState?.paragraphs, layout: documentState?.layout, ...options });
   let sourceText = '', savedText = '', fileHandle = null, fileName = 'Untitled.fountain';
   const T = text => window.ScripTotiI18n ? window.ScripTotiI18n.t(text) : text;
-  // Touch phones: defined early because revealCaret may run during startup.
-  const phoneMedia = matchMedia('(pointer:coarse)'), shortPhone = matchMedia('(max-height:500px)');
+  // Phones: a touch screen that is narrow, or short (a phone on its side).
+  // Tablets and computers keep the page view. Defined early because
+  // revealCaret may run during startup.
+  const phoneMedia = matchMedia('(pointer:coarse) and (max-width:700px), (pointer:coarse) and (max-height:500px)'), shortPhone = matchMedia('(max-height:500px)');
   let phoneWriter = null, phoneMode = 'write', phoneRegions = [], phonePages = [], phoneDocument = null, phoneBuilding = false, phonePreviewFit = 1;
   let dirty = false, showSceneNumbers = false, preferredSceneNumbers = null, theme = 'dark', pageZoom = 100, spellLanguage = 'it';
   let recoveryTimer = null, empty = null, doc = null, regions = [], remembered = null, currentPagination = null, contextCache = null;
@@ -7417,62 +7421,121 @@ async function startUpgrade() {
     phoneWriter.focus({ preventScroll:true }); getSelection().setBaseAndExtent(a.node, a.offset, b.node, b.offset);
     remembered = plainSelection({ ...selection, region:b.region });
   }
+  // The phone view is rebuilt after every edit, so it reuses what did not
+  // change: glyphs of paragraphs outside the edited stretch of text, and the
+  // DOM of paragraphs whose text, page and scene are the same. Only changed
+  // paragraphs are drawn again and moved into place, so a keystroke in a long
+  // script costs about the same as in a short one.
+  let phoneGlyphCache = { source: '', parts: new Map() }, phoneDividers = new Map();
   function ensurePhoneDocument(force = false) {
     if (!phoneWriter || !phoneMedia.matches || !doc || phoneBuilding || !force && phoneDocument === doc) return;
     phoneBuilding = true;
-    const focused = document.activeElement === phoneWriter, scroll = stage.scrollTop, saved = remembered;
+    const focused = document.activeElement === phoneWriter, scroll = force ? stage.scrollTop : null, saved = remembered;
     const previous = new Map();
     if (!force) for (const node of phoneRegions) { const list = previous.get(node._phoneSignature) || []; list.push(node); previous.set(node._phoneSignature, list); }
     phoneDocument = doc; phoneRegions = [];
     const parts = DraftEditing.parts(doc).filter(p => !p.generated);
+    const lineParts = new Map(parts.map(p => [p.kind + ':' + p.lineStart, p]));
+    // Text unchanged before `same` and after `tail` (from the end) keeps its glyphs.
+    const old = phoneGlyphCache, oldSource = old.source;
+    let same = 0; const limit = Math.min(oldSource.length, sourceText.length);
+    while (same < limit && oldSource.charCodeAt(same) === sourceText.charCodeAt(same)) same++;
+    let tail = 0; while (tail < limit - same && oldSource.charCodeAt(oldSource.length - 1 - tail) === sourceText.charCodeAt(sourceText.length - 1 - tail)) tail++;
+    const delta = sourceText.length - oldSource.length, cache = new Map();
+    const glyphsOf = part => {
+      const key = part.kind + ':' + part.lineStart;
+      let glyphs = null;
+      if (part.lineEnd < same) { const hit = old.parts.get(key); if (hit && hit.text === part.text) glyphs = hit.glyphs; }
+      else if (part.lineStart >= sourceText.length - tail && part.lineStart - delta >= 0) {
+        const hit = old.parts.get(part.kind + ':' + (part.lineStart - delta));
+        if (hit && hit.text === part.text) glyphs = delta ? hit.glyphs.map(g => ({ ...g, from: g.from + delta, to: g.to + delta })) : hit.glyphs;
+      }
+      glyphs ||= DraftEngine.richText(part.text, part.map, part.anchor).glyphs;
+      cache.set(key, { text: part.text, glyphs }); return glyphs;
+    };
     phonePages = [...editor.children].map((page, index) => {
-      const nodes = [...page.querySelectorAll('.editable-region')].filter(n => n._draft && !n._draft.part.generated);
-      const at = Math.min(...nodes.map(n => {
+      // Only the earliest region of a page says where the page starts.
+      let first = null, firstPoint = Infinity;
+      for (const n of page.querySelectorAll('.editable-region')) {
+        if (!n._draft || n._draft.part.generated) continue;
         const point = n._draft.glyphs.find(g => !g.generated)?.from ?? n._draft.anchor;
-        const part = parts.find(p => p.kind === n.dataset.kind && p.lineStart <= point && point <= p.lineEnd);
-        return part && (DraftEngine.richText(part.text, part.map, part.anchor).glyphs[0]?.from ?? part.anchor) === point ? part.lineStart : point;
-      }));
+        if (point < firstPoint) { firstPoint = point; first = n; }
+      }
+      let at = firstPoint;
+      if (first) {
+        const part = lineParts.get(first.dataset.kind + ':' + first._draft.part.lineStart) || parts.find(p => p.kind === first.dataset.kind && p.lineStart <= firstPoint && firstPoint <= p.lineEnd);
+        if (part && (glyphsOf(part)[0]?.from ?? part.anchor) === firstPoint) at = part.lineStart;
+      }
       return { label:page.dataset.pageLabel, at:index ? Number.isFinite(at) ? at : doc.bodyEnd : doc.bodyStart, node:page };
     });
     const end = regions.find(n => n.classList.contains('end-editor'))?._draft.part;
     if (end && !parts.some(p => p.placeholder && p.anchor === end.anchor)) parts.push(end);
-    const fragment = document.createDocumentFragment(); let pageIndex = 0;
+    const sceneNumbers = new Map(phoneScenes().map(e => [e.part.lineStart, e.number]));
+    const wanted = [], dividers = new Map(); let pageIndex = 0;
     const divider = page => {
-      const node = el('div', 'phone-page-divider', T('PAGINA') + ' ' + page.label);
-      node.dataset.pageLabel = page.label; node.dataset.at = String(page.at); node.contentEditable = 'false'; fragment.append(node);
+      let node = phoneDividers.get(page.label);
+      if (!node) { node = el('div', 'phone-page-divider', T('PAGINA') + ' ' + page.label); node.dataset.pageLabel = page.label; node.contentEditable = 'false'; }
+      node.dataset.at = String(page.at); dividers.set(page.label, node); wanted.push(node);
     };
     const put = (part, glyphs, at) => {
       while (pageIndex < phonePages.length && phonePages[pageIndex].at <= at) divider(phonePages[pageIndex++]);
-      const page = phonePageAt(at), scene = part.kind === 'scene' && phoneScenes().find(e => e.part.lineStart === part.lineStart);
-      const signature = JSON.stringify([part.kind, glyphs.map(g => [g.char,g.marks]), page?.label, scene?.number, Boolean(part.placeholder)]);
+      const page = phonePageAt(at), scene = part.kind === 'scene' ? sceneNumbers.get(part.lineStart) : undefined;
+      let text = '', marks = '';
+      for (const g of glyphs) { text += g.char; marks += (g.marks || 0) + ','; }
+      const signature = part.kind + '\u0001' + text + '\u0001' + marks + '\u0001' + (page?.label || '') + '\u0001' + (scene ?? '') + '\u0001' + (part.placeholder ? 1 : 0);
       let node = previous.get(signature)?.shift();
-      if (!node) { node = el('div', 'editable-region phone-region ' + part.kind); appendGlyphs(node, glyphs, null, false); }
-      node._phoneSignature = signature; node._draft = { part, glyphs, text:glyphs.map(g => g.char).join(''), anchor:glyphs[0]?.from ?? at, end:glyphs.at(-1)?.to ?? at };
+      if (!node) {
+        node = el('div', 'editable-region phone-region ' + part.kind); appendGlyphs(node, glyphs, null, false);
+        const box = el('div', 'phone-paragraph ' + part.kind);
+        if (scene !== undefined) { const chip = el('span', 'phone-scene-number', scene); chip.contentEditable = 'false'; chip.setAttribute('aria-hidden', 'true'); box.append(chip); }
+        box.append(node); node._phoneBox = box;
+      }
+      node._phoneSignature = signature; node._draft = { part, glyphs, text, anchor:glyphs[0]?.from ?? at, end:glyphs.at(-1)?.to ?? at };
       node.dataset.kind = part.kind; node.dataset.pageLabel = page?.label || '1'; node.dataset.start = String(node._draft.anchor); node.dataset.end = String(node._draft.end);
-      node.lang = spellLanguage; node.spellcheck = true;
+      if (node.lang !== spellLanguage) node.lang = spellLanguage;
+      node.spellcheck = true;
       if (!glyphs.length) node.dataset.empty = 'true'; else delete node.dataset.empty;
-      const box = el('div', 'phone-paragraph ' + part.kind);
-      if (scene) { const chip = el('span', 'phone-scene-number', scene.number); chip.contentEditable = 'false'; chip.setAttribute('aria-hidden', 'true'); box.append(chip); }
-      box.append(node); fragment.append(box); phoneRegions.push(node);
+      wanted.push(node._phoneBox); phoneRegions.push(node);
     };
+    // Page starts in source order: a paragraph is split only where a start
+    // falls inside it, found by walking the sorted starts once.
+    const starts = phonePages.map(p => p.at).sort((a, b) => a - b);
+    let next = 0;
     for (const part of parts) {
-      const glyphs = DraftEngine.richText(part.text, part.map, part.anchor).glyphs;
+      const glyphs = glyphsOf(part);
       if (!glyphs.length) { put(part, [], part.anchor); continue; }
+      while (next < starts.length && starts[next] <= glyphs[0].from) next++;
       let from = 0;
-      for (let i = 1; i < glyphs.length; i++) if (phonePages.some(p => p.at > glyphs[i - 1].from && p.at <= glyphs[i].from)) { put(part, glyphs.slice(from, i), glyphs[from].from); from = i; }
+      for (let k = next; k < starts.length && starts[k] <= glyphs.at(-1).from; k++) {
+        const i = glyphs.findIndex((g, j) => j > from && g.from >= starts[k]);
+        if (i > from) { put(part, glyphs.slice(from, i), glyphs[from].from); from = i; }
+      }
       put(part, glyphs.slice(from), glyphs[from].from);
     }
     while (pageIndex < phonePages.length) divider(phonePages[pageIndex++]);
-    for (const page of phonePages) if (!phoneRegions.some(n => n.dataset.pageLabel === page.label)) {
+    phoneGlyphCache = { source: sourceText, parts: cache }; phoneDividers = dividers;
+    const filled = new Set(phoneRegions.map(n => n.dataset.pageLabel));
+    let inserted = false;
+    for (const page of phonePages) if (!filled.has(page.label)) {
       const part = page.node.querySelector('.editable-region')?._draft?.part;
       if (!part?.placeholder) continue;
       const box = el('div', 'phone-paragraph'), node = el('div', 'editable-region phone-region action'); node.append(el('br'));
       node._draft = { part, glyphs:[], text:'', anchor:part.anchor, end:part.anchor }; node.dataset.kind = part.kind; node.dataset.pageLabel = page.label; node.dataset.empty = 'true';
-      box.append(node); [...fragment.children].find(n => n.classList.contains('phone-page-divider') && n.dataset.pageLabel === page.label)?.after(box); phoneRegions.push(node);
+      box.append(node); node._phoneBox = box;
+      const after = wanted.indexOf(dividers.get(page.label));
+      wanted.splice(after < 0 ? wanted.length : after + 1, 0, box); phoneRegions.push(node); inserted = true;
     }
-    phoneRegions.sort((a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
-    phoneWriter.replaceChildren(fragment); phoneWriter.setAttribute('contenteditable', String(writable));
-    phoneWriter.lang = spellLanguage; stage.scrollTop = scroll; phoneBuilding = false;
+    // Regions are built in document order; only an inserted empty page needs sorting.
+    if (inserted) phoneRegions.sort((a, b) => wanted.indexOf(a._phoneBox) - wanted.indexOf(b._phoneBox));
+    if (force) phoneWriter.replaceChildren(...wanted);
+    else {
+      // Move only what changed; untouched paragraphs stay where they are.
+      const kids = phoneWriter.childNodes;
+      wanted.forEach((node, i) => { if (kids[i] !== node) phoneWriter.insertBefore(node, kids[i] || null); });
+      while (kids.length > wanted.length) phoneWriter.lastChild.remove();
+    }
+    if (phoneWriter.getAttribute('contenteditable') !== String(writable)) phoneWriter.setAttribute('contenteditable', String(writable));
+    phoneWriter.lang = spellLanguage; if (scroll !== null && stage.scrollTop !== scroll) stage.scrollTop = scroll; phoneBuilding = false;
     if (focused && !rendering && phoneMode === 'write') restorePhoneSelection(saved || { anchor:doc.bodyStart, focus:doc.bodyStart });
   }
   function phoneMoveCaret(key, extend = false) {

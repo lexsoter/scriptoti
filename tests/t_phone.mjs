@@ -227,3 +227,13 @@ try {
   await desktop.page.keyboard.press('Meta+p'); desktop.check('desktop: Cmd+P opens the same dialog', await desktop.page.locator('#exportDialog').isVisible()); await desktop.page.locator('#exportDialog button[type=button]').click();
   desktop.check('desktop: no phone view or controls are shown', !await desktop.page.locator('#phoneWriter').isVisible() && !await desktop.page.locator('#phoneGotoBtn').isVisible() && await desktop.page.locator('.editor-toolbar').isVisible());
 } finally { desktop.report(); await desktop.close(); }
+
+// Tablets (iPad, with or without keyboard) keep the computer's page view.
+{
+  const t = await open({ width: 820, height: 1180, hasTouch: true, isMobile: true });
+  try {
+    await t.load('INT. CASA - GIORNO\n\nMarta guarda fuori.\n\n'); await t.page.waitForTimeout(300);
+    const view = await t.page.evaluate(() => ({ phone: document.documentElement.classList.contains('phone-writing'), pages: getComputedStyle(document.querySelector('#scriptEditor')).display !== 'none', toolbar: getComputedStyle(document.querySelector('.editor-toolbar')).display !== 'none' }));
+    t.check('tablet: page view and toolbar, not the phone view', !view.phone && view.pages && view.toolbar, JSON.stringify(view));
+  } finally { t.report(); await t.close(); }
+}
