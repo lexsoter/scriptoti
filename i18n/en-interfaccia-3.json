@@ -14,8 +14,6 @@
   "Pagine non valide.": "Invalid pages.",
   "Vai a": "Go to",
   "Anteprima": "Preview",
-  "Nuovo documento": "New document",
-  "Apri altro documento": "Open another document",
   "Invia il file": "Send file",
   "Cerca e sostituisci": "Find and replace",
   "Impostazioni": "Settings",
@@ -112,5 +110,12 @@
   "Questa riga sembra una transizione ma viene letta come Azione. Riscrivila su una riga da sola e premi Invio, oppure correggila qui: ScripToti mette «>» davanti e la porta a destra.": "This line looks like a transition but is read as Action. Write it again on its own line and press Enter, or fix it here: ScripToti puts «>» in front and moves it to the right.",
   "in linea": "online",
   "Tre segni uguale su una riga, oppure Cmd/Ctrl+Invio": "Three equals signs on a line, or Cmd/Ctrl+Enter",
+  "parole": "words",
+  "Nuovo documento": "New document",
+  "Apri altro documento": "Open another document",
+  "Grandezza del testo": "Text size",
+  "Revisioni visibili": "Revision highlights",
+  "Chiudi l'anteprima": "Close preview",
+  "Esporta PDF (stampa o salva)": "Export PDF (print or save)",
   "[[Tab]] cambia il tipo del paragrafo e propone prima quello più probabile (dopo un’azione il personaggio, dopo una battuta la transizione); [[Shift+Tab]] all’indietro; tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] changes the paragraph type and offers the most likely one first (after an action a character, after dialogue a transition); [[Shift+Tab]] goes back; hold it to choose from the list. The symbols at the start of the line stay in the file but are not shown."
 }

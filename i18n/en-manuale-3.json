@@ -1,23 +1,23 @@
 {
   "telefono": {
     "title": "On your phone",
-    "keys": "phone mobile iphone android safari keyboard writing preview go to pages scenes characters text size send file",
+    "keys": "phone mobile iphone android safari keyboard writing preview go to pages scenes characters text size side menu scrolling send file",
     "q": [
       "how do I write on my phone",
       "how do I jump to a page",
-      "how do I preview the PDF on my phone",
+      "how do I close the phone menu",
       "how do I make the phone text bigger"
     ],
-    "short": "On your phone, the writing view fits the screen. Go to finds pages, scenes and characters. Preview shows the printed pages.",
+    "short": "On your phone, writing fills the screen. The top bar shows pages and words. The side menu holds commands and settings.",
     "body": [
-      "On your phone, text wraps to fit the screen. Fountain types and bold, italic and underline stay visible. Formatting symbols stay hidden. **PAGE** dividers show where the PDF pages begin, including lettered pages such as 12A.",
-      "Above the keyboard you see the current text type: tap to cycle to the next type, or press and hold to choose one. ⇤ goes to the previous type. The arrows in the “Move the caret” group move your writing position. You also have Undo, Redo and parentheses. Tap a suggestion to complete a character name or location.",
-      "**Go to** lists Scenes, Pages and Characters. Type `page 12A`, `scene 7` or a word, then press Enter. Start, Last edit and End take you to useful places in the document.",
-      "**Preview** shows the actual printed pages and does not let you edit the text. Scroll between pages and pinch with two fingers to zoom. **Write** takes you back to the text. Export PDF and Send file are at the bottom.",
-      "The top menu opens New document, Open another document, Title page, Preview, Export PDF, Send file, Find and replace, and Comments. The gear opens **Settings**: text size from 14 to 26 px, dark theme, language and the manual. Your text size is remembered on this device and does not change the PDF.",
-      "**Title page** opens a form with title, credit, author, draft, date and contact fields. Save to apply the fields and return to your document.",
-      "**Export PDF** lets you include the title page and choose all pages or a range, using the actual labels, such as 12A. If there are revisions, you can choose marked pages only. These options also work on the computer and with [[Mod+P]].",
-      "Saving follows the same rules as on the computer: check the status below the file name. **Send file** prepares a Fountain copy with the document information. It uses your device’s share sheet, or downloads the copy if sharing is unavailable."
+      "On your phone, text wraps to fit the screen, without page dividers. Fountain types and bold, italic and underline stay visible. Formatting symbols stay hidden. When you scroll to reread, the view stays where you leave it. It returns to the caret when you start typing or editing again.",
+      "The top bar shows the menu, file name, caret page, total pages and document word count. You also have Go to, Undo, Redo and Preview. A shared document has a dot beside the name, with the same green, yellow and red states as on the computer. Tap it to open Sharing.",
+      "Above the keyboard, the text type button has a ⇥ symbol. Tap to change type, or press and hold to choose from the list. B, I, U and Aa use the same bold, italic, underline and uppercase/lowercase commands as on the computer. Suggestions appear above these buttons. Tap one to accept it. The strip disappears when you close the keyboard.",
+      "The menu slides in from the right. It has Dark theme, Scene numbers and Revision highlights switches that show their actual state, followed by Text size and Lingua / Language. Below are New document, Open another document, Title page, Find and replace, Comments, Sharing, and Help and manual. Tap outside the panel or swipe right to close it. Text size, from 14 to 26 px, is remembered on this device and does not change the PDF.",
+      "**Go to** lists Scenes, Pages and Characters. Type `page 12A`, `scene 7` or a word, then press Enter. Start, Last edit and End take you to useful places in the document. Page labels still match the printed pages, even though the writing view has no dividers.",
+      "**Preview** shows the actual printed pages and does not let you edit text. Scroll between pages and pinch with two fingers to zoom. The X, “Close preview”, returns to writing. The Share icon at the top opens Export PDF (print or save) and Send file. Sending prepares a Fountain copy with the document information. It uses your device’s share sheet, or downloads the copy if sharing is unavailable.",
+      "**Title page** opens a full-screen form with title, credit, author, draft, date and contact fields. Save to apply the fields and return to the document. Writing, autosave, comments and sharing use the same commands as on the computer.",
+      "**Export PDF** lets you include the title page and choose all pages or a range, using the actual labels, such as 12A. If there are revisions, you can choose marked pages only. These options also work on the computer and with [[Mod+P]]. Tablets keep the computer’s page view."
     ]
   },
   "segnala": {

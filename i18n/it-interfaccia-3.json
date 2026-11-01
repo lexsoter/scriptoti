@@ -14,8 +14,6 @@
   "Pagine non valide.": "Pagine non valide.",
   "Vai a": "Vai a",
   "Anteprima": "Anteprima",
-  "Nuovo documento": "Nuovo documento",
-  "Apri altro documento": "Apri altro documento",
   "Invia il file": "Invia il file",
   "Cerca e sostituisci": "Cerca e sostituisci",
   "Impostazioni": "Impostazioni",
@@ -112,5 +110,12 @@
   "Questa riga sembra una transizione ma viene letta come Azione. Riscrivila su una riga da sola e premi Invio, oppure correggila qui: ScripToti mette «>» davanti e la porta a destra.": "Questa riga sembra una transizione ma viene letta come Azione. Riscrivila su una riga da sola e premi Invio, oppure correggila qui: ScripToti mette «>» davanti e la porta a destra.",
   "in linea": "in linea",
   "Tre segni uguale su una riga, oppure Cmd/Ctrl+Invio": "Tre segni uguale su una riga, oppure Cmd/Ctrl+Invio",
+  "parole": "parole",
+  "Nuovo documento": "Nuovo documento",
+  "Apri altro documento": "Apri altro documento",
+  "Grandezza del testo": "Grandezza del testo",
+  "Revisioni visibili": "Revisioni visibili",
+  "Chiudi l'anteprima": "Chiudi l'anteprima",
+  "Esporta PDF (stampa o salva)": "Esporta PDF (stampa o salva)",
   "[[Tab]] cambia il tipo del paragrafo e propone prima quello più probabile (dopo un’azione il personaggio, dopo una battuta la transizione); [[Shift+Tab]] all’indietro; tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] cambia il tipo del paragrafo e propone prima quello più probabile (dopo un’azione il personaggio, dopo una battuta la transizione); [[Shift+Tab]] all’indietro; tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono."
 }

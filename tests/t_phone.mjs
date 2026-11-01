@@ -29,8 +29,8 @@ async function caretVisible(t) {
     const selection = getSelection(); if (!selection.rangeCount) return false;
     let r = selection.getRangeAt(0).getBoundingClientRect();
     if (!r.height) r = document.querySelector('#phoneWriter .active-edit')?.getBoundingClientRect() || r;
-    const box = document.querySelector('#stage').getBoundingClientRect(), stats = document.querySelector('.stats').getBoundingClientRect();
-    return r.height > 0 && r.top >= Math.max(box.top, visualViewport.offsetTop) && r.bottom <= Math.min(box.bottom, stats.top, visualViewport.offsetTop + visualViewport.height) + 1;
+    const box = document.querySelector('#stage').getBoundingClientRect(), strip = document.querySelector('#phoneKeyboard');
+    return r.height > 0 && r.top >= Math.max(box.top, visualViewport.offsetTop) && r.bottom <= Math.min(box.bottom, strip.hidden ? Infinity : strip.getBoundingClientRect().top, visualViewport.offsetTop + visualViewport.height) + 1;
   });
 }
 async function locked(t) {
@@ -110,14 +110,30 @@ for (const [width, height, locale] of [[390,844,'it-IT'],[844,390,'en-US']]) {
     await t.load(basic); await t.caretAfter('fuori.'); await keyboard(t, height > 500 ? 440 : 240);
     await t.page.locator('#phoneTab').tap(); await settle(t);
     t.check(`${label}: strip Tab changes type and keeps focus`, (await state(t)).selection.kind === 'character' && await focused(t));
-    const beforeArrow = (await state(t)).selection.focus;
-    await t.page.locator('#phoneArrowLeft').tap(); await settle(t);
-    t.check(`${label}: cursor pill has outlined icon controls that move the caret`, (await state(t)).selection.focus === beforeArrow - 1 && await t.page.locator('.phone-arrows').getAttribute('aria-label') === (locale === 'it-IT' ? 'Sposta il cursore' : 'Move the caret') && await t.page.locator('.phone-arrows button svg').count() === 4 && await focused(t));
+    t.check(`${label}: strip contains only Tab and B/I/U/Aa, with no caret or parenthesis controls`, JSON.stringify(await t.page.locator('.phone-keys>button').evaluateAll(nodes => nodes.map(n => n.id))) === JSON.stringify(['phoneTab','phoneBold','phoneItalic','phoneUnderline','phoneCase']) && await t.page.locator('.phone-arrows,#phoneParenthesis,#phoneBackTab').count() === 0);
+    t.check(`${label}: Tab is an accent control with its own circle icon at the same height`, await t.page.locator('#phoneTab').evaluate(n => n.querySelector('svg circle') && n.getBoundingClientRect().height === document.querySelector('#phoneBold').getBoundingClientRect().height && getComputedStyle(n).backgroundColor !== getComputedStyle(document.querySelector('#phoneBold')).backgroundColor));
+    t.check(`${label}: Undo and Redo live in the one-row header`, await t.page.locator('.topbar>#phoneUndo,.topbar>#phoneRedo').count() === 2 && await t.page.locator('.topbar').evaluate(n => n.getBoundingClientRect().height <= 50));
     const beforeStripEdit = await t.src(); await t.type('Z'); const afterStripEdit = await t.src();
     await t.page.locator('#phoneUndo').tap(); await settle(t);
     t.check(`${label}: strip Undo restores source and keeps the keyboard focus`, await t.src() === beforeStripEdit && await focused(t));
     await t.page.locator('#phoneRedo').tap(); await settle(t);
     t.check(`${label}: strip Redo restores the phone edit`, await t.src() === afterStripEdit && await focused(t));
+    for (const [id, marker] of [['phoneBold','**'],['phoneItalic','*'],['phoneUnderline','_']]) {
+      await t.load(basic); const a = (await t.src()).indexOf('guarda'); await t.caret(a, a + 6);
+      await t.page.locator('#' + id).tap(); await settle(t);
+      t.check(`${label}: ${id} formats the source selection and preserves focus`, (await t.src()).includes(marker + 'guarda' + marker) && await focused(t));
+      await t.load(basic); await t.caretAfter('fuori.'); await t.page.locator('#' + id).tap(); await t.type(' testo');
+      t.check(`${label}: ${id} formats the next typed text through the existing command`, (await t.src()).includes(' ' + marker + 'Testo' + marker) && await focused(t), JSON.stringify(await t.src()));
+    }
+    await t.load(basic); const ca = (await t.src()).indexOf('guarda'); await t.caret(ca, ca + 6);
+    await t.page.locator('#phoneCase').tap(); await settle(t);
+    t.check(`${label}: Aa uses the desktop uppercase command`, (await t.src()).includes('GUARDA') && await focused(t));
+    const tabBox = await t.page.locator('#phoneTab').boundingBox(), touch = await t.context.newCDPSession(t.page);
+    await touch.send('Input.dispatchTouchEvent', { type:'touchStart', touchPoints:[{ x:tabBox.x + tabBox.width / 2, y:tabBox.y + tabBox.height / 2, id:1 }] });
+    await t.page.waitForTimeout(550); await touch.send('Input.dispatchTouchEvent', { type:'touchEnd', touchPoints:[] }); await touch.detach();
+    t.check(`${label}: holding Tab still offers the existing six types`, await t.page.locator('#phoneTypes').isVisible() && await t.page.locator('#phoneTypes button').count() === 6);
+    await t.page.locator('#phoneType-action').tap(); await settle(t);
+    t.check(`${label}: direct type choice retains focus`, (await state(t)).selection.kind === 'action' && await focused(t));
     await t.load(basic); await t.caret((await t.src()).length); await t.type('MA');
     const chip = t.page.locator('#phoneSuggestions #completionPopup button[role=option]').filter({ has:t.page.locator('span', { hasText:/^MARTA$/ }) });
     t.check(`${label}: original character completions are chips above the keyboard`, await chip.isVisible() && await chip.evaluate(n => n.getBoundingClientRect().bottom <= document.querySelector('.phone-keys').getBoundingClientRect().top + 1) && await caretVisible(t));
@@ -156,9 +172,24 @@ for (const [width, height, locale] of [[390,844,'it-IT'],[844,390,'en-US']]) {
     t.check(`${label}: caret remains above keyboard in a long script`, await caretVisible(t));
     await keyboard(t, height > 500 ? 400 : 220, 15); await input(t, 'insertParagraph'); await t.type('Ancora.');
     t.check(`${label}: viewport scroll and Enter keep the caret visible`, await caretVisible(t));
+    const editingAt = (await state(t)).selection.focus;
+    await t.page.locator('#stage').evaluate(n => { n.dispatchEvent(new WheelEvent('wheel', { bubbles:true, deltaY:-1000 })); n.scrollTop = 100; });
+    const readingAt = await t.page.locator('#stage').evaluate(n => n.scrollTop);
+    await t.page.evaluate(() => { document.dispatchEvent(new Event('selectionchange')); visualViewport.dispatchEvent(new Event('scroll')); visualViewport.dispatchEvent(new Event('resize')); }); await t.page.waitForTimeout(400);
+    t.check(`${label}: rereading is not pulled back by selection or viewport events`, Math.abs(await t.page.locator('#stage').evaluate(n => n.scrollTop) - readingAt) < 1 && (await state(t)).selection.focus === editingAt);
+    await t.type(' Dopo la lettura.');
+    t.check(`${label}: typing resumes at the caret and brings it back into view`, (await t.src()).includes('Ancora. Dopo la lettura.') && await caretVisible(t));
+    await t.page.locator('#phoneWriter').evaluate(w => { w.dispatchEvent(new InputEvent('beforeinput', { bubbles:true, cancelable:true, inputType:'insertText', data:'X' })); const stage = document.querySelector('#stage'); stage.dispatchEvent(new WheelEvent('wheel', { bubbles:true, deltaY:-1000 })); stage.scrollTop = 120; }); await t.page.waitForTimeout(200);
+    t.check(`${label}: starting a scroll cancels a pending caret reveal`, Math.abs(await t.page.locator('#stage').evaluate(n => n.scrollTop) - 120) < 1);
+    const top = await t.page.locator('.phone-file-status').textContent(), totalWords = Number((await t.page.locator('#wordsStat').textContent()).replace(/\D/g, ''));
+    t.check(`${label}: header contains caret page and total words, with no bottom counter`, /\d+.*(?:di|of).*\d+.*·.*\d+.*(?:parole|words)/.test(top) && top.includes(totalWords.toLocaleString(locale)) && !await t.page.locator('.stats').isVisible());
+
     await keyboard(t, height); await locked(t);
     const labels = await t.page.locator('#scriptEditor>.script-page').evaluateAll(nodes => nodes.map(n => n.dataset.pageLabel));
-    t.check(`${label}: page dividers match every real locked page`, JSON.stringify(await t.page.locator('.phone-page-divider').evaluateAll(nodes => nodes.map(n => n.dataset.pageLabel))) === JSON.stringify(labels) && labels.includes('12A'));
+    t.check(`${label}: writing has no page dividers but preserves real locked labels`, await t.page.locator('.phone-page-divider').count() === 0 && labels.includes('12A'));
+    t.check(`${label}: dialogue keeps its indent without the vertical rule`, await t.page.locator('.phone-paragraph.dialogue').first().evaluate(n => parseFloat(getComputedStyle(n).marginLeft) > 0 && getComputedStyle(n).borderLeftStyle === 'none'));
+    const fullCount = await t.page.locator('.phone-file-status').textContent(); await t.caret((await t.src()).indexOf('MARTA'), (await t.src()).indexOf('MARTA') + 5); await settle(t);
+    t.check(`${label}: header keeps the document word count when text is selected`, (await t.page.locator('.phone-file-status').textContent()).split(' · ')[1] === fullCount.split(' · ')[1]);
     await t.page.locator('#phoneGotoBtn').tap(); await t.page.locator('[data-tab=pages]').tap();
     t.check(`${label}: Go to contains the actual page list`, await t.page.locator('#phoneGoList button').count() === labels.length);
     await t.page.locator('#phoneGoInput').fill('pagina 12a'); await t.page.keyboard.press('Enter'); await settle(t);
@@ -174,11 +205,36 @@ for (const [width, height, locale] of [[390,844,'it-IT'],[844,390,'en-US']]) {
     await t.page.locator('#phoneGotoBtn').tap(); await t.page.locator('#phoneGoInput').fill('finestra'); await t.page.keyboard.press('Enter'); await settle(t);
     t.check(`${label}: Go to a word selects its text without changing source`, (await state(t)).source.slice((await state(t)).selection.anchor, (await state(t)).selection.focus) === 'finestra' && await focused(t));
     await t.page.locator('#phoneMenuBtn').tap();
-    t.check(`${label}: simplified menu has the requested eight rows and no file name`, await t.page.locator('#phoneMenuTitle').textContent() === 'ScripToti' && await t.page.locator('.phone-menu-body>button').count() === 8 && !await t.page.locator('.editor-toolbar').isVisible());
-    await t.page.locator('#phoneSettingsBtn').tap();
+    await settle(t);
+    await t.page.locator('#phoneMenuPanel').evaluate(async n => { await Promise.all(n.getAnimations().map(a => a.finished)); });
+    const menuBox = await t.page.locator('#phoneMenuPanel').boundingBox();
+    t.check(`${label}: one right side menu contains settings and seven document commands`, Math.abs(menuBox.width - width * .85) < 1 && Math.abs(menuBox.x + menuBox.width - width) < 1 && await t.page.locator('.phone-menu-body>button:not([role=switch])').count() === 7 && await t.page.locator('#phoneSettingsBtn').count() === 0);
+    t.check(`${label}: menu rows use the existing desktop icons and 17px text`, await t.page.locator('[data-phone-command=commentsBtn]').evaluate(n => getComputedStyle(n).fontSize === '17px' && n.querySelector('svg').outerHTML === document.querySelector('.editor-toolbar [data-command=commentsBtn] svg').outerHTML));
+    for (const [command, kind] of [['darkModeToggle','checkbox'],['sceneNumbersToggle','checkbox'],['revisionVisibleBtn','pressed']]) {
+      const button = t.page.locator('[data-phone-command=' + command + ']');
+      const real = () => t.page.evaluate(({command,kind}) => kind === 'checkbox' ? document.getElementById(command).checked : document.getElementById(command).getAttribute('aria-pressed') === 'true', {command,kind});
+      const before = await real();
+      t.check(`${label}: ${command} switch shows the actual state`, await button.getAttribute('aria-checked') === String(before));
+      await button.tap(); await settle(t);
+      if (command === 'sceneNumbersToggle') t.check(`${label}: scene-number switch changes the writing chips too`, await t.page.locator('.phone-scene-number').first().isVisible() === !before);
+      if (command === 'revisionVisibleBtn') t.check(`${label}: revision switch changes the real printed-page visibility`, await t.page.locator('#scriptEditor').evaluate(n => n.classList.contains('revisions-hidden')) === before);
+      t.check(`${label}: ${command} switch updates the original setting and remains open`, await real() !== before && await button.getAttribute('aria-checked') === String(!before) && await t.page.locator('#phoneMenuPanel').isVisible());
+      await button.tap(); await settle(t);
+    }
     const sourceBeforeSize = await t.src(); await t.page.locator('#phoneTextSize').evaluate(n => { n.value = '24'; n.dispatchEvent(new Event('input', { bubbles:true })); });
     t.check(`${label}: phone text size is applied, remembered and does not affect the source`, await t.page.locator('#phoneWriter').evaluate(n => getComputedStyle(n).fontSize) === '24px' && await t.page.evaluate(() => localStorage.getItem('scriptoti-phone-size')) === '24' && await t.src() === sourceBeforeSize);
     await t.page.keyboard.press('Escape'); await settle(t); await t.page.locator('#phoneMenuBtn').tap();
+    await t.page.touchscreen.tap(10, 200); await settle(t);
+    t.check(`${label}: tapping outside closes the side menu`, !await t.page.locator('#phoneMenuPanel').isVisible());
+    await t.page.locator('#phoneMenuBtn').tap(); await settle(t);
+    const swipeBox = await t.page.locator('.phone-menu-head').boundingBox(), swipe = await t.context.newCDPSession(t.page);
+    await swipe.send('Input.dispatchTouchEvent', { type:'touchStart', touchPoints:[{ x:swipeBox.x + 20, y:swipeBox.y + 25, id:1 }] });
+    await swipe.send('Input.dispatchTouchEvent', { type:'touchMove', touchPoints:[{ x:swipeBox.x + 140, y:swipeBox.y + 27, id:1 }] });
+    await swipe.send('Input.dispatchTouchEvent', { type:'touchEnd', touchPoints:[] }); await swipe.detach(); await settle(t);
+    t.check(`${label}: swiping right closes the side menu`, !await t.page.locator('#phoneMenuPanel').isVisible());
+    await t.page.locator('#phoneMenuBtn').tap(); await t.page.goBack(); await settle(t);
+    t.check(`${label}: browser Back still closes the menu without navigating away`, !await t.page.locator('#phoneMenuPanel').isVisible() && t.page.url() === t.url);
+    await t.page.locator('#phoneMenuBtn').tap();
     await t.page.locator('[data-phone-command=replaceMenuBtn]').tap(); await settle(t);
     t.check(`${label}: Find and replace menu row calls the original command`, await t.page.locator('#findBar').isVisible() && await t.page.locator('#findMode').inputValue() === 'replace' && !await t.page.locator('#phoneMenuPanel').isVisible());
     await t.page.locator('#findCloseBtn').click(); await settle(t); await t.page.locator('#phoneMenuBtn').tap();
@@ -196,12 +252,15 @@ for (const [width, height, locale] of [[390,844,'it-IT'],[844,390,'en-US']]) {
     t.check(`${label}: preview is read only, including hardware editing keys`, await t.src() === previewSource);
     const initialWidth = pageBox.width; await pinch(t, 1.4);
     t.check(`${label}: pinch scales printed pages without scaling the site`, (await t.page.locator('#scriptEditor>.script-page').first().boundingBox()).width > initialWidth * 1.2 && await t.page.evaluate(() => visualViewport.scale === 1 && getComputedStyle(document.body).zoom === '1'));
+    t.check(`${label}: preview has an X and a top Share icon, without bottom buttons`, await t.page.locator('#phoneWriteBtn').getAttribute('aria-label') === (locale === 'it-IT' ? "Chiudi l'anteprima" : 'Close preview') && await t.page.locator('#phoneWriteBtn svg').count() === 1 && await t.page.locator('.phone-preview-foot').count() === 0 && await t.page.locator('#phonePreviewShare').isVisible());
+    await t.page.locator('#phonePreviewShare').tap(); await settle(t);
+    t.check(`${label}: preview Share opens a small sheet with the two existing export actions`, await t.page.locator('.phone-send-sheet').isVisible() && await t.page.locator('.phone-send-sheet').evaluate(n => n.getBoundingClientRect().height < visualViewport.height) && await t.page.locator('.phone-menu-body>button').count() === 2);
     await t.page.locator('#phonePreviewPdf').tap(); t.check(`${label}: preview PDF opens the common export dialog`, await t.page.locator('#exportDialog').isVisible()); await t.page.locator('#exportDialog button[type=button]').click();
     await t.page.evaluate(() => { navigator.canShare = () => true; navigator.share = async data => { window.phoneSent = { name:data.files[0].name, text:await data.files[0].text() }; }; });
-    await t.page.locator('#phoneSendFile').tap(); await settle(t);
+    await t.page.locator('#phonePreviewShare').tap(); await t.page.locator('#phoneSendFile').tap(); await settle(t);
     t.check(`${label}: Send file shares a Fountain copy of the current script`, await t.page.evaluate(() => window.phoneSent.name.endsWith('.fountain') && window.phoneSent.text.includes('Il nuovo titolo')));
     await t.page.evaluate(() => navigator.canShare = () => false);
-    const download = t.page.waitForEvent('download'); await t.page.locator('#phoneSendFile').tap();
+    await t.page.locator('#phonePreviewShare').tap(); const download = t.page.waitForEvent('download'); await t.page.locator('#phoneSendFile').tap();
     t.check(`${label}: Send file falls back to a download`, (await download).suggestedFilename().endsWith('.fountain'));
     await t.page.locator('#phoneWriteBtn').tap(); await settle(t); t.check(`${label}: Write restores the editable view and caret`, await focused(t) && await t.page.locator('#phoneWriter').isVisible());
     await exports(t, label);
@@ -215,6 +274,15 @@ for (const [width, height, locale] of [[390,844,'it-IT'],[844,390,'en-US']]) {
     await t.page.evaluate(async () => { const root = await navigator.storage.getDirectory(), h = await root.getFileHandle('phone.fountain', { create:true }), w = await h.createWritable(); await w.write('!Primo.\n'); await w.close(); await DraftSafe.openHandle(h); });
     await settle(t); await t.caretAfter('Primo.'); await t.type(' Secondo.'); await t.page.waitForTimeout(2600);
     t.check(`${label}: phone edits autosave through the existing file pipeline`, await t.page.evaluate(async () => { const root = await navigator.storage.getDirectory(); return (await (await (await root.getFileHandle('phone.fountain')).getFile()).text()).includes('Primo. Secondo.'); }));
+    for (const color of ['green','yellow','red']) {
+      await t.page.evaluate(color => { const led = document.querySelector('#shareLed'); led.hidden = false; led.className = 'share-led ' + color; led.title = color; }, color); await settle(t);
+      t.check(`${label}: phone sharing dot mirrors desktop ${color}`, await t.page.locator('#phoneShareLed').isVisible() && await t.page.locator('#phoneShareLed').evaluate((n,color) => n.classList.contains(color), color));
+    }
+    t.check(`${label}: sharing dot sits next to the name`, await t.page.locator('#phoneShareLed').evaluate(n => Math.abs(n.getBoundingClientRect().left - document.querySelector('#filename').getBoundingClientRect().right - 5) < 1));
+    await t.page.evaluate(() => { document.querySelector('#shareLed').onclick = () => window.phoneShareOpened = true; }); await t.page.locator('#phoneShareLed').tap();
+    t.check(`${label}: tapping the sharing dot calls the existing Share command`, await t.page.evaluate(() => window.phoneShareOpened === true));
+    await t.page.evaluate(() => document.querySelector('#shareLed').hidden = true); await settle(t);
+    t.check(`${label}: sharing dot is hidden when the document is not shared`, !await t.page.locator('#phoneShareLed').isVisible());
     t.check(`${label}: phone manual page exists in the selected language`, await t.page.evaluate(() => ScripTotiManual.entries.some(e => e.id === 'telefono' && e.body.length === 8)));
   } finally { t.report(); await t.close(); }
 }
