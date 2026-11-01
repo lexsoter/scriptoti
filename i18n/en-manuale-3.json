@@ -1,4 +1,25 @@
 {
+  "telefono": {
+    "title": "On your phone",
+    "keys": "phone mobile iphone android safari keyboard writing preview go to pages scenes characters text size send file",
+    "q": [
+      "how do I write on my phone",
+      "how do I jump to a page",
+      "how do I preview the PDF on my phone",
+      "how do I make the phone text bigger"
+    ],
+    "short": "On your phone, the writing view fits the screen. Go to finds pages, scenes and characters. Preview shows the printed pages.",
+    "body": [
+      "On your phone, text wraps to fit the screen. Fountain types and bold, italic and underline stay visible. Formatting symbols stay hidden. **PAGE** dividers show where the PDF pages begin, including lettered pages such as 12A.",
+      "Above the keyboard you see the current text type: tap to cycle to the next type, or press and hold to choose one. ⇤ goes to the previous type. The arrows in the “Move the caret” group move your writing position. You also have Undo, Redo and parentheses. Tap a suggestion to complete a character name or location.",
+      "**Go to** lists Scenes, Pages and Characters. Type `page 12A`, `scene 7` or a word, then press Enter. Start, Last edit and End take you to useful places in the script.",
+      "**Preview** shows the actual printed pages and does not let you edit the text. Scroll between pages and pinch with two fingers to zoom. **Write** takes you back to the text. Export PDF and Send file are at the bottom.",
+      "The top menu opens New script, Open another script, Title page, Preview, Export PDF, Send file, Find and replace, and Comments. The gear opens **Settings**: text size from 14 to 26 px, dark theme, language and the manual. Your text size is remembered on this device and does not change the PDF.",
+      "**Title page** opens a form with title, credit, author, draft, date and contact fields. Save to apply the fields and return to your script.",
+      "**Export PDF** lets you include the title page and choose all pages or a range, using the actual labels, such as 12A. If there are revisions, you can choose marked pages only. These options also work on the computer and with [[Mod+P]].",
+      "Saving follows the same rules as on the computer: check the status below the file name. **Send file** prepares a Fountain copy with the script information. It uses your device’s share sheet, or downloads the copy if sharing is unavailable."
+    ]
+  },
   "segnala": {
     "title": "Reporting a problem or suggestion",
     "keys": "report bug error problem suggestion idea question contact help support email feedback developer",
