@@ -85,5 +85,22 @@ await settle(3500);
 a = await src(A); b = await src(B);
 check('simultaneous typing converges', a === b && a.includes('Luca entra. Si siede.') && a.includes('È tardi. Molto tardi.'), JSON.stringify(a) + '\n' + JSON.stringify(b));
 
+// The long-document preview must keep publishing every accepted character.
+const long = Array.from({ length: 112 }, (_, i) => `INT. STANZA ${i} - GIORNO\n\n!Riga condivisa ${i}. Elena controlla i fogli sul tavolo.\n\nGIULIO\nIl testo arriva anche agli altri.\n\n===`).join('\n\n') + '\n';
+await A.page.evaluate(long => { const s = DraftEditor.state(); DraftEditor.replaceText(0, s.source.length, long, s.source, s.document); }, long);
+await B.page.waitForFunction(long => DraftEditor.state().source === long && document.querySelectorAll('.script-page').length >= 110, long, { timeout: 20000 });
+const fast = (p, n, text) => p.page.evaluate(({ n, text }) => {
+  const s = DraftEditor.state().source, at = s.indexOf('Elena controlla', s.indexOf('Riga condivisa ' + n)) + 6;
+  DraftEditor.selectAbsolute({ anchor: at, focus: at });
+  document.querySelector('#scriptEditor').dispatchEvent(new InputEvent('beforeinput', { bubbles: true, cancelable: true, inputType: 'insertText', data: text }));
+  return DraftEditor.pending;
+}, { n, text });
+const pending = await Promise.all([fast(A, 55, 'ANNA '), fast(B, 75, 'BRUNO ')]);
+for (const p of [A, B]) await p.page.waitForFunction(() => !DraftEditor.pending && DraftEditor.state().source.includes('ANNA controlla') && DraftEditor.state().source.includes('BRUNO controlla'), null, { timeout: 20000 });
+a = await src(A); b = await src(B);
+check('long document: pending local edits converge without losing either writer', pending.every(Boolean) && a === b, JSON.stringify({ pending, same: a === b }));
+await A.page.evaluate(() => DraftSafe.saveLocal(true));
+check('long shared document: saved file includes both writers', await A.page.evaluate(async () => DraftComments.unpack(await (await DraftSafe.disk.handle.getFile()).text()).source === DraftEditor.state().source));
+
 finish(results, errors);
 await browser.close(); php.kill();

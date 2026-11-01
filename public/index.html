@@ -1049,7 +1049,7 @@ const DraftEngine = (() => {
       return value;
     }).join('');
   }
-  const plain = text => richText(text).text;
+  const plain = text => /[*_\\]/.test(text) ? richText(text).text : text;
   // MONTAGE and MONTAGGIO open a heading only when written in capitals,
   // so ordinary Action that starts with those words stays Action.
   const shotHeading = text => /^(?:MONTAGE|MONTAGGIO)(?=$|[\s.:,–—-])/.test(text) && text === text.toLocaleUpperCase('it');
@@ -1478,7 +1478,7 @@ const DraftEngine = (() => {
     if (doc.titleEnd) return source.slice(0, doc.titleStart) + header + source.slice(doc.titleEnd);
     return header ? header + '\n\n' + source : source;
   }
-  return { parse, inline, plain, richText, wrap, view, paginate, geometry, PAGE, STANDARD_MARGINS, characterContinuations, updateTitle, titleParts: source => ({ fields: parse(source).fields }) };
+  return { parse, inline, plain, richText, isScene, wrap, view, paginate, geometry, PAGE, STANDARD_MARGINS, characterContinuations, updateTitle, titleParts: source => ({ fields: parse(source).fields }) };
 })();
 
 </script>
@@ -2632,11 +2632,13 @@ const DraftProduction = (() => {
     for (const entry of entries) if (!assigned.has(entry)) entry.omitted = true;
   }
   function clipPart(part, from, to, final) {
+    if (!part.placeholder && (part.end <= from || part.start >= to)) return null;
     const all = glyphs(part), selected = all.filter(g => g.from >= from && g.from < to);
     if (!selected.length && !(part.placeholder && part.anchor >= from && (part.anchor < to || final && part.anchor === to))) return null;
     return { ...part, _original: part, _glyphs: selected, _startsBefore: Boolean(all.length && selected[0] !== all[0]), _continuesAfter: Boolean(all.length && selected.at(-1) !== all.at(-1)) };
   }
   function clipSpeech(e, from, to, final) {
+    if (e.end < from || e.start > to) return null;
     const cue = clipPart(e.cue, from, to, final), parts = e.parts.map(p => clipPart(p, from, to, final)).filter(Boolean);
     if (!cue && !parts.length) return null;
     const all = e.parts.flatMap(glyphs), end = all.at(-1)?.to ?? e.cue.end;
@@ -2844,15 +2846,18 @@ const DraftSearch = (() => {
   }
   const fail = (code, message) => { throw new SafetyError(code, message); };
   const written = value => typeof value === 'string' && /[^\s\u200B-\u200D\u2060\uFEFF]/u.test(value);
+  let contentRaw = null, contentValue = false;
   function hasContent(raw, context) {
     // Metadata and accidental spaces do not make an empty screenplay a backup.
     // Unknown/corrupt nonempty records remain available for manual recovery.
     if (Object.values(context?.commentDrafts || {}).some(written)) return true;
     if (!written(raw)) return false;
+    if (raw === contentRaw) return contentValue;
     try {
       const parsed = unpack(normalize(raw));
-      return written(parsed.source) || parsed.threads.some(thread => thread.messages.some(message => written(message.text)));
-    } catch { return true; }
+      contentValue = written(parsed.source) || parsed.threads.some(thread => thread.messages.some(message => written(message.text)));
+    } catch { contentValue = true; }
+    contentRaw = raw; return contentValue;
   }
   function validateRaw(raw) {
     if (typeof raw !== 'string' || raw.includes('\0')) fail('encoding', 'Il file non è testo Fountain valido.');
@@ -5048,7 +5053,7 @@ async function startUpgrade() {
   async function persist(target = active.session) {
     if (!target) return;
     const owner = projects.find(project => project.session === target) || (active.session === target ? active : null);
-    if (owner) emergency(owner);
+    if (owner) { clearTimeout(owner.recoverTimer); owner.recoverTimer = 0; emergency(owner); }
     recoveryCount++; refresh();
     try { await target.recover(); if (owner) owner.recoveryIssue = null; }
     catch (error) { if (owner) notify(error, 'recovery', owner, true); throw error; }
@@ -5059,8 +5064,12 @@ async function startUpgrade() {
   }
   function recoverSoon() {
     const owner = active; if (!owner.session) return;
-    emergency(owner); void persistBest(owner);
-    if (Date.now() - owner.checkpointAt > 30000) { owner.checkpointAt = Date.now(); void owner.session.backup('Copia di lavoro', owner.session.source).catch(error => notify(error, 'recovery', owner, true)); }
+    emergency(owner); clearTimeout(owner.recoverTimer);
+    const recover = () => {
+      owner.recoverTimer = 0; void persistBest(owner);
+      if (Date.now() - owner.checkpointAt > 30000) { owner.checkpointAt = Date.now(); void owner.session.backup('Copia di lavoro', owner.session.source).catch(error => notify(error, 'recovery', owner, true)); }
+    };
+    if (owner.emergencyError) recover(); else owner.recoverTimer = setTimeout(recover, 200);
   }
   function refresh() {
     if (!window.document?.querySelector('.app')) return;
@@ -5166,7 +5175,7 @@ async function startUpgrade() {
   async function switchProject(id) {
     const next = projects.find(project => project.session.id === id);
     if (!next || next === active || !allowSwitch() || dialog.open) return false;
-    switching = true;
+    editor.flush?.(); switching = true;
     try {
       await flushActive(); switching = false; displayProject(next);
       // The new editor is ready now. Persisting the navigation index must not
@@ -5177,6 +5186,7 @@ async function startUpgrade() {
   }
   async function finishClose(project, requireSaved = false) {
     if (requireSaved && unsaved(project)) return false;
+    if (project === active) editor.flush?.();
     actionBusy = true; clearTimeout(saveTimer); refresh();
     try {
       if (project === active) captureActive();
@@ -5211,7 +5221,7 @@ async function startUpgrade() {
     }, 'primary'), button('Non salvare', () => finishClose(project)), button('Annulla', () => close())]);
     return false;
   }
-  function paint() { if (!active.comments || editor.state().composing) return; editor.annotations(active.comments.threads.filter(thread => !thread.resolved && !thread.orphaned)); }
+  function paint() { if (!active.comments || editor.pending || editor.state().composing) return; editor.annotations(active.comments.threads.filter(thread => !thread.resolved && !thread.orphaned)); }
   function applySource(source, presentation = editor.state().document) {
     const oldSource = active.comments.source, oldThreads = JSON.parse(JSON.stringify(active.comments.threads)), oldDocument = active.comments.document, oldShare = active.comments.share;
     let undoShared = null;
@@ -5570,7 +5580,7 @@ async function startUpgrade() {
   }
   async function action(task) {
     if (actionBusy || saving) return;
-    actionBusy = true; clearTimeout(saveTimer); refresh();
+    editor.flush?.(); actionBusy = true; clearTimeout(saveTimer); refresh();
     try { await persistBest(); await task(); }
     finally { actionBusy = false; refresh(); if (!dialog.open && active.session) editor.focus(); scheduleSave(); }
   }
@@ -5703,6 +5713,7 @@ async function startUpgrade() {
     }
   }
   function saveLocal(manual = false) {
+    editor.flush?.();
     if (saving) return Promise.resolve(false);
     const task = performSaveLocal(manual); localSaveTask = task;
     void task.finally(() => { if (localSaveTask === task) localSaveTask = null; }).catch(() => {});
@@ -5811,6 +5822,7 @@ async function startUpgrade() {
     await persistBest(active); await rememberRecentBest(active); await rememberWorkspaceBest(); await completePendingClose();
   }
   function saveDestination(as = false) {
+    editor.flush?.();
     destinationMode = as ? 'saveAs' : 'save'; clearTimeout(saveTimer);
     const name = make('input'); name.id = 'fileNameInput'; name.value = active.session.name.replace(/\.txt$/i, '.fountain'); name.setAttribute('aria-label', 'Nome del file Fountain');
     show(as ? 'Salva con nome' : 'Salva', [name], [button('Sul dispositivo', saveDevice, 'primary'), button('Annulla', close)]);
@@ -6154,13 +6166,13 @@ async function startUpgrade() {
   if ('launchQueue' in window) window.launchQueue.setConsumer(async params => { for (const handle of params.files || []) { if (allowSwitch()) try { await openHandle(handle); } catch (error) { notify(error); } } });
   dialog.addEventListener('cancel', () => { destinationMode = null; pendingClose = null; scheduleSave(); });
   async function persistAll() {
-    captureActive(); let failure = null;
+    editor.flush?.(); captureActive(); let failure = null;
     for (const project of projects) try { await persist(project.session); } catch (error) { failure = error; }
     await rememberWorkspace(); if (failure) throw failure;
   }
   async function prepareUpdate() {
     if (!ready || !allowSwitch() || dialog.open) throw new Error('Concludi la digitazione o il salvataggio prima di aggiornare.');
-    actionBusy = true; clearTimeout(saveTimer); refresh();
+    editor.flush?.(); actionBusy = true; clearTimeout(saveTimer); refresh();
     const release = () => { actionBusy = false; refresh(); scheduleSave(); };
     try { await persistAll(); await window.DraftAI?.persist?.(); return release; }
     catch (error) { release(); throw error; }
@@ -6291,6 +6303,7 @@ async function startUpgrade() {
   document.addEventListener('pointerdown', hideTypeHint, true);
   document.addEventListener('focusout', hideTypeHint);
   let composing = null, nativeEdit = null, rendering = false, activeRegion = null;
+  let layoutPending = false, layoutTimer = 0, settlingLayout = false;
   let typingStyle = null, saving = false, draftCounters = {};
   let verticalAim = null, navigationRows = null, properNames = [];
   let collaboration = null, writable = true;
@@ -6389,7 +6402,7 @@ async function startUpgrade() {
     flush();
     if (!glyphs.length) node.append(el('br'));
   }
-  function regionNode(region, extraClass = '') {
+  function regionNode(region, extraClass = '', collect = true) {
     const node = el('div', [region.kind, 'editable-region', extraClass].filter(Boolean).join(' '));
     node.lang = spellLanguage; node.spellcheck = true;
     const view = DraftEngine.view(region), part = region.part;
@@ -6431,7 +6444,7 @@ async function startUpgrade() {
       node.dataset.empty = 'true';
       node.dataset.placeholderLabel = T(({ scene: 'Slugline', action: 'Azione', character: 'Character', parenthetical: 'Parentesi', dialogue: 'Dialogo', transition: 'Transizione', centered: 'Testo centrato', lyric: 'Versi' })[part.kind] || 'Azione');
     }
-    regions.push(node); return node;
+    if (collect) regions.push(node); return node;
   }
   function generated(tag, className, text) {
     const node = el(tag, className + ' generated', text);
@@ -6566,7 +6579,93 @@ async function startUpgrade() {
       node.classList.remove('active-edit'); regions.push(node);
     });
   }
+  function cancelLayout() { clearTimeout(layoutTimer); layoutTimer = 0; layoutPending = false; }
+  function flushLayout() {
+    if (!layoutPending || settlingLayout) return;
+    cancelLayout(); settlingLayout = true;
+    const selection = plainSelection(readSelection()) || remembered;
+    try {
+      const next = Production && documentState?.locks ? Production.reconcile(sourceText, documentState, empty) : documentState;
+      if (collaboration?.commit && collaboration.commit({ source:sourceText, document:next }, 'layout', snapshot(selection)) === false) { render(selection); return; }
+      documentState = next; render(selection); markChanged();
+    } catch (error) { render(selection); toast(error.message); }
+    finally { settlingLayout = false; }
+  }
+  function previewCandidate(change, kind, selection) {
+    if (currentPagination?.pages.length < 24 || composing || selection?.titleKey || !['insertText','deleteBackward','deleteForward'].includes(kind)) return false;
+    const part = selection?.part, c = change.edits?.length === 1 && change.edits[0];
+    return c && part && !part.placeholder && ['action','dialogue'].includes(part.kind) && c.oldStart >= part.start && c.oldEnd <= part.end &&
+      !sourceText.slice(c.oldStart, c.oldEnd).includes('\n') && !change.source.slice(c.newStart, c.newEnd).includes('\n');
+  }
+  function preparePreview(change, kind, selection, presentation) {
+    if (!previewCandidate(change, kind, selection)) return null;
+    const next = parseSource(change.source, { paragraphs:presentation?.paragraphs, empty:change.empty, caret:change.focus });
+    if (next.elements.length !== doc.elements.length || next.elements.some((e, i) => e.type !== doc.elements[i].type)) return null;
+    const oldParts = DraftEditing.parts(doc), parts = DraftEditing.parts(next), pairs = new Map();
+    if (parts.length !== oldParts.length) return null;
+    let part = null;
+    for (let i = 0; i < parts.length; i++) {
+      const a = oldParts[i], b = parts[i];
+      if (a.kind !== b.kind || Boolean(a.placeholder) !== Boolean(b.placeholder)) return null;
+      if (a === selection.part) part = b;
+      else if (a.text !== b.text) return null;
+      pairs.set(a.kind + ':' + a.lineStart, b);
+    }
+    if (!part) return null;
+    const own = n => n._draft.part.lineStart === selection.part.lineStart && n._draft.part.kind === selection.part.kind;
+    if (regions.filter(own).length !== 1 || phoneWriting() && phoneRegions.filter(own).length !== 1) return null;
+    const endAt = regions.find(n => n.classList.contains('end-editor'))?._draft.part.lineStart;
+    for (const node of regions.concat(phoneWriting() ? phoneRegions : [])) {
+      const p = node._draft.part;
+      if (!(p.placeholder && p.lineStart === endAt) && !pairs.has(p.kind + ':' + p.lineStart)) return null;
+    }
+    // Reuse the normal paragraph layout; the rest of the pages wait for a pause.
+    const element = next.elements.find(e => e.part === part || e.type === 'speech' && e.parts.includes(part));
+    if (!element) return null;
+    const local = DraftEngine.paginate([element], 10000, pageGeometry().columns);
+    const region = layoutRegions(local.pages[0] || []).find(r => r.part === part);
+    if (!region) return null;
+    if (!phoneWriting()) {
+      const box = selection.region.getBoundingClientRect(), sheet = selection.region.closest('.script-page').getBoundingClientRect();
+      const scale = sheet.width / (DraftEngine.PAGE.width * 4 / 3), height = region.lines.reduce((n, l) => n + (l.height || 1), 0) * 16 * scale;
+      if (box.top + height > sheet.top + (DraftEngine.PAGE.height - pageGeometry().margins.bottom) * 4 / 3 * scale) return null;
+    }
+    next.elements.forEach((e, i) => { if (e.type === 'scene') e.number = doc.elements[i].number; });
+    return { doc:next, pairs, part, region, own, edit:change.edits[0] };
+  }
+  function renderPreview(plan, selection) {
+    const c = plan.edit, delta = c.newEnd - c.oldEnd;
+    const rebase = node => {
+      const view = node._draft, part = view.part;
+      if (plan.own(node)) return;
+      const shift = part.lineStart >= c.oldEnd ? delta : 0;
+      view.part = plan.pairs.get(part.kind + ':' + part.lineStart) || { ...part, anchor:part.anchor + shift, start:part.start + shift, end:part.end + shift, lineStart:part.lineStart + shift, lineEnd:part.lineEnd + shift };
+      if (shift) {
+        view.anchor += shift; view.end += shift;
+        for (const g of view.glyphs) { g.from += shift; g.to += shift; }
+      }
+    };
+    const node = regions.find(plan.own);
+    regions.forEach(rebase);
+    const replacement = regionNode(plan.region, '', false);
+    node.replaceWith(replacement); regions[regions.indexOf(node)] = replacement;
+    doc = plan.doc; navigationRows = null; contextCache = null;
+    if (phoneWriting()) {
+      const node = phoneRegions.find(plan.own);
+      phoneRegions.forEach(rebase);
+      const rich = DraftEngine.richText(plan.part.text, plan.part.map, plan.part.anchor);
+      node.replaceChildren(); appendGlyphs(node, rich.glyphs, null, false);
+      node._draft = { ...rich, part:plan.part, end:plan.part.end };
+      node.dataset.start = String(node._draft.anchor); node.dataset.end = String(node._draft.end);
+      for (const page of phonePages) if (page.at >= c.oldEnd) page.at += delta;
+      phoneDocument = doc; phoneGlyphCache = { source:'', parts:new Map() };
+      phoneTools(false);
+    }
+    layoutPending = true; clearTimeout(layoutTimer); layoutTimer = setTimeout(flushLayout, 150);
+    restoreSelection(selection); highlight();
+  }
   function render(selection = null) {
+    cancelLayout();
     navigationRows = null;
     rendering = true; const scrollTop = stage.scrollTop, scrollLeft = stage.scrollLeft;
     doc = parseSource(sourceText, { empty, caret: selection?.titleKey ? undefined : selection?.focus ?? remembered?.focus });
@@ -6777,7 +6876,7 @@ async function startUpgrade() {
   // Footer counts: the whole document, or only the selection while one exists.
   function countText(text) { return { words: (text.match(/[\p{L}\p{N}]+(?:['’][\p{L}\p{N}]+)*/gu) || []).length, chars: Array.from(text).length }; }
   function updateStats(selection = null) {
-    if (!doc) return;
+    if (!doc || layoutPending) return;
     const scoped = Boolean(selection && selection.start !== selection.end);
     const { words, chars } = countText(scoped ? selectedPlainText(selection) : doc.text);
     $('#wordsStat').textContent = words.toLocaleString('it-IT'); $('#charsStat').textContent = chars.toLocaleString('it-IT');
@@ -6884,16 +6983,25 @@ async function startUpgrade() {
     hideTypeHint();
     verticalAim = null;
     if (!writable) { if (!composing) render(before?.selection || remembered); return; }
+    if (layoutPending && !previewCandidate(change, kind, selection)) { flushLayout(); selection = readSelection() || selection; }
+    const supplied = change.document, explicitBefore = before;
     before = before || snapshot(selection);
+    let preview = null;
     try {
-      if (Presentation) change.document = change.document ? Presentation.validate(change.document, change.source) : Presentation.update(documentState, sourceText, change.source, true, change.edits, plainSelection(selection) || remembered);
-      if (Production && change.document?.locks) change.document = Production.reconcile(change.source, change.document, change.empty);
+      if (Presentation) change.document = supplied ? Presentation.validate(supplied, change.source) : Presentation.update(documentState, sourceText, change.source, true, change.edits, plainSelection(selection) || remembered);
+      preview = preparePreview(change, kind, selection, change.document);
+      if (layoutPending && !preview) {
+        flushLayout(); selection = readSelection() || selection; before = explicitBefore || snapshot(selection);
+        change.document = supplied ? Presentation.validate(supplied, change.source) : Presentation.update(documentState, sourceText, change.source, true, change.edits, plainSelection(selection) || remembered);
+      }
+      if (!preview && Production && change.document?.locks) change.document = Production.reconcile(change.source, change.document, change.empty);
     } catch (error) { render(before.selection); toast(error.message); return; }
     if (collaboration?.commit && collaboration.commit(change, kind, before) === false) { if (!composing) render(before.selection); return; }
     const afterSelection = { anchor: change.anchor, focus: change.focus, titleKey: change.titleKey || null, kind: change.empty?.kind || change.kind || null, page: change.page || plainSelection(selection)?.page || remembered?.page || null, bias: change.source !== sourceText && change.anchor === change.focus && !change.empty && !['insertParagraph', 'insertLineBreak'].includes(kind) ? 'left' : null };
     sourceText = change.source; documentState = change.document || documentState; empty = change.empty || null;
     if ((!collaboration || collaboration.localHistory) && !change.viewOnly && (sourceText !== before.source || JSON.stringify(empty) !== JSON.stringify(before.empty) || JSON.stringify(documentState) !== JSON.stringify(before.document))) history.record(before, { source: sourceText, document: documentState && Presentation.clone(documentState), empty, selection: afterSelection }, kind);
-    render(afterSelection); markChanged(); revealCaret();
+    if (preview) renderPreview(preview, afterSelection); else render(afterSelection);
+    markChanged(); revealCaret();
     const currentType = readSelection();
     if (['elementType', 'insertParagraph', 'insertLineBreak'].includes(kind) && (currentType?.part?.kind || currentType?.kind) !== (selection?.part?.kind || selection?.kind)) flashTypeHint(currentType);
     if (typingStyle && kind !== 'format') {
@@ -6901,7 +7009,7 @@ async function startUpgrade() {
     }
   }
   function undo(redo = false) {
-    hideTypeHint();
+    flushLayout(); hideTypeHint();
     if (!writable || collaboration?.canEdit?.() === false) return;
     typingStyle = null;
     if (collaboration?.undo) { collaboration.undo(redo); return; }
@@ -7158,7 +7266,7 @@ async function startUpgrade() {
     // first typed words, so no leading spaces are left in the file.
     const spacer = selection.part?.kind === 'dialogue' && !selection.titleKey && !selection.part.literal && selection.start === selection.end && text && !text.includes('\n') && row && !row.trim();
     let change = spacer ? { ...DraftEditing.replace(sourceText, rowStart, rowStart + row.length, text), anchor: rowStart + text.length, focus: rowStart + text.length } : rawInsertion(selection, text);
-    if (!selection.titleKey && !text.includes('\n') && !selection.part?.literal) {
+    if (!selection.titleKey && !text.includes('\n') && !selection.part?.literal && (selection.part?.kind === 'scene' || DraftEngine.isScene(change.source.slice(rowStart, change.source.indexOf('\n', rowStart) < 0 ? change.source.length : change.source.indexOf('\n', rowStart))))) {
       const parsed = parseSource(change.source), scene = parsed.elements.find(e => e.type === 'scene' && e.start <= change.focus && e.end >= change.focus);
       if (scene) {
         const glyphs = DraftEngine.richText(scene.part.text, scene.part.map, scene.part.anchor).glyphs;
@@ -7511,6 +7619,7 @@ async function startUpgrade() {
     commit(insertion(selection, text.replace(/\r\n?/g, '\n')), 'paste', selection);
   }
   function start(text, name = 'Untitled.fountain', isSaved = false, presentation = null) {
+    cancelLayout();
     const normalized = text.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
     const prepared = Production ? Production.prepare(normalized, presentation) : Presentation?.validate(presentation, normalized) || null;
     clearTimeout(recoveryTimer);
@@ -7603,6 +7712,7 @@ async function startUpgrade() {
   };
   let printing = false;
   function printDocument(revisedOnly = false, options = null) {
+    flushLayout();
     if (composing || printing || $('#printBtn').disabled) return;
     const originalTitle = [...titlePages.childNodes];
     if (options?.title && !originalTitle.length && Object.values(doc.fields).some(value => value.trim())) titlePages.append(makeTitle(doc.fields));
@@ -7941,7 +8051,7 @@ async function startUpgrade() {
   function updatePhoneLocation() {
     if (!phoneMedia.matches || !doc) return;
     const selection = readSelection(), page = phonePages.find(p => p.label === selection?.region?.dataset.pageLabel) || phonePageAt(selection?.focus ?? remembered?.focus ?? doc.bodyStart);
-    const words = countText(doc.text).words.toLocaleString(window.ScripTotiI18n?.lang === 'en' ? 'en-US' : 'it-IT');
+    const words = layoutPending ? $('#wordsStat').textContent : countText(doc.text).words.toLocaleString(window.ScripTotiI18n?.lang === 'en' ? 'en-US' : 'it-IT');
     phoneLocation.textContent = T('pag.') + ' ' + (page?.label || '1') + ' ' + T('di') + ' ' + phonePages.length + ' · ' + words + ' ' + T('parole');
     phoneLocation.title = $('#saveStatus').textContent;
     phoneWriter.classList.toggle('scene-numbers-visible', showSceneNumbers);
@@ -8837,7 +8947,9 @@ async function startUpgrade() {
   calibratePitch();
   document.fonts?.ready.then(() => { calibratePitch(); });
   applyTheme(); applyZoom(); applySpelling();
+  document.addEventListener('pointerdown', event => { if (layoutPending && !stage.contains(event.target)) flushLayout(); }, true);
   stage.addEventListener('beforeinput', beforeInput);
+  stage.addEventListener('keydown', event => { if (event.ctrlKey || event.metaKey || event.altKey || ['Enter','Tab','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)) flushLayout(); }, true);
   stage.addEventListener('scroll', visiblePage, { passive: true });
   stage.addEventListener('input', onInput);
   stage.addEventListener('keydown', keydown);
@@ -8848,6 +8960,7 @@ async function startUpgrade() {
   stage.addEventListener('dragstart', event => event.preventDefault());
   stage.addEventListener('drop', event => event.preventDefault());
   stage.addEventListener('compositionstart', () => {
+    flushLayout();
     const selection = readSelection();
     if (selection) { invalidateNativeRegion(selection.region); composing = { selection, before: snapshot(selection) }; }
   });
@@ -8895,7 +9008,9 @@ async function startUpgrade() {
   // Source-backed editor transactions stay separate from file writers and the
   // optional local AI interface. Reading context never changes the document.
   window.DraftEditor = {
+    get pending() { return layoutPending; }, flush:flushLayout,
     context() {
+      flushLayout();
       if (!contextCache) {
         const pages = (currentPagination?.pages || []).map((page, i) => {
           const glyphs = (Production ? Production.rows(page) : []).filter(r => !r.generated && !r.part?.generated).flatMap(r => r.line.glyphs).filter(g => !g.generated).sort((a, b) => a.from - b.from);
@@ -8946,7 +9061,7 @@ async function startUpgrade() {
     attach(hooks) { collaboration = hooks; clearTimeout(recoveryTimer); dirty = false; history.clear(); },
     state() { return { source: sourceText, document: documentState && Presentation.clone(documentState), name: fileName, selection: plainSelection(readSelection()) || remembered, empty: empty && { ...empty }, composing: Boolean(composing) }; },
     capture() {
-      history.breakGroup();
+      flushLayout(); history.breakGroup();
       const field = findBar.contains(document.activeElement) ? document.activeElement : null;
       return { ...this.state(), history, typingStyle: typingStyle && { ...typingStyle }, scrollTop: stage.scrollTop, scrollLeft: stage.scrollLeft, find: { open: !findBar.hidden, value: findInput.value, replacement: $('#replaceInput').value, mode: $('#findMode').value, case: $('#findCase').checked, whole: $('#findWholeWord').checked, index: findIndex, focus: field?.id, start: field?.selectionStart, end: field?.selectionEnd } };
     },
@@ -8975,12 +9090,14 @@ async function startUpgrade() {
     load(source, name, presentation) { start(source, name, true, presentation); },
     filename(name) { fileName = name; $('#filename').textContent = name; },
     writable(value) {
+      if (writable === Boolean(value)) return;
       writable = Boolean(value); editor.setAttribute('contenteditable', String(writable));
       titlePages.querySelectorAll('[data-title-key]').forEach(node => node.setAttribute('contenteditable', String(writable)));
       for (const id of ['titlePageBtn', 'pageSetupBtn', 'boldBtn', 'italicBtn', 'underlineBtn', 'renameBtn', 'undoBtn', 'redoBtn', 'caseBtn']) { if ($('#' + id)) $('#' + id).disabled = !writable; }
       updateDocumentButtons();
     },
     remote(source, selection, placeholder = null, presentation = documentState) {
+      cancelLayout();
       const focus = stage.contains(document.activeElement);
       const prepared = Production ? Production.prepare(source, presentation) : Presentation?.validate(presentation, source) || null;
       sourceText = source; documentState = prepared; empty = placeholder; typingStyle = null; dirty = false;
