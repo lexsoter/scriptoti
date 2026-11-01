@@ -76,5 +76,6 @@
   "righe per pagina": "righe per pagina",
   "Questa riga sembra una transizione ma viene letta come Azione. Riscrivila su una riga da sola e premi Invio, oppure correggila qui: ScripToti mette «>» davanti e la porta a destra.": "Questa riga sembra una transizione ma viene letta come Azione. Riscrivila su una riga da sola e premi Invio, oppure correggila qui: ScripToti mette «>» davanti e la porta a destra.",
   "in linea": "in linea",
-  "[[Tab]] cambia il tipo del paragrafo: Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione ([[Shift+Tab]] all’indietro); tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] cambia il tipo del paragrafo: Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione ([[Shift+Tab]] all’indietro); tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono."
+  "[[Tab]] cambia il tipo del paragrafo: Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione ([[Shift+Tab]] all’indietro); tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.": "[[Tab]] cambia il tipo del paragrafo: Scena → Azione → Personaggio → Parentesi → Dialogo → Transizione ([[Shift+Tab]] all’indietro); tenendolo premuto scegli dall’elenco. I simboli all’inizio della riga restano nel file ma non si vedono.",
+  "Tre segni uguale su una riga, oppure Cmd/Ctrl+Invio": "Tre segni uguale su una riga, oppure Cmd/Ctrl+Invio"
 }

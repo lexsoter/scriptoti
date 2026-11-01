@@ -164,11 +164,17 @@ t.check('one Undo restores the text after a direct choice', (await t.src()) === 
 // A page break ("===") at the end: Backspace on the empty page removes the
 // break, never the text of the page before.
 await t.load('Title\n\nINT. CASA - GIORNO\n\nMarta esce.\n\n>FADE OUT.\n\n===\n\n\n\n');
-const before = await t.page.evaluate(() => document.querySelectorAll('.script-page').length);
+const pagesBefore = await t.page.evaluate(() => document.querySelectorAll('.script-page').length);
 const firstOnLast = await t.page.evaluate(() => [...document.querySelectorAll('.script-page')].at(-1).querySelector('.editable-region')?._draft.anchor);
 await t.caret(firstOnLast); await t.press('Backspace');
-const after = await t.page.evaluate(() => document.querySelectorAll('.script-page').length), text = await t.src();
-t.check('Backspace removes a page break and its empty page', before === 2 && after === 1 && !/^===$/m.test(text) && text.includes('>FADE OUT.') && text.includes('Marta esce.'), JSON.stringify({ before, after, tail: text.slice(-30) }));
+const pagesAfter = await t.page.evaluate(() => document.querySelectorAll('.script-page').length), text = await t.src();
+t.check('Backspace removes a page break and its empty page', pagesBefore === 2 && pagesAfter === 1 && !/^===$/m.test(text) && text.includes('>FADE OUT.') && text.includes('Marta esce.'), JSON.stringify({ pagesBefore, pagesAfter, tail: text.slice(-30) }));
+
+// Cmd/Ctrl+Enter starts a new page ("===").
+await t.load('Title\n\nINT. CASA - GIORNO\n\nMarta esce.\n\n'); await t.caretAfter('Marta esce.');
+await t.page.keyboard.press(process.platform === 'darwin' ? 'Meta+Enter' : 'Control+Enter'); await t.type('Nuova pagina.');
+const broke = await t.page.evaluate(() => ({ pages: document.querySelectorAll('.script-page').length, second: [...document.querySelectorAll('.script-page')][1]?.innerText || '' }));
+t.check('Cmd/Ctrl+Enter starts a new page', /Marta esce\.\n\n===\n\nNuova pagina\./.test(await t.src()) && broke.pages === 2 && broke.second.includes('Nuova pagina.'), JSON.stringify({ broke, src: (await t.src()).slice(-40) }));
 
 // Find and replace keeps a leading capital and all-caps occurrences.
 const replaced = await t.page.evaluate(() => {

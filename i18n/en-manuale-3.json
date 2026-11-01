@@ -31,7 +31,7 @@
       "## File",
       "- [[Mod+O]] Open · [[Mod+S]] Save · [[Mod+Shift+S]] Save As · [[Alt+Shift+W]] Close project · [[Mod+P]] Export PDF",
       "## Writing",
-      "- [[Tab]] / [[Shift+Tab]] change text type · [[Enter]] new paragraph · [[Shift+Enter]] line break within the same paragraph",
+      "- [[Tab]] / [[Shift+Tab]] change text type · [[Enter]] new paragraph · [[Shift+Enter]] line break within the same paragraph · [[Mod+Enter]] new page",
       "- [[Mod+Z]] Undo · [[Mod+Shift+Z]] Redo",
       "- [[Mod+B]] bold · [[Mod+I]] italic · [[Mod+U]] underline · [[Mod+Shift+K]] uppercase/lowercase",
       "- [[Mod+F]] Find · [[Mod+Alt+F]] Find and replace",
