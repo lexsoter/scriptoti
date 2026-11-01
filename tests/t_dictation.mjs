@@ -168,6 +168,15 @@ for (const phone of [false, true]) {
       await t.page.evaluate(() => document.querySelector('.dictate-stop').click());
     }
   }
+  // The document id alone is not enough: a new session in B retires the old one.
+  await start(); await t.page.evaluate(() => { window.__oldRec = window.__rec; document.querySelector('.dictate-stop').click(); });
+  await start(); await late(); await intact('new recogniser in the same document');
+  t.check(tag + ': old recogniser was aborted', await t.page.evaluate(() => window.__oldRec.aborted === true));
+  // The same session also replaces its recogniser after an idle restart.
+  await t.page.evaluate(() => { window.__oldRec = window.__rec; window.__rec.onend(); });
+  await t.page.waitForTimeout(180); await late(); await intact('old recogniser after restart');
+  t.check(tag + ': recogniser restarted without accepting its predecessor', await t.page.evaluate(() => window.__rec !== window.__oldRec) && await t.page.locator('#dictatePanel').isVisible());
+  await t.page.evaluate(() => document.querySelector('.dictate-stop').click());
   // Finishing in the original document still takes the recogniser's final phrase.
   await t.page.evaluate(() => window.DraftSafe.switchProject(window.__voiceA)); await start();
   await t.page.evaluate(() => document.querySelector('.dictate-stop').click());
