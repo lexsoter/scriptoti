@@ -16,6 +16,9 @@ const pageText = await t.page.evaluate(() => document.querySelector('#stage').in
 t.check('the pages show the Italian text as written', pageText.includes('Annulla tutto.') && pageText.includes('Salva il latte.'), pageText.slice(0, 160));
 const lint = await t.page.evaluate(() => { window.DraftHelp.setLint?.(true); window.DraftHelp.runLint?.(); window.DraftHelp.openPanel('lint'); return new Promise(r => setTimeout(() => r(document.querySelector('.help-panel, #helpPanel, aside')?.innerText || ''), 500)); });
 t.check('syntax check messages in English', /looks like a transition/.test(lint) && !/sembra una transizione/.test(lint), lint.slice(0, 200));
+
+const composed = await t.page.evaluate(() => ['Stai già usando l’ultima versione (0.30.0).', 'Controllo della sintassi: avvisi (3)…', 'Condiviso · invio… (3 online)', 'Salva (Cmd+Maiusc+S)'].map(x => window.ScripTotiI18n.t(x)));
+t.check('texts with a value in brackets are translated', composed.join(' | ') === 'You are already using the latest version (0.30.0). | Syntax check: warnings (3)… | Shared · sending… (3 online) | Save (Cmd+Shift+S)', composed.join(' | '));
 // Enter conventions still work: Italian transitions are understood.
 await t.caret((await t.src()).length); await t.type('cut to:'); await t.press('Enter');
 t.check('conventions unchanged in English', (await t.src()).includes('>CUT TO:'), JSON.stringify((await t.src()).slice(-30)));
