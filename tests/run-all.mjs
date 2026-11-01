@@ -1,6 +1,6 @@
 // Runs every test one after the other; fails if any of them fails.
 import { spawnSync } from 'node:child_process';
-const tests = ['t1_6', 't5', 't9_12', 't14_16', 't_round', 't_dual_margins', 't_stall', 't_reconnect', 't_rename', 't_029', 't_tab', 't_dictation', 't_lang', 't_phone', 't_share', 't_share_refused'];
+const tests = ['t1_6', 't5', 't9_12', 't14_16', 't_round', 't_dual_margins', 't_stall', 't_reconnect', 't_rename', 't_029', 't_tab', 't_dictation', 't_updates', 't_lang', 't_phone', 't_share', 't_share_refused'];
 const failed = [];
 // The English texts inside index.html must match i18n/en-*.json.
 const i18n = spawnSync(process.execPath, ['../i18n/build.mjs', '--check'], { cwd: import.meta.dirname, stdio: 'inherit' });

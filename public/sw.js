@@ -1,14 +1,18 @@
 const CACHE = 'scriptoti-0.35.0';
+const BUILD = 'e679607aedd6dcf3f112f6b18e89cd916cc029e88ebc540c7972ac1d388e2835';
+const SHELL = 'd72a05a51be84fe5d189e581707dfe11809efdf8241e27c367a9046568fb0665';
+const RELEASE = CACHE + '-' + BUILD;
 const VERSION = 'name="scriptoti-version" content="0.35.0"';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon.svg', './icon-v021-192.png', './icon-v021-512.png', './icon-v021.svg', './icon-s2-32.png', './icon-s2-180.png', './icon-s2-192.png', './icon-s2-512.png', './icon-s2-mark.png', './logo-esteso-bianco.png', './logo-esteso-nero.png'];
 const allowed = new Set(ASSETS.map(path => new URL(path, self.location.href).href));
+const digest = async response => [...new Uint8Array(await crypto.subtle.digest('SHA-256', await response.arrayBuffer()))].map(b => b.toString(16).padStart(2, '0')).join('');
 
 self.addEventListener('install', event => {
-  // An update waits for existing windows, or for an explicit safe reload.
-  event.waitUntil(caches.open(CACHE).then(async cache => {
+  // Each publication prepares its own cache while the current one keeps running.
+  event.waitUntil(caches.open(RELEASE).then(async cache => {
     await cache.addAll(ASSETS.map(path => new Request(new URL(path, self.location.href), { cache: 'reload' })));
     const shell = await cache.match('./index.html');
-    if (!shell?.ok || !(await shell.text()).includes(VERSION)) throw new Error('Incomplete application update');
+    if (!shell?.ok || !(await shell.clone().text()).includes(VERSION) || await digest(shell) !== SHELL) throw new Error('Incomplete application update');
   }));
 });
 
@@ -17,7 +21,7 @@ self.addEventListener('message', event => {
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('scriptoti-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim()));
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('scriptoti-') && key !== RELEASE).map(key => caches.delete(key)))).then(() => self.clients.claim()));
 });
 
 self.addEventListener('fetch', event => {
@@ -31,14 +35,14 @@ self.addEventListener('fetch', event => {
         if (!response.ok || response.redirected || !response.headers.get('Content-Type')?.includes('text/html')) throw new Error('Invalid application response');
         const body = await response.clone().text();
         // A waiting release must never replace the running release's offline shell.
-        if (!body.includes(VERSION)) throw new Error('Different application version');
-        await (await caches.open(CACHE)).put('./index.html', response.clone());
+        if (!body.includes(VERSION) || await digest(response.clone()) !== SHELL) throw new Error('Different application release');
+        await (await caches.open(RELEASE)).put('./index.html', response.clone());
         return response;
       } catch {
-        return (await caches.open(CACHE)).match('./index.html');
+        return (await caches.open(RELEASE)).match('./index.html');
       }
     })());
     return;
   }
-  event.respondWith(caches.open(CACHE).then(async cache => (await cache.match(event.request)) || fetch(event.request)));
+  event.respondWith(caches.open(RELEASE).then(async cache => (await cache.match(event.request)) || fetch(event.request)));
 });

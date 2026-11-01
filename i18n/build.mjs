@@ -3,6 +3,7 @@
 // Run after changing a translation:  node i18n/build.mjs
 import fs from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -30,10 +31,24 @@ const start = '/* I18N-EN-START */', end = '/* I18N-EN-END */';
 const a = html.indexOf(start), b = html.indexOf(end);
 if (a < 0 || b < a) throw new Error('I18N-EN markers not found in index.html');
 const next = html.slice(0, a + start.length) + json + html.slice(b);
+// Reuse this step to fingerprint the offline release, even without a version bump.
+const worker = path.join(here, '..', 'public', 'sw.js'), sw = fs.readFileSync(worker, 'utf8');
+const assets = JSON.parse(sw.match(/const ASSETS = (\[[^;]+\]);/)[1].replace(/'/g, '"'));
+const normalize = text => text.replace(/const (BUILD|SHELL) = '[^']*';/g, "const $1 = '';");
+const hash = data => createHash('sha256').update(data).digest('hex');
+const release = createHash('sha256').update(normalize(sw));
+for (const asset of assets) {
+  release.update(asset).update('\0');
+  const file = path.join(here, '..', 'public', asset === './' ? 'index.html' : asset);
+  release.update(file === page ? next : fs.readFileSync(file)).update('\0');
+}
+const stamped = sw.replace(/const BUILD = '[^']*';/, "const BUILD = '" + release.digest('hex') + "';").replace(/const SHELL = '[^']*';/, "const SHELL = '" + hash(next) + "';");
 if (process.argv.includes('--check')) {
   if (next !== html) { console.error('index.html non contiene le traduzioni aggiornate: esegui node i18n/build.mjs'); process.exit(1); }
-  console.log('Traduzioni aggiornate.');
+  if (stamped !== sw) { console.error('Copia offline non aggiornata: esegui node i18n/build.mjs'); process.exit(1); }
+  console.log('Traduzioni e copia offline aggiornate.');
 } else {
   fs.writeFileSync(page, next);
+  fs.writeFileSync(worker, stamped);
   console.log(`Traduzioni inserite: ${Object.keys(ui).length} testi, ${Object.keys(manual).length} pagine del manuale.`);
 }
