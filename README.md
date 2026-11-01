@@ -1,6 +1,10 @@
+<p align="center"><img src="docs/logo-esteso.png" alt="ScripToti" width="420"></p>
+
 # ScripToti
 
 **[English](#scriptoti) · [Italiano](#scriptoti-in-italiano)**
+
+> **A note from the author.** I am not a programmer. I built ScripToti entirely by talking with two AI assistants, Claude (Anthropic) and Codex (OpenAI), to have the screenwriting tool I wanted for my own work. I use it for my work, and I share it in case it is useful to someone else too.
 
 **ScripToti is a free program for writing screenplays** (films, shorts, series). It runs in your browser: nothing to install, no account to create.
 
@@ -82,6 +86,8 @@ Created by Salvatore Frisina.
 ---
 
 # ScripToti in italiano
+
+> **Una nota dell'autore.** Non sono un programmatore. Ho creato ScripToti interamente dialogando con due assistenti di intelligenza artificiale, Claude (Anthropic) e Codex (OpenAI), per avere lo strumento di scrittura che volevo per il mio lavoro. Lo uso per lavorare e lo condivido nel caso sia utile anche ad altri.
 
 **ScripToti è un programma gratuito per scrivere sceneggiature** (film, corti, serie). Si usa dal browser, senza installare niente e senza creare un account.
 
