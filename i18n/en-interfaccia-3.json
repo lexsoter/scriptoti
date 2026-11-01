@@ -131,5 +131,7 @@
   "Aggiungi una parentetica": "Add a parenthetical",
   "A capo": "New paragraph",
   "Cancella": "Backspace",
-  "Canc": "Delete"
+  "Canc": "Delete",
+  "Non posso verificare se il nuovo nome è libero nella cartella. Usa File → Salva con nome… e scegli una destinazione.": "I cannot check whether this name is available in the folder. Use File → Save As… and choose a destination.",
+  "Esiste già un file o una cartella con questo nome. Scegli un altro nome oppure usa File → Salva con nome….": "A file or folder with this name already exists. Choose another name or use File → Save As…."
 }

@@ -35,6 +35,31 @@ t.check('it keeps saving under the new name', f['Bozza finale.fountain']?.includ
 await rename('c');
 f = await files(); n = await name();
 t.check('a name used by another open screenplay is refused, nothing replaced', f['c.fountain'] === '!Testo di C.\n' && 'Bozza finale.fountain' in f && n.session === 'Bozza finale.fountain', JSON.stringify(Object.keys(f)) + ' ' + JSON.stringify(n));
+// These destinations have never been opened or entered in Recent.
+await page.evaluate(async () => {
+  const root = await navigator.storage.getDirectory();
+  for (const [n, text] of [['unopened.fountain', '!Non sovrascrivere.\n'], ['empty.fountain', '']]) {
+    const writer = await (await root.getFileHandle(n, { create: true })).createWritable(); await writer.write(text); await writer.close();
+  }
+  await root.getDirectoryHandle('folder.fountain', { create: true });
+});
+for (const target of ['unopened', 'empty', 'folder']) {
+  const before = await files(); await rename(target); const after = await files();
+  t.check('refuses unknown existing destination: ' + target, JSON.stringify(before) === JSON.stringify(after) && (await name()).session === 'Bozza finale.fountain', JSON.stringify(after));
+}
+await page.evaluate(() => {
+  window.__resolve = FileSystemDirectoryHandle.prototype.resolve;
+  window.__move = FileSystemFileHandle.prototype.move; window.__moves = 0;
+  FileSystemDirectoryHandle.prototype.resolve = async () => null;
+  FileSystemFileHandle.prototype.move = function (...args) { window.__moves++; return window.__move.apply(this, args); };
+});
+await rename('Cannot verify');
+const refused = await page.evaluate(() => {
+  FileSystemDirectoryHandle.prototype.resolve = window.__resolve;
+  FileSystemFileHandle.prototype.move = window.__move;
+  return { moves: window.__moves, message: document.querySelector('#toast').textContent };
+});
+t.check('unknown parent: refuses before move and offers Save As', refused.moves === 0 && /Salva con nome/.test(refused.message) && (await name()).session === 'Bozza finale.fountain', JSON.stringify(refused));
 await rename('nome/sbagliato');
 t.check('an invalid name is refused', (await name()).session === 'Bozza finale.fountain', JSON.stringify(await name()));
 await page.reload(); await page.waitForTimeout(2500);
