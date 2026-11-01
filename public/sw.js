@@ -1,6 +1,6 @@
-const CACHE = 'scriptoti-0.32.2';
-const VERSION = 'name="scriptoti-version" content="0.32.2"';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon.svg', './icon-v021-192.png', './icon-v021-512.png', './icon-v021.svg', './icon-v033-32.png', './icon-v033-180.png', './icon-v033-192.png', './icon-v033-512.png', './icon-v033-mark.png'];
+const CACHE = 'scriptoti-0.32.3';
+const VERSION = 'name="scriptoti-version" content="0.32.3"';
+const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon.svg', './icon-v021-192.png', './icon-v021-512.png', './icon-v021.svg', './icon-s2-32.png', './icon-s2-180.png', './icon-s2-192.png', './icon-s2-512.png', './icon-s2-mark.png'];
 const allowed = new Set(ASSETS.map(path => new URL(path, self.location.href).href));
 
 self.addEventListener('install', event => {
