@@ -8630,6 +8630,7 @@ async function startUpgrade() {
     } else if (!readSelection() && remembered) restoreSelection(remembered);
     dictation = { owner: dictateOwner(), interim: '', idle: 0, rec: null };
     listen(); paintDictation();
+    if (phoneWriting()) { phoneReading = false; schedulePhoneCaret(true); queuePhoneUi(); }
   }
   function listen() {
     if (!dictation) return;

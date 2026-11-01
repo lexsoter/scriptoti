@@ -74,7 +74,21 @@ t = await open({ width: 390, height: 844, hasTouch: true, isMobile: true });
 await t.context.addInitScript(fake); await t.page.reload(); await t.page.waitForTimeout(600);
 await t.load('Title\n\nINT. CASA - GIORNO\n\nMarta entra.\n\n'); await t.page.waitForTimeout(300);
 t.check('phone: floating microphone shown', await t.page.locator('#dictateFab').isVisible());
-await t.page.locator('#dictateFab').tap(); await t.page.waitForTimeout(200);
+await t.load(Array.from({ length: 130 }, (_, i) => '!Paragrafo ' + i + '. Una riga lunga da rileggere con calma.').join('\n\n') + '\n');
+await t.caret((await t.src()).trimEnd().length);
+await t.page.locator('#stage').evaluate(stage => { stage.dispatchEvent(new WheelEvent('wheel', { bubbles: true, deltaY: -10000 })); stage.scrollTop = 0; });
+await t.page.waitForFunction(() => document.querySelector('#stage').scrollTop === 0);
+const beforeMicrophone = await t.src();
+t.check('phone: dictation starts with an off-screen caret', await t.page.evaluate(() => getSelection().getRangeAt(0).getBoundingClientRect().top > innerHeight));
+await t.page.locator('#dictateFab').tap();
+await t.page.waitForFunction(() => {
+  const panel = document.querySelector('#dictatePanel'), selection = getSelection();
+  if (panel.hidden || !selection.rangeCount) return false;
+  const caret = selection.getRangeAt(0).getBoundingClientRect();
+  return caret.height > 0 && caret.top >= document.querySelector('#stage').getBoundingClientRect().top && caret.bottom < panel.getBoundingClientRect().top;
+});
+t.check('phone: starting dictation reveals the caret above the panel before any phrase', await t.src() === beforeMicrophone);
+
 t.check('phone: no keyboard while dictating (inputmode none) and panel open', await t.page.evaluate(() => document.querySelector('#phoneWriter').getAttribute('inputmode')) === 'none' && await t.page.locator('#dictatePanel').isVisible());
 await say(t, 'Fuori piove.');
 t.check('phone: dictated text reaches the document', (await t.src()).includes('Fuori piove.'), JSON.stringify((await t.src()).slice(-30)));
@@ -87,7 +101,7 @@ const panel = await t.page.evaluate(() => {
 t.check('phone: dictation controls fit in two touch-sized rows', panel.rows === 2 && panel.fit, JSON.stringify(panel));
 await t.load(Array.from({ length: 130 }, (_, i) => '!Paragrafo ' + i + '. Una riga lunga da rileggere con calma.').join('\n\n') + '\n');
 await t.caret((await t.src()).trimEnd().length); await say(t, 'Una frase finale da vedere.');
-await t.page.waitForTimeout(350);
+await t.page.waitForFunction(() => { const r = getSelection().getRangeAt(0).getBoundingClientRect(); return r.height > 0 && r.bottom < document.querySelector('#dictatePanel').getBoundingClientRect().top; });
 const visible = await t.page.evaluate(() => {
   const selection = getSelection(), rect = selection.getRangeAt(0).getBoundingClientRect();
   return { top: rect.top, bottom: rect.bottom, height: rect.height, panel: document.querySelector('#dictatePanel').getBoundingClientRect().top, stage: document.querySelector('#stage').getBoundingClientRect().top };
