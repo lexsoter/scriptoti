@@ -30,7 +30,8 @@ async function caretVisible(t) {
     let r = selection.getRangeAt(0).getBoundingClientRect();
     if (!r.height) r = document.querySelector('#phoneWriter .active-edit')?.getBoundingClientRect() || r;
     const box = document.querySelector('#stage').getBoundingClientRect(), strip = document.querySelector('#phoneKeyboard');
-    return r.height > 0 && r.top >= Math.max(box.top, visualViewport.offsetTop) && r.bottom <= Math.min(box.bottom, strip.hidden ? Infinity : strip.getBoundingClientRect().top, visualViewport.offsetTop + visualViewport.height) + 1;
+    // The strip hangs under the top bar: the caret must sit below it and above the keyboard.
+    return r.height > 0 && r.top >= Math.max(box.top, visualViewport.offsetTop, strip.hidden ? -Infinity : strip.getBoundingClientRect().bottom) - 1 && r.bottom <= Math.min(box.bottom, visualViewport.offsetTop + visualViewport.height) + 1;
   });
 }
 async function locked(t) {
@@ -170,6 +171,7 @@ for (const [width, height, locale] of [[390,844,'it-IT'],[844,390,'en-US']]) {
     t.check(`${label}: cancelled composition adds no text`, await t.src() === beforeIME);
     await t.load(long); await t.caret((await t.src()).length); await t.type('Una riga finale.');
     t.check(`${label}: caret remains above keyboard in a long script`, await caretVisible(t));
+    t.check(`${label}: the strip hangs right under the top bar, clear of the iOS keyboard bar`, await t.page.evaluate(() => { const strip = document.querySelector('#phoneKeyboard'), bar = document.querySelector('.topbar'); return !strip.hidden && Math.abs(strip.getBoundingClientRect().top - bar.getBoundingClientRect().bottom) <= 1; }));
     await keyboard(t, height > 500 ? 400 : 220, 15); await input(t, 'insertParagraph'); await t.type('Ancora.');
     t.check(`${label}: viewport scroll and Enter keep the caret visible`, await caretVisible(t));
     const editingAt = (await state(t)).selection.focus;
