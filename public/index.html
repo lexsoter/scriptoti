@@ -3479,8 +3479,10 @@ const DraftSearch = (() => {
     const excludedPart = part => excluded && part.lineStart === excluded.lineStart;
     for (const element of doc.elements) if (element.type === 'scene' && !excludedPart(element.part)) {
       const value = scene(element.text); if (!value?.base) continue;
-      const list = locations.get(value.base) || new Map();
-      list.set(value.places.join(' - '), value.places); locations.set(value.base, list);
+      const list = locations.get(value.base) || { at: element.part.lineStart, places: new Map(), mentions: new Map() }, key = value.places.join(' - ');
+      list.places.set(key, value.places);
+      if (!list.mentions.has(key)) list.mentions.set(key, { places: value.places, at: element.part.lineStart });
+      locations.set(value.base, list);
       if (value.time) usedTimes.add(value.time);
       for (const language of ['it', 'en']) if (timeWords[language].test(value.time)) votes[language]++;
       if (/^\.?EST\b/.test(normalize(element.text))) votes.it++; else if (/^\.?EXT\b/.test(normalize(element.text))) votes.en++;
@@ -3513,7 +3515,7 @@ const DraftSearch = (() => {
       }
       if (item.description) break;
     }
-    return { locations: [...locations].map(([name, values]) => ({ name, places: [...values.values()] })), characters, times: [...new Set(timeList)], language };
+    return { locations: [...locations].map(([name, value]) => ({ name, at: value.at, places: [...value.places.values()], mentions: [...value.mentions.values()] })), characters, times: [...new Set(timeList)], language };
   }
   function suggestions(catalogue, source, selection, limit = 6, descriptions = []) {
     const focus = selection?.focus;
@@ -3532,15 +3534,19 @@ const DraftSearch = (() => {
       };
       if (!splits.length) {
         const query = normalize(plain(rest)), spacing = !rest && prefix[0] !== '.' && !/\s$/.test(prefix[0]) ? ' ' : '';
-        const values = catalogue.locations.filter(item => item.name.startsWith(query)).map(item => ({ label: item.name, value: spacing + item.name, kind: 'location' }));
+        const values = catalogue.locations.filter(item => item.name.startsWith(query)).map(item => ({ label: item.name, value: spacing + item.name, kind: 'location', at: item.at, earlier: item.at < lineStart, from: lineStart }));
         return { start, end: componentEnd(focus), query, items: values.slice(0, limit) };
       }
       const last = splits.at(-1), query = normalize(plain(rest.slice(last.index + last[0].length))), base = normalize(plain(rest.slice(0, splits[0].index)));
       const location = catalogue.locations.find(item => item.name === base), depth = splits.length;
-      const children = query ? [...new Set((location?.places || []).map(parts => parts[depth]).filter(Boolean))].filter(name => name.startsWith(query)) : [];
+      const parents = normalize(plain(rest.slice(0, last.index))).split(/\s+[-–—]\s*/), children = new Map();
+      if (query) for (const mention of location?.mentions || []) {
+        const name = mention.places[depth];
+        if (name?.startsWith(query) && parents.every((p, i) => mention.places[i] === p) && !children.has(name)) children.set(name, mention.at);
+      }
       // Keep one space after the dash when the writer typed "-" without it.
       const gap = /\s$/.test(last[0]) ? '' : ' ';
-      const values = [...catalogue.times.filter(name => name.startsWith(query)).map(name => ({ label: name, value: gap + name, kind: 'time' })), ...children.map(name => ({ label: name, value: gap + name, kind: 'location' }))];
+      const values = [...catalogue.times.filter(name => name.startsWith(query)).map(name => ({ label: name, value: gap + name, kind: 'time' })), ...[...children].map(([name, at]) => ({ label: name, value: gap + name, kind: 'location', at, earlier: at < lineStart, from: lineStart }))];
       return { start: start + last.index + last[0].length, end: componentEnd(focus), query, items: values.slice(0, limit) };
     }
     const query = identity(before);
@@ -3600,8 +3606,8 @@ const DraftSearch = (() => {
       if (popup.hidden || item?.kind !== 'character' || !selection || selection.anchor !== selection.focus || selection.focus < current.end) return false;
       return accept(item);
     }
-    // Page and scene of a character's last appearance, from the current
-    // pagination, so the hint follows every edit, lock and renumbering.
+    // Character's last appearance or location's first heading, from the current
+    // pagination, so hints follow every edit, lock and renumbering.
     // Characters seen in this scene or the two before it need no reminder.
     const AWAY_SCENES = 3, AWAY_PAGES = 5;
     function lastSeen(item) {
@@ -3615,6 +3621,7 @@ const DraftSearch = (() => {
       const T = text => window.ScripTotiI18n ? window.ScripTotiI18n.t(text) : text;
       const where = T('pag.') + ' ' + page.label + (scene ? ' ' + T('scena') + ' ' + (scene.number || scenes.indexOf(scene) + 1) : '');
       if (!item.earlier) return T('Compare più avanti a') + ' ' + where;
+      if (item.kind === 'location') return where;
       const between = scenes.filter(s => s.start > at && s.start <= item.from).length;
       const here = pageOf(item.from), pages = here ? context.pages.indexOf(here) - context.pages.indexOf(page) : 0;
       if (scenes.length ? between < AWAY_SCENES : pages < AWAY_PAGES) return '';
@@ -3629,7 +3636,7 @@ const DraftSearch = (() => {
       current.items.forEach((item, i) => {
         const button = document.createElement('button'); button.type = 'button'; button.id = 'completion-' + i; button.setAttribute('role', 'option'); button.setAttribute('aria-selected', String(i === index));
         const name = document.createElement('span'); name.textContent = item.label; button.append(name);
-        const note = item.kind === 'character' ? lastSeen(item) : item.description;
+        const note = ['character', 'location'].includes(item.kind) ? lastSeen(item) : item.description;
         if (note) { const description = document.createElement('small'); description.textContent = note; button.append(description); }
         button.onpointerdown = event => event.preventDefault(); button.onclick = () => accept(item); popup.append(button);
       });
