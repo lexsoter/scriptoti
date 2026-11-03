@@ -1,8 +1,8 @@
-const CACHE = 'scriptoti-0.37.0';
-const BUILD = 'bb38fb92c8c4d577b7b38545dc3744bd159a52b96e15213820e19573b1acdcbc';
-const SHELL = '0bc7695eed92a950103f3219f887b218ebae5cf2d38402e53583c77fca652fd9';
+const CACHE = 'scriptoti-0.38.0';
+const BUILD = 'f7d66169c277c09ffa9ecc6878a4851db70b7b61188fbcd09fc9ef70572d8058';
+const SHELL = '162ca5961ce9e4112573c19a5f49773b8bf7bd9c6ddf6d5a0e3cd0380431afe9';
 const RELEASE = CACHE + '-' + BUILD;
-const VERSION = 'name="scriptoti-version" content="0.37.0"';
+const VERSION = 'name="scriptoti-version" content="0.38.0"';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon.svg', './icon-v021-192.png', './icon-v021-512.png', './icon-v021.svg', './icon-s2-32.png', './icon-s2-180.png', './icon-s2-192.png', './icon-s2-512.png', './icon-s2-mark.png', './logo-esteso-bianco.png', './logo-esteso-nero.png'];
 const allowed = new Set(ASSETS.map(path => new URL(path, self.location.href).href));
 const digest = async response => [...new Uint8Array(await crypto.subtle.digest('SHA-256', await response.arrayBuffer()))].map(b => b.toString(16).padStart(2, '0')).join('');
