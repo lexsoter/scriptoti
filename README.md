@@ -73,7 +73,7 @@ The format is called **Fountain**: a simple, open way to write screenplays as te
 - **Syntax check**: it warns you when something will not be read the way you meant, for example a scene heading that is not recognised.
 - **A complete manual** inside the program, in the **Help** menu, in English and Italian.
 
-## Limits and known issues (version 0.37.0)
+## Limits and known issues (version 0.38.0)
 
 ScripToti is young and changes often. This list is updated with each version.
 
@@ -191,7 +191,7 @@ Il formato si chiama **Fountain**: un modo semplice e aperto di scrivere scenegg
 - **Manuale completo** dentro il programma, nel menu **Aiuto**, in italiano e in inglese.
 - **In italiano o in inglese**: il programma segue la lingua del browser; si cambia da **Vista → Lingua / Language**.
 
-## Limiti e problemi noti (versione 0.37.0)
+## Limiti e problemi noti (versione 0.38.0)
 
 ScripToti è giovane e cambia spesso. Questo elenco si aggiorna a ogni versione.
 

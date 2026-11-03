@@ -282,13 +282,15 @@
   },
   "personaggio": {
     "title": "Character cues and dialogue",
-    "keys": "character cue name dialogue speech lines speaking uppercase recognition",
+    "keys": "character cue name dialogue speech lines speaking uppercase recognition action automatic capitals punctuation comma period abbreviations split return enter middle name",
     "q": [
       "how do I write dialogue",
       "how do I make a character speak",
       "where do I put the character name",
       "how do I leave dialogue",
-      "how do I add a line break within dialogue"
+      "how do I add a line break within dialogue",
+      "why does BOOM turn everything into capitals",
+      "how do I split a character name with Enter"
     ],
     "short": "Write the name in UPPERCASE on its own line, press [[Enter]], and write the dialogue. [[Enter]] ends the speech and switches to Action. At the end of a line, [[Shift+Enter]] opens a parenthetical. In the middle of a line, it adds a plain line break. If the name is not recognized, press [[Tab]] or put “@” in front.",
     "body": [
@@ -296,12 +298,38 @@
       "> MARCO\n> I don't have time for this.",
       "- [[Enter]] in dialogue ends the speech and switches to **Action**. In the middle of a line, the text after the cursor becomes Action.",
       "- [[Shift+Enter]] **at the end of a dialogue line** opens a parenthetical `()` with the caret inside. [[Enter]] returns to dialogue. **In the middle of a line**, it adds a plain line break within the same speech.",
-      "- [[Enter]] on the name moves to the dialogue line. If there is no dialogue yet, the name stays a character cue while you write. If you save without adding dialogue, it becomes Action when you reopen the file.",
+      "- [[Enter]] at the end of the name moves to dialogue. **In the middle of a character cue**, it splits the line: the text on the right moves below, even if the name is new or suggestions are open. At the start of the name, it leaves room above. A cue without a leading `@`, saved without dialogue, becomes Action when you reopen it.",
       "- [[Backspace]] at the start of an Action paragraph below an uppercase name joins it to the name as dialogue.",
       "- A name with only one uppercase letter stays Action: it needs at least two letters.",
       "- If a name is not recognized, for example because it contains numbers or is lowercase, press [[Tab]] until you reach “Character” or put `@` in front: `@McQueen`.",
-      "As you type a name, ScripToti suggests characters already in the document, flags possible typos, and shows where each character first appears (“First appeared on page 3, scene 2”).",
-      "When a character speaks again after an Action paragraph, ScripToti adds (CONT’D) automatically. When dialogue continues onto the next page, it adds (MORE) and (CONT’D)."
+      "As you type a name, ScripToti suggests characters already in the document and flags possible typos. For someone absent for at least three scenes, it shows the last appearance, for example “Last seen on page 3, scene 2”. If the character only appears later, it says so. Location references work differently: they always show the first scene heading.",
+      "When a character speaks again after an Action paragraph, ScripToti adds (CONT’D) automatically. When dialogue continues onto the next page, it adds (MORE) and (CONT’D).",
+      "## When a cue becomes Action",
+      "If a period, `!` or `?` is followed by a space and another word, forced capitals stop: `BOOM. A helicopter explodes.` becomes Action. The same applies to a comma followed by text (`GIULIO, 40, walks in.`) or a nontechnical parenthesis followed by text (`MR. SMITH (29) walks in.`). Text already written keeps its case.",
+      "Names with more than one word, such as `RED FOX` or `MARIA GRAZIA`, stay character cues. So do technical extensions such as `(V.O.)`, `(O.S.)`, `(O.C.)`, `(CONT'D)` and the Italian `(FUORI CAMPO)`. The `^` marker still indicates dual dialogue.",
+      "Periods in abbreviated titles do not switch to Action: `MR.`, `MRS.`, `MS.`, `DR.`, `ST.`, `JR.`, `SIG.`, `SIG.RA`, `DOTT.`, `PROF.`, `AVV.`, `ING.`. A name containing a period also stays a cue if it is already used as a character in the document.",
+      "**Immediately after the switch**, one [[Mod+Z]] restores the character cue and keeps the letter you just typed. A leading `@` always forces a character cue and capitals, even with punctuation or parentheses. The rules are the same on a computer and phone."
+    ]
+  },
+  "suggerimenti": {
+    "title": "Location and character suggestions",
+    "keys": "suggestions autocomplete completion locations characters typo description first mention first appearance page scene location sublocation locked 12A",
+    "q": [
+      "how do suggestions work",
+      "autocomplete character names",
+      "it suggests the wrong name",
+      "where did I first use this location",
+      "what do the page and scene below a location mean"
+    ],
+    "short": "ScripToti suggests only locations and characters in your document. Every location shows its first page and scene; characters who have been away show their last appearance. [[Enter]] or a click accepts; [[Esc]] dismisses.",
+    "body": [
+      "As you type a scene heading, ScripToti suggests **locations** already used, then the **time of day** in the document’s language: DAY, NIGHT… or GIORNO, NOTTE… in Italian. Times have no page or scene reference.",
+      "Every location always shows **page X scene Y** from the first scene heading that contains it, excluding the heading you are writing. For a sublocation such as `HOUSE - KITCHEN`, the first heading with that combination counts. References use the printed labels, including locked pages and scenes such as **12A**, and follow your edits. If the first mention is later in the document, you see “Appears later on page X scene Y”.",
+      "On a phone, the same references appear below names in the keyboard strip. A location found only in the heading you are writing is not suggested.",
+      "As you type an uppercase name, ScripToti suggests **characters** from the document and flags possible typos (RUTA → RITA). For someone absent for at least three scenes, it recalls the last appearance, for example “Last seen on page 3, scene 2”. Nearby characters have no reminder. If a character only appears later, it says so.",
+      "- [[↑]] [[↓]] to choose, [[Enter]] or a click to accept, [[Esc]] to dismiss. **In the middle of a name**, [[Enter]] splits the line instead of accepting a suggestion.",
+      "- You can keep a similar name as a separate character if you meant it.",
+      "Nothing is invented: suggestions come only from the open document."
     ]
   }
 }

@@ -282,13 +282,15 @@
   },
   "personaggio": {
     "title": "Personaggio e dialogo",
-    "keys": "personaggio character nome dialogo battuta parlare chi parla maiuscolo cue riconoscimento nome",
+    "keys": "personaggio character nome dialogo battuta parlare chi parla maiuscolo cue riconoscimento nome boom maiuscolo azione punto virgola abbreviazione invio metà nome",
     "q": [
       "come scrivo un dialogo",
       "come faccio parlare un personaggio",
       "il nome del personaggio",
       "come esco dal dialogo",
-      "come vado a capo nella battuta"
+      "come vado a capo nella battuta",
+      "perché BOOM diventa tutto maiuscolo",
+      "come divido il nome con Invio"
     ],
     "short": "Scrivi il nome in MAIUSCOLO su una riga, premi [[Invio]] e scrivi la battuta. [[Invio]] chiude la battuta e passa all’Azione. A fine riga [[Shift+Invio]] apre una parentetica; in mezzo alla riga fa un semplice a capo. Se il nome non è riconosciuto premi [[Tab]] o mettigli davanti «@».",
     "body": [
@@ -296,12 +298,38 @@
       "> MARCO\n> Non ho tempo per questo.",
       "- [[Invio]] nel dialogo chiude la battuta e passa all’**Azione**; a metà riga, il testo dopo il cursore diventa Azione.",
       "- [[Shift+Invio]] **a fine riga di dialogo** apre una parentetica `()` con il cursore dentro; [[Invio]] torna al dialogo. **In mezzo alla riga** fa un semplice a capo nella stessa battuta.",
-      "- [[Invio]] sul nome porta alla riga della battuta. Se la battuta non c’è ancora, il nome resta personaggio finché scrivi; se salvi senza battuta, alla riapertura torna Azione.",
+      "- [[Invio]] in fondo al nome porta alla battuta. **A metà del nome** divide la riga: il testo a destra passa sotto, anche se il nome non era già nel documento o i suggerimenti erano aperti. All’inizio del nome lascia una riga sopra. Un nome non forzato con `@`, salvato senza battuta, torna Azione alla riapertura.",
       "- [[Backspace]] all’inizio di un’Azione che sta sotto un nome in maiuscolo la unisce al nome: diventa la sua battuta.",
       "- Un nome con una sola lettera maiuscola resta Azione: servono almeno due lettere.",
       "- Se il nome non viene riconosciuto (per esempio contiene numeri o è in minuscolo), premi [[Tab]] fino a «Character» o scrivi `@` davanti: `@McQueen`.",
-      "Mentre scrivi il nome, ScripToti suggerisce i personaggi già presenti nel documento, segnala i possibili refusi e indica dove ognuno compare per la prima volta («Apparso prima a pag. 3 scena 2»).",
-      "Quando lo stesso personaggio riprende a parlare dopo un’azione, ScripToti aggiunge da solo (CONT’D); quando una battuta prosegue alla pagina dopo, aggiunge (MORE) e (CONT’D)."
+      "Mentre scrivi il nome, ScripToti suggerisce i personaggi già presenti nel documento e segnala i possibili refusi. Per chi manca da almeno tre scene indica l’ultima apparizione, per esempio «Ultima volta a pag. 3 scena 2». Se compare solo più avanti, lo segnala. I riferimenti dei luoghi funzionano diversamente: indicano sempre la prima intestazione di scena.",
+      "Quando lo stesso personaggio riprende a parlare dopo un’azione, ScripToti aggiunge da solo (CONT’D); quando una battuta prosegue alla pagina dopo, aggiunge (MORE) e (CONT’D).",
+      "## Quando il nome diventa Azione",
+      "Se dopo un punto, `!` o `?` scrivi uno spazio e un’altra parola, il maiuscolo del personaggio si ferma: `BOOM. Esplode un elicottero.` diventa Azione. Lo stesso vale per una virgola seguita da testo (`GIULIO, 40, entra.`) o per una parentesi non tecnica seguita da testo (`MR. SMITH (29) walks in.`). La parte già scritta resta com’è.",
+      "Restano personaggi i nomi di più parole, come `RED FOX` o `MARIA GRAZIA`, e le estensioni tecniche come `(V.O.)`, `(O.S.)`, `(O.C.)`, `(CONT'D)` e `(FUORI CAMPO)`. Il simbolo `^` continua a indicare il dialogo doppio.",
+      "Il punto nei titoli abbreviati non fa passare ad Azione: `MR.`, `MRS.`, `MS.`, `DR.`, `ST.`, `JR.`, `SIG.`, `SIG.RA`, `DOTT.`, `PROF.`, `AVV.`, `ING.`. Restano validi anche i nomi con un punto già usati come personaggi nel documento.",
+      "**Subito dopo il passaggio**, un solo [[Mod+Z]] riporta la riga a personaggio, conservando la lettera appena scritta. Con `@` all’inizio forzi sempre il personaggio e il maiuscolo, anche con punteggiatura o parentesi. Le regole sono le stesse sul computer e sul telefono."
+    ]
+  },
+  "suggerimenti": {
+    "title": "Suggerimenti di luoghi e personaggi",
+    "keys": "suggerimenti completamento automatico autocompletamento luoghi personaggi refuso descrizione prima menzione prima apparizione pagina scena luogo sotto luogo 12A",
+    "q": [
+      "come funzionano i suggerimenti",
+      "completamento automatico dei nomi",
+      "mi suggerisce un nome sbagliato",
+      "dove ho usato un luogo per la prima volta",
+      "a cosa servono pagina e scena sotto il luogo"
+    ],
+    "short": "ScripToti propone solo luoghi e personaggi del documento. Ogni luogo mostra pagina e scena della prima menzione; i personaggi lontani mostrano l’ultima. [[Invio]] o un clic accetta, [[Esc]] ignora.",
+    "body": [
+      "Scrivendo un’intestazione, ScripToti propone i **luoghi** già usati, poi il **momento** della giornata nella lingua del documento: GIORNO, NOTTE… oppure DAY, NIGHT…. I momenti non mostrano pagina e scena.",
+      "Sotto ogni luogo compare sempre **pag. X scena Y** della prima intestazione che lo contiene, escludendo quella che stai scrivendo. Per un sotto-luogo, come `CASA - CUCINA`, conta la prima intestazione con quella combinazione. Le etichette sono quelle stampate, comprese pagine e scene bloccate come **12A**, e si aggiornano dopo le modifiche. Se il luogo compare per la prima volta più avanti, leggi «Compare più avanti a pag. X scena Y».",
+      "Sul telefono le stesse indicazioni compaiono sotto il nome nei suggerimenti della striscia. Un luogo presente solo nell’intestazione che stai scrivendo non viene suggerito.",
+      "Scrivendo un nome in maiuscolo, ScripToti propone i **personaggi** del documento e segnala i possibili refusi (RUTA → RITA). Per chi manca da almeno tre scene ricorda l’ultima apparizione, per esempio «Ultima volta a pag. 3 scena 2». Per i personaggi delle scene vicine l’indicazione non compare. Se un personaggio compare solo più avanti, lo segnala.",
+      "- [[↑]] [[↓]] per scegliere, [[Invio]] o clic per accettare, [[Esc]] per ignorare. **A metà di un nome**, [[Invio]] divide la riga e non accetta il suggerimento.",
+      "- Un nome simile a un altro ma voluto si può tenere come personaggio distinto.",
+      "Non viene inventato niente: i suggerimenti arrivano solo dal documento aperto."
     ]
   }
 }
