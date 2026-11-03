@@ -1185,7 +1185,7 @@ const DraftEngine = (() => {
         options.empty.at === position(rows[i + 1]?.offset ?? -1);
       const activeCue = options.editing && Number.isInteger(options.caret) &&
         options.caret >= position(row.offset) && options.caret <= position(row.offset + row.raw.length) &&
-        /^[\p{L}\p{N}][\p{L}\p{N}'’ .-]*(?:\([^)]*\))?$/u.test(base) && base.length <= 42;
+        /^[\p{L}\p{N}][\p{L}\p{N}'’ .,!?-]*(?:\([^)]*\)?)?$/u.test(base) && base.length <= 42;
       const cue = forced || (!['center', 'right'].includes(formats.get(position(row.offset))?.align) && !line.startsWith('!') && (rows[i + 1]?.raw.length > 0 || pendingDialogue || activeCue) && (base.match(/\p{L}/gu) || []).length >= 2 && base === base.toUpperCase());
       if (cue) {
         const dual = /\^\s*$/.test(line);
@@ -1478,7 +1478,7 @@ const DraftEngine = (() => {
     if (doc.titleEnd) return source.slice(0, doc.titleStart) + header + source.slice(doc.titleEnd);
     return header ? header + '\n\n' + source : source;
   }
-  return { parse, inline, plain, richText, isScene, wrap, view, paginate, geometry, PAGE, STANDARD_MARGINS, characterContinuations, updateTitle, titleParts: source => ({ fields: parse(source).fields }) };
+  return { parse, inline, plain, richText, visibleSource, isScene, wrap, view, paginate, geometry, PAGE, STANDARD_MARGINS, characterContinuations, updateTitle, titleParts: source => ({ fields: parse(source).fields }) };
 })();
 
 </script>
@@ -1487,6 +1487,8 @@ const DraftEngine = (() => {
    a rendered line or a cached contenteditable fragment. */
 const DraftEditing = (() => {
   const clamp = (n, min, max) => Math.max(min, Math.min(n, max));
+  const cueVariants = { 'VOICE OVER': 'V.O.', VOICEOVER: 'V.O.', 'VOCE OVER': 'V.O.', 'VOCE FUORI CAMPO': 'V.O.', 'VOCE OFF': 'V.O.', 'FUORI CAMPO': 'O.S.', 'FUORI SCENA': 'O.S.', 'OFF SCREEN': 'O.S.', OFFSCREEN: 'O.S.', OFF: 'O.S.', 'OFF CAMERA': 'O.C.' };
+  const cueExtensions = { VO: 'V.O.', OS: 'O.S.', OC: 'O.C.', CONTD: "CONT'D", CONT: "CONT'D", CONTINUED: "CONT'D", FC: 'F.C.', VFC: 'V.F.C.', PRELAP: 'PRELAP', FILTERED: 'FILTERED', SUBTITLED: 'SUBTITLED', 'INTO PHONE': 'INTO PHONE', 'ON PHONE': 'ON PHONE', 'ON TV': 'ON TV', 'ON RADIO': 'ON RADIO', 'AL TELEFONO': 'AL TELEFONO', SEGUE: 'SEGUE', 'CONT.': "CONT'D", SOTTOTITOLATO: 'SOTTOTITOLATO', SOTTOTITOLI: 'SOTTOTITOLI', SUB: 'SUB', RADIO: 'RADIO', TV: 'TV', TELEFONO: 'TELEFONO', REGISTRAZIONE: 'REGISTRAZIONE', ECO: 'ECO', CONTINUA: 'CONTINUA' };
   const graphemes = typeof Intl.Segmenter === 'function' ? new Intl.Segmenter(undefined, { granularity: 'grapheme' }) : null;
   function replace(source, start, end, text, empty = null) {
     start = clamp(start, 0, source.length); end = clamp(end, start, source.length);
@@ -1520,12 +1522,42 @@ const DraftEditing = (() => {
     const all = parts(doc);
     return all.find(p => p.placeholder && p.anchor === at) || all.find(p => p.start <= at && p.lineEnd >= at) || null;
   }
-  function type(source, start, end, text, part) {
-    // Lowercase words after a name and its parenthesis ("FABIO (36) lotta")
-    // describe an action: they keep their case and the line becomes Action.
-    const describes = part?.kind === 'character' && /^\p{Ll}/u.test(text) && /\)[ \t]+$/.test(source.slice(source.lastIndexOf('\n', start - 1) + 1, start));
-    if (['character', 'scene'].includes(part?.kind) && !describes) text = text.replace(/^[^\n]*/, value => value.toLocaleUpperCase('it'));
+  const upperInput = (text, kind) => ['character', 'scene'].includes(kind) ? text.replace(/^[^\n]*/, value => value.toLocaleUpperCase('it')) : text;
+  const cueTitles = new Set(['MR', 'MRS', 'MS', 'DR', 'ST', 'JR', 'SIG', 'SIG.RA', 'DOTT', 'PROF', 'AVV', 'ING']);
+  function cueExtension(text) {
+    const folded = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleUpperCase('it').trim(), key = folded.replace(/[.\s‘’']/g, '');
+    return Boolean(cueExtensions[key] || cueExtensions[folded] || cueVariants[folded.replace(/\./g, '')] || key === 'CONTINUAZIONE');
+  }
+  function cueAction(row, doc, part) {
+    const visible = DraftEngine.visibleSource(row).text;
+    if (/^\s*[@!]/.test(visible)) return false;
+    const raw = DraftEngine.plain(visible).replace(/\s*\^\s*$/, '').trim();
+    for (const match of raw.matchAll(/\(([^)]*)\)(?=\s*\S)/g)) if (!cueExtension(match[1])) return true;
+    const text = raw.replace(/\(([^)]*)\)/g, (whole, inner) => cueExtension(inner) ? ' ' : whole).replace(/\s+/g, ' ');
+    if (/,\s*\S/.test(text)) return true;
+    const dotted = doc ? parts(doc).filter(p => p.kind === 'character' && p.lineStart !== part.lineStart).map(p => DraftEngine.plain(p.text).replace(/\([^)]*\)/g, '').replace(/\s*\^\s*$/, '').replace(/\s+/g, ' ').trim().toLocaleUpperCase('it')).filter(name => name.includes('.')) : [];
+    const upper = text.toLocaleUpperCase('it');
+    for (const match of text.matchAll(/([.!?])\s+(?=[\p{L}\p{N}])/gu)) {
+      if (match[1] === '.') {
+        const title = text.slice(0, match.index).match(/([\p{L}.]+)$/u)?.[1].toLocaleUpperCase('it');
+        if (cueTitles.has(title) || dotted.some(name => match.index < name.length && (name.startsWith(upper) || upper === name || upper.startsWith(name + ' ')))) continue;
+      }
+      return true;
+    }
+    return false;
+  }
+  function followup(source, next) {
+    if (!next || source === next.source) return null;
+    let a = 0, b = source.length, c = next.source.length;
+    while (a < b && a < c && source[a] === next.source[a]) a++;
+    while (b > a && c > a && source[b - 1] === next.source[c - 1]) { b--; c--; }
+    return { ...replace(source, a, b, next.source.slice(a, c)), anchor: next.anchor, focus: next.focus, kind: next.kind };
+  }
+  function type(source, start, end, text, part, doc = null) {
     if (part?.literal) return replace(source, start, end, text);
+    const rawText = text;
+    text = upperInput(text, part?.kind);
+    const typedLength = text.length;
     // ")" typed just before the closing parenthesis steps over it.
     if (text === ')' && start === end && part?.kind === 'parenthetical' && source[start] === ')') return replace(source, start, start + 1, ')');
     // "(" on an empty row of a speech opens a parenthetical already closed.
@@ -1549,7 +1581,14 @@ const DraftEditing = (() => {
       const markers = { character: '@', scene: '.', transition: '>', lyric: '~', parenthetical: '(', ...(part.kind === 'action' && part.forced ? { action: '!' } : {}) };
       if (markers[part.kind] && !text.startsWith(markers[part.kind])) prefix += markers[part.kind];
     }
-    const change = replace(source, start, end, prefix + text);
+    if (part?.kind === 'character' && !part.placeholder && !rawText.includes('\n') && cueAction(source.slice(Math.max(rowStart, part.lineStart), start) + rawText + source.slice(end, rowBreak < 0 ? source.length : rowBreak), doc, part)) {
+      // Keep an undoable cue before recording the Action inference.
+      const before = source.slice(rowStart, start), change = replace(source, rowStart, end, '@' + before + prefix + text);
+      change.kind = 'character'; change.typedLength = typedLength;
+      change.followup = { ...replace(source, rowStart, end, '!' + before + prefix + rawText), kind: 'action', typedLength: rawText.length };
+      return change;
+    }
+    const change = replace(source, start, end, prefix + text); change.typedLength = typedLength;
     if (closing) { change.anchor = change.focus = change.focus - 1; change.kind = 'parenthetical'; }
     if (!text || /\n\n$/.test(text)) change.empty = { at: change.focus, kind: 'action' };
     return change;
@@ -1811,6 +1850,17 @@ const DraftEditing = (() => {
       }
     }
     const speech = part?.speech, firstWords = speech?.parts.find(p => p.kind === 'dialogue' && !p.placeholder);
+    if (!hardBreak && part && part === speech?.cue && !part.placeholder && part.text.trim() && start <= bounds(part).start) {
+      const change = replace(source, part.lineStart, part.lineStart, '\n\n');
+      change.anchor = change.focus = part.lineStart; change.empty = { at: change.focus, kind: 'action' }; return change;
+    }
+    if (part && part === speech?.cue && !part.placeholder && start > bounds(part).start && start < bounds(part).end) {
+      const gs = glyphs(part), next = gs.findIndex(g => g.from >= start), at = next < 0 ? gs.length : next, prefix = source.slice(part.lineStart, part.start), suffix = source.slice(part.end, part.lineEnd);
+      const dual = /\^\s*$/.test(suffix), forced = !prefix.trimStart().startsWith('@') && (gs.slice(0, at).map(g => g.char).join('').match(/\p{L}/gu) || []).length < 2 ? '@' : '';
+      const split = serializeStyled(source, part, [...gs.slice(0, at), { char: (dual ? suffix : '') + '\n', from: start, to: start, marks: 0 }, ...gs.slice(at)]);
+      const change = replace(source, part.lineStart, part.lineEnd, forced + prefix + split.text + (dual ? '' : suffix));
+      change.anchor = change.focus = part.lineStart + forced.length + prefix.length + split.glyphs[at].to; change.kind = 'dialogue'; return change;
+    }
     if (!hardBreak && part && part === speech?.cue && firstWords) {
       // The speech already has words: Enter at the cue opens a new dialogue
       // row above the existing words, so the caret is never sent past them.
@@ -1988,7 +2038,7 @@ const DraftEditing = (() => {
     if (['scene', 'character', 'transition', 'parenthetical'].includes(kind)) text = text.replace(/\n/g, ' ');
     const marker = { scene: '.', action: '!', character: '@', parenthetical: '(', dialogue: '', transition: '>' }[kind];
     const originalText = text;
-    if (kind === 'character') text = text.toLocaleUpperCase('it');
+    if (kind === 'character') text = upperInput(text, kind);
     const formatted = marker + text + (kind === 'parenthetical' ? ')' : '');
     let before = source.slice(0, part.lineStart), after = source.slice(part.lineEnd), prefix = '';
     if (['parenthetical', 'dialogue'].includes(kind)) {
@@ -2011,7 +2061,7 @@ const DraftEditing = (() => {
       } else if (after && !after.startsWith('\n\n')) after = '\n' + after;
     } else if (!['parenthetical', 'dialogue'].includes(kind) && after && !after.startsWith('\n\n')) after = '\n' + after;
     const rawOffset = Math.min(originalText.length, Math.max(0, at - part.start - (part.kind === 'parenthetical' ? 1 : 0)));
-    const offset = kind === 'character' ? originalText.slice(0, rawOffset).toLocaleUpperCase('it').length : rawOffset;
+    const offset = kind === 'character' ? upperInput(originalText.slice(0, rawOffset), kind).length : rawOffset;
     const focus = before.length + prefix.length + marker.length + offset;
     const result = { source: before + prefix + formatted + after, anchor: focus, focus, kind, empty: null };
     if (kind === 'character' && originalText !== text) result.restoreText = originalText;
@@ -2277,7 +2327,7 @@ const DraftEditing = (() => {
       clear() { undoStack.length = redoStack.length = 0; last = null; }
     };
   }
-  return { replace, parts, bounds, locate, type, removeSelection, erase, dialogueEnd, parenthetical, enter, cycleType, typeOrder, tabCycle, tabStep, style, serializeStyled, marksAt, caseNames, changeCase, nextDraftName, characterNames, renameCandidates, applyRenames, history };
+  return { replace, parts, bounds, locate, type, followup, cueExtension, removeSelection, erase, dialogueEnd, parenthetical, enter, cycleType, typeOrder, tabCycle, tabStep, style, serializeStyled, marksAt, caseNames, changeCase, nextDraftName, characterNames, renameCandidates, applyRenames, history };
 })();
 
 </script>
@@ -3569,7 +3619,7 @@ const DraftSearch = (() => {
     end -= line.slice(leading, end).match(/[*_]+$/)?.[0].length || 0;
     // A cue completion must never consume authored text to the right of the
     // caret. In RITA|And this. Enter means split, not replace the whole row.
-    if (focus < lineStart + end && !catalogue.characters.some(item => item.name === identity(line) || item.aliases.includes(identity(line)))) return null;
+    if (focus < lineStart + end) return null;
     return { start: lineStart + leading, end: lineStart + end, query, items: scored.slice(0, limit) };
   }
   return { normalize, identity, distance, scene, catalogue, suggestions };
@@ -3601,9 +3651,13 @@ const DraftSearch = (() => {
         dismissed = ''; hide(); editor.selectAbsolute({ anchor: value.start + item.value.length, focus: value.start + item.value.length, kind: item.kind === 'character' ? 'character' : 'scene' }); return true;
       } else { hide(); editor.toast('Il testo è cambiato: scegli di nuovo il suggerimento.'); }
     }
+    function atCueEnd(state) {
+      const at = state.selection.focus, end = state.source.indexOf('\n', at);
+      return !DraftEngine.plain(state.source.slice(at, end < 0 ? state.source.length : end)).replace(/\s*\^\s*$/, '').trim();
+    }
     function acceptCharacter() {
-      const selection = editor.state().selection, item = current?.items[index];
-      if (popup.hidden || item?.kind !== 'character' || !selection || selection.anchor !== selection.focus || selection.focus < current.end) return false;
+      const state = editor.state(), selection = state.selection, item = current?.items[index];
+      if (popup.hidden || item?.kind !== 'character' || !selection || selection.anchor !== selection.focus || selection.focus < current.end || !atCueEnd(state)) return false;
       return accept(item);
     }
     // Character's last appearance or location's first heading, from the current
@@ -3680,10 +3734,10 @@ const DraftSearch = (() => {
       if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
         event.preventDefault(); event.stopImmediatePropagation(); index = (index + (event.key === 'ArrowUp' ? -1 : 1) + current.items.length) % current.items.length; paint();
       } else if (event.key === 'Enter' && !event.shiftKey) {
-        const selection = editor.state().selection;
-        if (!selection || selection.anchor !== selection.focus || selection.focus < current.end) { hide(); return; }
+        const state = editor.state(), selection = state.selection, item = current.items[index];
+        if (!selection || selection.anchor !== selection.focus || selection.focus < current.end || item.kind === 'character' && !atCueEnd(state)) { hide(); return; }
         event.preventDefault(); event.stopImmediatePropagation();
-        const item = current.items[index], phone = document.activeElement.closest('#phoneWriter');
+        const phone = document.activeElement.closest('#phoneWriter');
         if (accept(item) && phone && item.kind === 'character') phone.dispatchEvent(new InputEvent('beforeinput', { bubbles:true, cancelable:true, inputType:'insertParagraph' }));
       }
       else if (event.key === 'Escape') { event.preventDefault(); event.stopImmediatePropagation(); dismissed = current.signature; hide(); }
@@ -4569,10 +4623,6 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
 })(typeof window === 'object' ? window : globalThis, function (engine) {
   'use strict';
   const fold = text => String(text).normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase();
-  // Extensions that belong on the character line.
-  const EXTENSIONS = { VO: 'V.O.', OS: 'O.S.', OC: 'O.C.', CONTD: "CONT'D", CONT: "CONT'D", CONTINUED: "CONT'D", FC: 'F.C.', VFC: 'V.F.C.', PRELAP: 'PRELAP', FILTERED: 'FILTERED', SUBTITLED: 'SUBTITLED', 'INTO PHONE': 'INTO PHONE', 'ON PHONE': 'ON PHONE', 'ON TV': 'ON TV', 'ON RADIO': 'ON RADIO', 'AL TELEFONO': 'AL TELEFONO', SEGUE: 'SEGUE', 'CONT.': "CONT'D", SOTTOTITOLATO: 'SOTTOTITOLATO', SOTTOTITOLI: 'SOTTOTITOLI', SUB: 'SUB', RADIO: 'RADIO', TV: 'TV', TELEFONO: 'TELEFONO', REGISTRAZIONE: 'REGISTRAZIONE', ECO: 'ECO', CONTINUA: 'CONTINUA' };
-  const VARIANTS = { 'VOICE OVER': 'V.O.', VOICEOVER: 'V.O.', 'VOCE OVER': 'V.O.', 'VOCE FUORI CAMPO': 'V.O.', 'VOCE OFF': 'V.O.', 'FUORI CAMPO': 'O.S.', 'FUORI SCENA': 'O.S.', 'OFF SCREEN': 'O.S.', OFFSCREEN: 'O.S.', OFF: 'O.S.', 'OFF CAMERA': 'O.C.' };
-  const extKey = ext => fold(ext).replace(/[.\s’']/g, '').replace(/^CONTD$/, 'CONTD');
   const TRANSITION = /^(?:CUT TO|SMASH CUT(?: TO)?|MATCH CUT(?: TO)?|JUMP CUT(?: TO)?|DISSOLVE TO|FADE OUT|FADE TO BLACK|FADE TO|STACCO(?: NETTO)?(?: SU| A)?|DISSOLVENZA(?: INCROCIATA)?(?: IN NERO| A NERO| A| SU)?|CHIUSURA IN NERO|TAGLIO(?: NETTO)?(?: SU| A)?)\b[^a-z]*$/i;
   const TIME_JUMP = /\b(il giorno dopo|il giorno seguente|la mattina dopo|la mattina seguente|il mattino dopo|la sera dopo|qualche ora dopo|alcune ore dopo|più tardi|piu tardi|quella sera|quella notte|nel frattempo|intanto, a|altrove|anni dopo|mesi dopo|settimane dopo|the next day|later that|meanwhile)\b/i;
 
@@ -4633,8 +4683,7 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
       const exts = [...name.matchAll(/\(([^)]*)\)/g)].map(m => m[1].trim());
       for (const ext of exts) {
         // Technical extensions are fine in any accepted spelling.
-        const k = extKey(ext);
-        if (EXTENSIONS[k] || EXTENSIONS[fold(ext).trim()] || VARIANTS[fold(ext).replace(/[.]/g, '').trim()] || /^CONT/.test(k)) continue;
+        if (DraftEditing.cueExtension(ext)) continue;
         // A wryly written beside the name belongs on its own line under it.
         const base = raw.replace(/\s*\(([^)]*)\)(?=\s*\^?\s*$)/, '');
         add({ rule: 'wryly-on-cue', severity: 'warning', start: cue.lineStart, end: cue.lineEnd, key: fold(ext), title: 'La parentetica va sotto il nome', message: 'Accanto al nome vanno solo le estensioni tecniche come (V.O.) o (O.S.). Le indicazioni di recitazione, come (' + ext + '), vanno su una riga a sé, sotto il nome e sopra la battuta.', help: 'parentetica', fix: raw.match(/\(([^)]*)\)\s*\^?\s*$/) ? { start: cue.lineStart, end: cue.lineEnd, text: base + '\n(' + ext + ')', label: 'Sposta «(' + ext + ')» sotto il nome' } : null });
@@ -7018,6 +7067,10 @@ async function startUpgrade() {
     if (typingStyle && kind !== 'format') {
       const current = readSelection(); if (current) { typingStyle.at = current.focus; updateStyleButtons(current); }
     }
+    if (change.followup && sourceText === change.source) {
+      history.breakGroup(); collaboration?.breakGroup?.();
+      commit(DraftEditing.followup(sourceText, change.followup), 'autoAction', currentType); return;
+    }
     if (kind === 'insertText' && sourceText === change.source && currentType?.start === currentType?.end && currentType?.part?.kind === 'action') {
       const joined = DraftEditing.parenthetical(sourceText, currentType.focus, doc, currentType.part);
       if (joined) { history.breakGroup(); collaboration?.breakGroup?.(); commit(joined, 'autoParenthetical', currentType); }
@@ -7067,20 +7120,20 @@ async function startUpgrade() {
       }
       return DraftEditing.replace(sourceText, selection.start, selection.end, text);
     }
-    let source = sourceText, start = selection.start, end = selection.end, part = selection.part;
+    let source = sourceText, start = selection.start, end = selection.end, part = selection.part, currentDoc = doc;
     const withinPart = part && !part.placeholder && start >= part.start && end <= part.end;
     if (start !== end && withinPart && text && !text.includes('\n')) {
       // A replacement inside one formatting span keeps its marks and type.
       const spans = DraftEngine.richText(part.text, part.map, part.anchor).spans;
-      if (!spans.some(s => (s.start < start && s.end > start) !== (s.start < end && s.end > end))) return DraftEditing.type(source, start, end, text, part);
+      if (!spans.some(s => (s.start < start && s.end > start) !== (s.start < end && s.end > end))) return DraftEditing.type(source, start, end, text, part, currentDoc);
     }
     if (start !== end) {
       const removal = DraftEditing.removeSelection(source, start, end, doc);
       source = removal.source; start = end = removal.focus;
-      const current = DraftEngine.parse(source, { editing: true, empty: removal.empty });
-      part = DraftEditing.locate(current, start);
+      currentDoc = DraftEngine.parse(source, { editing: true, empty: removal.empty });
+      part = DraftEditing.locate(currentDoc, start);
     }
-    return DraftEditing.type(source, start, end, text, part);
+    return DraftEditing.type(source, start, end, text, part, currentDoc);
   }
   function titlePart(value) { return { text: value, map: null, anchor: 0, start: 0, end: value.length, lineStart: 0, lineEnd: value.length, kind: 'title' }; }
   function selectionStyle(selection) {
@@ -7276,10 +7329,6 @@ async function startUpgrade() {
   function insertion(selection, text) {
     const rowStart = sourceText.lastIndexOf('\n', selection.start - 1) + 1, rowBreak = sourceText.indexOf('\n', selection.start);
     const row = sourceText.slice(rowStart, rowBreak < 0 ? sourceText.length : rowBreak);
-    // Lowercase words after a name and its parenthesis ("FABIO (36) lotta")
-    // describe an action: they keep their case and the line becomes Action.
-    const describes = selection.part?.kind === 'character' && /^\p{Ll}/u.test(text) && /\)[ \t]+$/.test(sourceText.slice(rowStart, selection.start));
-    if (['character', 'scene'].includes(selection.part?.kind) && !describes) text = text.replace(/^[^\n]*/, value => value.toLocaleUpperCase('it'));
     // The spacer row that keeps an empty dialogue line is replaced by the
     // first typed words, so no leading spaces are left in the file.
     const spacer = selection.part?.kind === 'dialogue' && !selection.titleKey && !selection.part.literal && selection.start === selection.end && text && !text.includes('\n') && row && !row.trim();
@@ -7304,14 +7353,19 @@ async function startUpgrade() {
       }
     }
     if (!typingStyle || typingStyle.at !== selection.focus || typingStyle.titleKey !== selection.titleKey || !text || text.includes('\n')) return change;
-    const parsed = parseSource(change.source), key = selection.titleKey;
-    const value = key ? parsed.fields[key] || '' : change.source;
-    const all = key ? [titlePart(value)] : DraftEditing.parts(parsed);
-    const styled = DraftEditing.style(value, all, change.focus - text.length, change.focus, 0, typingStyle.marks);
-    if (styled) {
-      change = { ...styled, anchor: styled.focus, focus: styled.focus };
-      if (key) { change.source = DraftEngine.updateTitle(sourceText, { ...doc.fields, [key]: styled.source }, true, true); change.titleKey = key; }
-    }
+    const styleInput = value => {
+      const parsed = parseSource(value.source), key = selection.titleKey;
+      const textValue = key ? parsed.fields[key] || '' : value.source, all = key ? [titlePart(textValue)] : DraftEditing.parts(parsed);
+      const styled = DraftEditing.style(textValue, all, value.focus - (value.typedLength ?? text.length), value.focus, 0, typingStyle.marks);
+      let result = value;
+      if (styled) {
+        result = { ...styled, anchor: styled.focus, focus: styled.focus, kind: value.kind };
+        if (key) { result.source = DraftEngine.updateTitle(sourceText, { ...doc.fields, [key]: styled.source }, true, true); result.titleKey = key; }
+      }
+      if (value.followup) result.followup = styleInput(value.followup);
+      return result;
+    };
+    change = styleInput(change);
     typingStyle.at = change.focus;
     return change;
   }
