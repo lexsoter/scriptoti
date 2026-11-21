@@ -68,6 +68,8 @@
     .rail button.active { background:var(--hover); color:var(--ink); border-color:var(--line); }
     .page-size { margin-top:12px; font-size:10px; color:var(--muted); letter-spacing:.06em; }
     .stage { position:relative; min-width:0; flex:1; overflow:auto; display:flex; flex-direction:column; align-items:center; gap:28px; padding:34px 30px 90px; }
+    .page-frame { position:relative; flex:none; margin-inline:auto; overflow:clip; overflow-clip-margin:30px; }
+    .page-stack { position:absolute; top:0; left:0; width:max-content; display:flex; flex-direction:column; gap:28px; transform-origin:top left; }
     .title-pages:empty { display:none; }
     .document-editor { display:flex; flex-direction:column; align-items:center; gap:28px; flex:none; outline:none; }
     .paper { flex:none; position:relative; width:210mm; min-height:297mm; background:var(--paper); color:var(--paper-ink); box-shadow:0 5px 30px #0005; font:12pt/12pt "Courier Prime","Courier New",Courier,monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
@@ -156,7 +158,7 @@
       body { overflow:visible; background:#fff; color:#000; }
       .topbar,.rail,.stats,.zoom-control,.find-bar,.notice,.toast,.end-editor,dialog { display:none!important; }
       .app,.workspace,.stage,.document-editor,.title-pages { display:block; height:auto; overflow:visible; padding:0; }
-      .document-editor,.title-pages { zoom:1!important; }
+      .page-frame,.page-stack { display:contents; }
       .paper { margin:0; box-shadow:none; background:#fff; color:#000; min-height:297mm; height:297mm; break-after:page; page-break-after:always; }
       .document-editor>.paper:last-child { break-after:auto; page-break-after:auto; }
       .editable-region:hover,.active-edit,.title-editable:hover,.title-editable:focus { background:transparent; outline:0; }
@@ -599,7 +601,7 @@
   .phone-top-action svg { display:block; width:18px; height:18px; }
   #phoneGotoBtn { grid-column:3; grid-row:1; width:44px; padding:4px; }
   #phoneUndo { grid-column:4; grid-row:1; position:static; } #phoneRedo { grid-column:5; grid-row:1; } #phonePreviewBtn { grid-column:6; grid-row:1; }
-  .phone-writing #scriptEditor,.phone-writing .title-pages { display:none!important; }
+  .phone-writing .page-frame,.phone-writing #scriptEditor,.phone-writing .title-pages { display:none!important; }
   .phone-writing #stage { display:block; padding:0; overflow-x:hidden; overflow-anchor:none; }
   .phone-writing.phone-keyboard-open #stage { padding-bottom:0; }
   .phone-writing .phone-writer { display:block; width:100%; padding:12px 18px 28px; outline:none; color:var(--ink); font:var(--phone-font-size,18px)/1.45 "Courier Prime","Courier New",monospace; overflow-wrap:break-word; }
@@ -6343,7 +6345,9 @@ async function startUpgrade() {
   editor.setAttribute('contenteditable', 'true'); editor.spellcheck = true;
   editor.setAttribute('role', 'textbox'); editor.setAttribute('aria-label', 'Screenplay');
   editor.setAttribute('aria-multiline', 'true');
-  stage.append(titlePages, editor);
+  const pageFrame = document.createElement('div'), pageStack = document.createElement('div');
+  pageFrame.className = 'page-frame'; pageStack.className = 'page-stack';
+  pageStack.append(titlePages, editor); pageFrame.append(pageStack); stage.append(pageFrame);
   const initial = '';
   let history = DraftEditing.history();
   const Presentation = window.DraftDocument;
@@ -6414,9 +6418,15 @@ async function startUpgrade() {
     try { localStorage.setItem('draft-options', JSON.stringify({ theme, pageZoom, spellLanguage, ...(preferredSceneNumbers === null ? {} : { sceneNumbers: preferredSceneNumbers }) })); } catch {}
   }
   function applyTheme() { document.documentElement.dataset.theme = theme; $('#darkModeToggle').checked = theme === 'dark'; }
+  function sizePageFrame(scale) {
+    pageFrame.style.width = pageStack.offsetWidth * scale + 'px';
+    pageFrame.style.height = pageStack.offsetHeight * scale + 'px';
+  }
+  let pageScale = 1;
+  new ResizeObserver(() => sizePageFrame(pageScale)).observe(pageStack);
   function applyZoom() {
     const scale = pageZoom / 100 * (phoneMedia.matches && phoneMode === 'preview' ? phonePreviewFit : 1);
-    titlePages.style.zoom = String(scale); editor.style.zoom = String(scale);
+    pageScale = scale; pageStack.style.transform = 'scale(' + scale + ')'; sizePageFrame(scale);
     $('#zoomSlider').value = String(pageZoom); $('#zoomValue').value = pageZoom + '%';
   }
   function calibratePitch() {
@@ -6783,6 +6793,7 @@ async function startUpgrade() {
       if (index === pages.length - 1) addEndEditor(page);
     });
     for (let index = pages.length; index < oldPages.length; index++) oldPages[index].remove();
+    sizePageFrame(pageScale);
     $('#pagesStat').textContent = String(pages.length);
     $('#currentPage').title = T(documentState?.locks ? 'Pagina visualizzata e pagine fisiche con riferimenti bloccati; Title page escluso.' : 'Pagina visualizzata e pagine del documento; Title page escluso.') + ' ' + T('Clic per andare a una pagina.');
     updateStats();
