@@ -3702,8 +3702,10 @@ const DraftSearch = (() => {
         const name = document.createElement('span'); name.textContent = item.label; button.append(name);
         const note = ['character', 'location'].includes(item.kind) ? lastSeen(item) : item.description;
         if (note) { const description = document.createElement('small'); description.textContent = note; button.append(description); }
-        button.onpointerdown = event => { if (event.button === 0) { event.preventDefault(); accept(item); } };
-        button.onclick = event => { if (!event.detail) accept(item); }; popup.append(button);
+        // A mouse picks on press; a finger picks on release, so the phone strip can still be swiped.
+        let pressed = false;
+        button.onpointerdown = event => { if (event.button !== 0) return; event.preventDefault(); if (event.pointerType === 'mouse') { pressed = true; accept(item); } };
+        button.onclick = () => { if (!pressed) accept(item); }; popup.append(button);
       });
       if (current.items.some(item => item.typo)) {
         const distinct = document.createElement('button'); distinct.type = 'button'; distinct.className = 'completion-distinct'; distinct.textContent = 'Mantieni «' + current.query + '» come personaggio distinto';
