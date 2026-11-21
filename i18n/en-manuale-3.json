@@ -323,13 +323,81 @@
     ],
     "short": "ScripToti suggests only locations and characters in your document. Every location shows its first page and scene; characters who have been away show their last appearance. [[Enter]] or a click accepts; [[Esc]] dismisses.",
     "body": [
-      "As you type a scene heading, ScripToti suggests **locations** already used, then the **time of day** in the document’s language: DAY, NIGHT… or GIORNO, NOTTE… in Italian. Times have no page or scene reference.",
+      "As you type a scene heading, ScripToti suggests **locations** already used, then the **time of day** in the document’s language: DAY, NIGHT… or GIORNO, NOTTE… in Italian. Times have no page or scene reference. When neither language predominates in the headings, times follow the language selected under **View → Spelling**. If this is unset, they follow the interface language.",
       "Every location always shows **page X scene Y** from the first scene heading that contains it, excluding the heading you are writing. For a sublocation such as `HOUSE - KITCHEN`, the first heading with that combination counts. References use the printed labels, including locked pages and scenes such as **12A**, and follow your edits. If the first mention is later in the document, you see “Appears later on page X scene Y”.",
       "On a phone, the same references appear below names in the keyboard strip. A location found only in the heading you are writing is not suggested.",
       "As you type an uppercase name, ScripToti suggests **characters** from the document and flags possible typos (RUTA → RITA). For someone absent for at least three scenes, it recalls the last appearance, for example “Last seen on page 3, scene 2”. Nearby characters have no reminder. If a character only appears later, it says so.",
       "- [[↑]] [[↓]] to choose, [[Enter]] or a click to accept, [[Esc]] to dismiss. **In the middle of a name**, [[Enter]] splits the line instead of accepting a suggestion.",
       "- You can keep a similar name as a separate character if you meant it.",
       "Nothing is invented: suggestions come only from the open document."
+    ]
+  },
+  "benvenuto": {
+    "title": "What is ScripToti?",
+    "keys": "introduction overview getting started features program app editor fountain screenplay script synopsis treatment",
+    "q": [
+      "what is ScripToti",
+      "what can I use it for",
+      "how does the app work"
+    ],
+    "short": "ScripToti is a screenplay editor: you write plain text, and it formats it as a screenplay using the rules of Fountain.",
+    "body": [
+      "ScripToti is a screenplay editor that runs in your browser. You can also install it as an app. Write plain text: ScripToti recognizes scene headings, character cues, dialogue, and transitions, and formats them automatically on A4 pages, ready to export as a PDF.",
+      "The file you save is an ordinary `.fountain` file: text you can read in any program, with comments, revisions, and settings stored in a hidden block at the end.",
+      "You can also use it for synopses and treatments: text that is not a scene heading or dialogue is Action. You can justify, center, or indent it, and use 1.5 line spacing.",
+      "## Where to start",
+      "- Open **Help → Fountain guide** to see how to write each type of text.",
+      "- Press [[Tab]] to change the type of the current paragraph.",
+      "- Turn on **Help → Syntax check** to get suggestions as you write.",
+      "- Ask any question in **Help → Ask ScripToti**. On a computer or tablet, drag the title bar to move the window. Double-click the bar to return it to the bottom centre."
+    ]
+  },
+  "scena": {
+    "title": "Scene heading (slugline)",
+    "keys": "slugline scene heading location int ext est interior exterior day night scene number new scene change location",
+    "q": [
+      "how do I write a scene heading",
+      "how do I format a slugline",
+      "interior or exterior",
+      "how do I specify day or night",
+      "when do I need a new scene",
+      "my scene heading is not recognized",
+      "scene numbers"
+    ],
+    "short": "Write INT. or EXT., the location, and the time of day separated by a dash: “INT. KITCHEN - NIGHT”. ScripToti recognizes the heading and makes it uppercase. A change of location or time starts a new scene. The Italian exterior prefix EST. is also recognized.",
+    "body": [
+      "A scene heading tells you where and when the scene takes place:",
+      "> INT. ANNA'S KITCHEN - NIGHT",
+      "- **INT.** means interior, **EXT.** means exterior, and **INT./EXT.** or **I/E** means both. ScripToti also recognizes the Italian forms **EST.** and INT./EST.",
+      "- Next comes the **location**, from general to specific: `EXT. ROSSI VILLA - GARDEN`.",
+      "- After a dash, add the **time**: DAY, NIGHT, DAWN, SUNSET, CONTINUOUS, LATER. Suggestions follow the document's language: GIORNO/NOTTE for Italian scene headings, DAY/NIGHT for English ones. When neither language predominates in the headings, times follow the language selected under **View → Spelling**. If this is unset, they follow the interface language.",
+      "Just type `int.` at the start of a line: ScripToti recognizes it and makes it uppercase. Both the Italian `MONTAGGIO` and English `MONTAGE` are treated as scene headings because they mark a change of situation. When you press [[Enter]], ScripToti adds the hidden period automatically (`.MONTAGGIO` for the Italian form), so other Fountain programs also read it as a scene heading. Shots such as `ANGLE ON` or the Italian `SU MARTA` do not start new scenes: see **Shots**. For a different heading, such as “ANNA'S DREAM,” put a period in front: `.ANNA'S DREAM`.",
+      "## When to start a new scene",
+      "Every change of **location** or **time** (the next day, later, that same evening) needs a new heading. Writing “The next day” inside Action instead is a common mistake. Syntax check flags it.",
+      "## Scene numbers",
+      "**View → Scene numbers** ([[Alt+Shift+N]]) shows them in the margins. To set a number yourself, put it between `#` signs at the end: `INT. KITCHEN - NIGHT #12A#`.",
+      "As you type, ScripToti suggests locations already used in the document. Press [[Enter]] or click to accept a suggestion; press [[Esc]] to ignore it."
+    ]
+  },
+  "vista": {
+    "title": "Zoom, dark theme, spellcheck, and counts",
+    "keys": "zoom enlarge dark light theme spelling spellcheck language Italian English words characters count pages current page page number selection",
+    "q": [
+      "how do I zoom in on the page",
+      "light theme",
+      "spellcheck",
+      "how many words",
+      "count words in a selection",
+      "where can I see the page number",
+      "what page am I on"
+    ],
+    "short": "Use the zoom control at the bottom right, [[Mod++]] and [[Mod+-]] ([[Mod+0]] resets to 100%), or pinch on your trackpad. Only the pages zoom, keeping your writing position in place. Use View → Dark theme ([[Alt+Shift+D]]) and View → Spellcheck (Italian/English). At the bottom left, you see the current page and total pages, word and character counts, or counts for your selection.",
+    "body": [
+      "- **Zoom** is at the bottom right, from 50% to 200%. Text, comments and revision bands scale with the page. On a tablet, pinch with two fingers to adjust the zoom.",
+      "- **View → Dark theme** ([[Alt+Shift+D]]). The PDF always has a white background.",
+      "- **View → Spellcheck** sets the browser's spellcheck language (Italian or English).",
+      "- **View → Lingua / Language**: the language of the program, Italian or English. By default it follows your browser's language. It changes only menus, messages and the manual: your document stays as it is.",
+      "- At the bottom left, the **page** you are viewing and total pages appear (“Page 3 of 12,” or “Title page” on the title page). Click the indicator, enter a page number, and press [[Enter]] to go there. If the page does not exist, you see “Page not found.” Next are the document's **word and character counts**. Select some text to see “Selection,” with counts for that selection only."
     ]
   }
 }

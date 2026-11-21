@@ -323,13 +323,81 @@
     ],
     "short": "ScripToti propone solo luoghi e personaggi del documento. Ogni luogo mostra pagina e scena della prima menzione; i personaggi lontani mostrano l’ultima. [[Invio]] o un clic accetta, [[Esc]] ignora.",
     "body": [
-      "Scrivendo un’intestazione, ScripToti propone i **luoghi** già usati, poi il **momento** della giornata nella lingua del documento: GIORNO, NOTTE… oppure DAY, NIGHT…. I momenti non mostrano pagina e scena.",
+      "Scrivendo un’intestazione, ScripToti propone i **luoghi** già usati, poi il **momento** della giornata nella lingua del documento: GIORNO, NOTTE… oppure DAY, NIGHT…. I momenti non mostrano pagina e scena. Se le intestazioni non indicano una lingua prevalente, gli orari seguono la lingua scelta in **Vista → Ortografia**. In assenza di questa impostazione seguono la lingua dell’interfaccia.",
       "Sotto ogni luogo compare sempre **pag. X scena Y** della prima intestazione che lo contiene, escludendo quella che stai scrivendo. Per un sotto-luogo, come `CASA - CUCINA`, conta la prima intestazione con quella combinazione. Le etichette sono quelle stampate, comprese pagine e scene bloccate come **12A**, e si aggiornano dopo le modifiche. Se il luogo compare per la prima volta più avanti, leggi «Compare più avanti a pag. X scena Y».",
       "Sul telefono le stesse indicazioni compaiono sotto il nome nei suggerimenti della striscia. Un luogo presente solo nell’intestazione che stai scrivendo non viene suggerito.",
       "Scrivendo un nome in maiuscolo, ScripToti propone i **personaggi** del documento e segnala i possibili refusi (RUTA → RITA). Per chi manca da almeno tre scene ricorda l’ultima apparizione, per esempio «Ultima volta a pag. 3 scena 2». Per i personaggi delle scene vicine l’indicazione non compare. Se un personaggio compare solo più avanti, lo segnala.",
       "- [[↑]] [[↓]] per scegliere, [[Invio]] o clic per accettare, [[Esc]] per ignorare. **A metà di un nome**, [[Invio]] divide la riga e non accetta il suggerimento.",
       "- Un nome simile a un altro ma voluto si può tenere come personaggio distinto.",
       "Non viene inventato niente: i suggerimenti arrivano solo dal documento aperto."
+    ]
+  },
+  "benvenuto": {
+    "title": "Che cos’è ScripToti",
+    "keys": "introduzione panoramica cosa fa programma app editor fountain sceneggiatura soggetto trattamento",
+    "q": [
+      "che cos è scriptoti",
+      "a cosa serve",
+      "come funziona il programma"
+    ],
+    "short": "ScripToti è un editor di sceneggiature: scrivi testo normale e lui lo impagina da solo come una sceneggiatura, secondo le regole del formato Fountain.",
+    "body": [
+      "ScripToti è un editor di sceneggiature che funziona nel browser e si può installare come app. Scrivi testo semplice: ScripToti riconosce intestazioni di scena, personaggi, dialoghi e transizioni e li impagina automaticamente sul foglio A4, pronto per il PDF.",
+      "Il file che salvi è un normale file `.fountain`: testo leggibile da qualunque programma, con commenti, revisioni e impostazioni conservati in un blocco nascosto in fondo.",
+      "Va bene anche per soggetti e trattamenti: il testo che non è una scena o un dialogo è Azione, e si può giustificare, centrare, rientrare e scrivere con interlinea 1,5.",
+      "## Da dove partire",
+      "- Apri il menu **Aiuto → Legenda Fountain** per vedere come si scrive ogni tipo di testo.",
+      "- Premi [[Tab]] per cambiare il tipo del paragrafo in cui ti trovi.",
+      "- Accendi **Aiuto → Controllo della sintassi** per ricevere suggerimenti mentre scrivi.",
+      "- Chiedi qualunque cosa a **Aiuto → Chiedi a ScripToti**. Su computer e tablet puoi trascinare la finestra dalla barra del titolo. Un doppio clic sulla barra la riporta in basso al centro."
+    ]
+  },
+  "scena": {
+    "title": "Intestazione di scena (slugline)",
+    "keys": "slugline intestazione scena location luogo int est ext interno esterno giorno notte heading numero di scena nuova scena cambio luogo",
+    "q": [
+      "come scrivo una scena",
+      "come si scrive la slugline",
+      "interno esterno",
+      "come indico giorno e notte",
+      "quando serve una nuova scena",
+      "la slugline non viene riconosciuta",
+      "numeri di scena"
+    ],
+    "short": "Scrivi INT. o EST. (EXT.), il luogo e il momento separati da un trattino: «INT. CUCINA - NOTTE». ScripToti la riconosce e la mette in maiuscolo. Ogni cambio di luogo o di tempo apre una nuova scena.",
+    "body": [
+      "L’intestazione di scena dice dove e quando avviene la scena:",
+      "> INT. CUCINA DI ANNA - NOTTE",
+      "- **INT.** interno, **EST.** (o **EXT.**) esterno, **INT./EST.** o **I/E** quando è entrambe le cose.",
+      "- Poi il **luogo**, dal generale al particolare: `EST. VILLA ROSSI - GIARDINO`.",
+      "- Poi, dopo un trattino, il **momento**: GIORNO, NOTTE, ALBA, TRAMONTO, CONTINUO, PIÙ TARDI. I suggerimenti seguono la lingua del documento: GIORNO/NOTTE se le scene sono in italiano, DAY/NIGHT se sono in inglese. Se le intestazioni non indicano una lingua prevalente, gli orari seguono la lingua scelta in **Vista → Ortografia**. In assenza di questa impostazione seguono la lingua dell’interfaccia.",
+      "Basta scrivere `int.` all’inizio della riga: ScripToti la riconosce e la mette in maiuscolo. Anche `MONTAGGIO` e `MONTAGE` sono intestazioni, perché segnano un cambio di situazione: quando premi [[Invio]] ScripToti aggiunge da solo il punto nascosto (`.MONTAGGIO`), così anche gli altri programmi Fountain la leggono come scena. Le inquadrature come `ANGLE ON` o `SU MARTA` invece non sono scene nuove: vedi **Inquadrature**. Per un’intestazione diversa (per esempio «SOGNO DI ANNA») metti un punto davanti: `.SOGNO DI ANNA`.",
+      "## Quando serve una nuova scena",
+      "Ogni volta che cambia il **luogo** o il **tempo** (il giorno dopo, più tardi, la sera stessa) serve una nuova intestazione. «Il giorno dopo» scritto dentro l’Azione è un errore frequente: il Controllo della sintassi lo segnala.",
+      "## Numeri di scena",
+      "**Vista → Numeri di scena** ([[Alt+Shift+N]]) li mostra ai margini. Per fissare un numero a mano scrivilo tra `#` in fondo: `INT. CUCINA - NOTTE #12A#`.",
+      "Mentre scrivi, ScripToti suggerisce i luoghi già usati nel documento: [[Invio]] o un clic per accettare, [[Esc]] per ignorare."
+    ]
+  },
+  "vista": {
+    "title": "Zoom, tema scuro, ortografia, conteggi",
+    "keys": "zoom ingrandire tema scuro chiaro ortografia correttore lingua italiano inglese parole caratteri conteggio pagine pagina corrente numero di pagina selezione",
+    "q": [
+      "come ingrandisco la pagina",
+      "tema chiaro",
+      "correttore ortografico",
+      "quante parole",
+      "contare le parole della selezione",
+      "dove vedo il numero di pagina",
+      "in che pagina sono"
+    ],
+    "short": "Lo zoom è in basso a destra, oppure [[Mod++]] e [[Mod+-]] ([[Mod+0]] torna al 100%) o il pizzico sul trackpad: ingrandisce solo le pagine e tiene fermo il punto in cui scrivi; Vista → Tema scuro ([[Alt+Shift+D]]) e Vista → Ortografia (italiano/inglese). In basso a sinistra: la pagina che stai guardando e il totale, parole e caratteri, o quelli della sola selezione.",
+    "body": [
+      "- **Zoom** in basso a destra, dal 50% al 200%. Il testo, i commenti e le bande delle revisioni seguono la scala della pagina. Sul tablet puoi regolarla con due dita.",
+      "- **Vista → Tema scuro** ([[Alt+Shift+D]]); il PDF è sempre bianco.",
+      "- **Vista → Ortografia**: lingua del correttore del browser (italiano o inglese).",
+      "- **Vista → Lingua / Language**: la lingua del programma, italiano o inglese. Di base segue la lingua del browser. Cambia solo menu, messaggi e manuale: il documento resta com’è.",
+      "- In basso a sinistra: la **pagina** che stai guardando sul totale («Pagina 3 di 12», «Title page» sulla pagina del titolo): cliccaci sopra, scrivi un numero di pagina e premi [[Invio]] per andarci; se la pagina non esiste compare «Pagina non trovata». Poi **parole e caratteri** del documento. Se selezioni del testo compare «Selezione» con parole e caratteri della sola parte selezionata."
     ]
   }
 }
