@@ -3692,7 +3692,8 @@ const DraftSearch = (() => {
         const name = document.createElement('span'); name.textContent = item.label; button.append(name);
         const note = ['character', 'location'].includes(item.kind) ? lastSeen(item) : item.description;
         if (note) { const description = document.createElement('small'); description.textContent = note; button.append(description); }
-        button.onpointerdown = event => event.preventDefault(); button.onclick = () => accept(item); popup.append(button);
+        button.onpointerdown = event => { if (event.button === 0) { event.preventDefault(); accept(item); } };
+        button.onclick = event => { if (!event.detail) accept(item); }; popup.append(button);
       });
       if (current.items.some(item => item.typo)) {
         const distinct = document.createElement('button'); distinct.type = 'button'; distinct.className = 'completion-distinct'; distinct.textContent = 'Mantieni «' + current.query + '» come personaggio distinto';
@@ -3700,9 +3701,14 @@ const DraftSearch = (() => {
       }
       popup.hidden = false;
       (document.activeElement?.closest('#phoneWriter') || document.querySelector('#scriptEditor'))?.setAttribute('aria-activedescendant', 'completion-' + index);
-      if (phone) return;
+      if (!phone) position();
+    }
+    function position(checkView = false) {
+      if (popup.hidden || popup.closest('#phoneSuggestions')) return;
       const selection = editor.state().selection, range = editor.range(selection);
       const rect = range?.getBoundingClientRect?.();
+      const view = document.querySelector('#stage').getBoundingClientRect();
+      if (checkView && rect?.height && (rect.bottom <= view.top || rect.top >= view.bottom || rect.right < view.left || rect.left >= view.right)) return hide();
       const x = rect?.left || 32, y = rect?.bottom || 120;
       popup.style.left = Math.max(8, Math.min(x, window.innerWidth - 350)) + 'px';
       popup.style.top = Math.max(8, Math.min(y + 5, window.innerHeight - Math.min(300, popup.scrollHeight || 200) - 12)) + 'px';
@@ -3747,8 +3753,8 @@ const DraftSearch = (() => {
     document.addEventListener('selectionchange', refresh);
     document.addEventListener('focusin', event => { if (!event.target.closest?.('#scriptEditor, #phoneWriter, .completion-popup')) hide(); });
     window.addEventListener('draft-editor-state', refresh);
-    document.querySelector('#stage')?.addEventListener('scroll', () => { if (!popup.closest('#phoneSuggestions')) hide(); });
-    window.addEventListener('resize', () => { if (!popup.closest('#phoneSuggestions')) hide(); });
+    document.querySelector('#stage')?.addEventListener('scroll', () => position(true));
+    window.addEventListener('resize', () => position(true));
     window.DraftCompletionUI = {
       hide, refresh, acceptCharacter,
       descriptions(records, expectedSource, expectedId) {
