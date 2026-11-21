@@ -727,6 +727,7 @@
 .help-chat { position:fixed; left:50%; bottom:48px; transform:translateX(-50%); z-index:30; width:min(640px,calc(100vw - 24px)); max-height:min(60dvh,520px); display:flex; flex-direction:column; background:var(--panel); border:1px solid var(--line); border-radius:12px; box-shadow:0 12px 40px #0006; font:13px/1.5 system-ui,sans-serif; }
 .help-chat[hidden] { display:none!important; }
 .help-chat-head { display:flex; align-items:center; gap:10px; padding:9px 12px; border-bottom:1px solid var(--line); }
+.help-chat.can-drag .help-chat-head { cursor:move; user-select:none; touch-action:none; }
 .help-chat-head .help-muted { flex:1; }
 .help-chat-log { flex:1; min-height:60px; overflow:auto; padding:10px 12px; }
 .help-msg { margin:6px 0; max-width:92%; padding:8px 11px; border-radius:10px; }
@@ -4974,7 +4975,38 @@ ${n.toString()}`)},kr=class{constructor(t){this.patterns=[],this.$state=t}if(t,n
       chatLog.scrollTop = chatLog.scrollHeight;
     }
     form.onsubmit = event => { event.preventDefault(); const q = ask.value.trim(); if (!q) return; ask.value = ''; answer(q); };
-    function openChat() { chat.hidden = false; if (!chatLog.children.length) greet(); sync(); ask.focus(); }
+    const phone = matchMedia('(pointer:coarse) and (max-width:700px), (pointer:coarse) and (max-height:500px)');
+    let position = null, drag = null;
+    function placeChat() {
+      chat.classList.toggle('can-drag', !phone.matches);
+      if (!position || phone.matches) {
+        for (const key of ['left', 'top', 'bottom', 'transform']) chat.style.removeProperty(key);
+        return;
+      }
+      if (chat.hidden) return;
+      const box = chat.getBoundingClientRect();
+      position.x = Math.max(0, Math.min(position.x, innerWidth - box.width));
+      position.y = Math.max(0, Math.min(position.y, innerHeight - box.height));
+      Object.assign(chat.style, { left:position.x + 'px', top:position.y + 'px', bottom:'auto', transform:'none' });
+    }
+    chatHead.onpointerdown = event => {
+      if (phone.matches || event.button !== 0 || !event.isPrimary || event.target.closest('button')) return;
+      event.preventDefault();
+      const box = chat.getBoundingClientRect();
+      drag = { id:event.pointerId, dx:event.clientX - box.left, dy:event.clientY - box.top };
+      chatHead.setPointerCapture(event.pointerId);
+    };
+    chatHead.onpointermove = event => {
+      if (drag?.id !== event.pointerId || phone.matches) return;
+      position = { x:event.clientX - drag.dx, y:event.clientY - drag.dy }; placeChat();
+    };
+    chatHead.onlostpointercapture = () => { drag = null; };
+    chatHead.ondblclick = event => {
+      if (!phone.matches && !event.target.closest('button')) { position = null; placeChat(); }
+    };
+    window.addEventListener('resize', placeChat); phone.addEventListener('change', placeChat);
+    new ResizeObserver(placeChat).observe(chat);
+    function openChat() { chat.hidden = false; if (!chatLog.children.length) greet(); placeChat(); sync(); ask.focus(); }
 
     // ---- Menu, toolbar and keys ---------------------------------------------
     function sync() {
