@@ -3524,7 +3524,7 @@ const DraftSearch = (() => {
   function speeches(elements) {
     return elements.flatMap(e => e.type === 'speech' ? [e] : e.type === 'dual' ? [e.left, e.right].filter(Boolean) : []);
   }
-  function catalogue(doc, source, excluded = null, distinct = []) {
+  function catalogue(doc, source, excluded = null, distinct = [], spelling) {
     const locations = new Map(), names = new Map(), usedTimes = new Set(), except = new Set(distinct.map(normalize)), votes = { it: 0, en: 0 };
     const excludedPart = part => excluded && part.lineStart === excluded.lineStart;
     for (const element of doc.elements) if (element.type === 'scene' && !excludedPart(element.part)) {
@@ -3537,8 +3537,8 @@ const DraftSearch = (() => {
       for (const language of ['it', 'en']) if (timeWords[language].test(value.time)) votes[language]++;
       if (/^\.?EST\b/.test(normalize(element.text))) votes.it++; else if (/^\.?EXT\b/.test(normalize(element.text))) votes.en++;
     }
-    // Suggest times in the language the headings mostly use; Italian when undecided.
-    const language = votes.en > votes.it ? 'en' : 'it', other = language === 'it' ? 'en' : 'it';
+    const fallback = spelling || globalThis.ScripTotiI18n?.lang;
+    const language = votes.en === votes.it ? (fallback === 'en' ? 'en' : 'it') : votes.en > votes.it ? 'en' : 'it', other = language === 'it' ? 'en' : 'it';
     const timeList = [...times[language], ...[...usedTimes].filter(time => !timeWords[other].test(time))];
     for (const speech of speeches(doc.elements)) {
       if (excludedPart(speech.cue)) continue;
@@ -3719,8 +3719,9 @@ const DraftSearch = (() => {
       const formatKey = JSON.stringify([state.empty, state.document?.paragraphs, state.document?.layout]);
       if (parsedCache?.source !== state.source || parsedCache?.formatKey !== formatKey) parsedCache = { source: state.source, formatKey, doc: DraftEngine.parse(state.source, { editing: true, empty: state.empty, paragraphs: state.document?.paragraphs, layout: state.document?.layout }) };
       const doc = parsedCache.doc;
-      const part = DraftEditing.locate(doc, selection.focus), key = id() + ':' + state.source + ':' + (part?.lineStart ?? '') + ':' + JSON.stringify(prefs().distinct);
-      if (cache?.key !== key) cache = { key, value: core.catalogue(doc, state.source, part, prefs().distinct) };
+      const spelling = document.querySelector('#scriptEditor').lang;
+      const part = DraftEditing.locate(doc, selection.focus), key = id() + ':' + spelling + ':' + state.source + ':' + (part?.lineStart ?? '') + ':' + JSON.stringify(prefs().distinct);
+      if (cache?.key !== key) cache = { key, value: core.catalogue(doc, state.source, part, prefs().distinct, spelling) };
       const next = core.suggestions(cache.value, state.source, selection, 6, prefs().descriptions);
       const signature = id() + ':' + state.source + ':' + selection.focus;
       if (!next?.items.length || dismissed === signature || next.items.some(item => item.value === state.source.slice(next.start, next.end))) return hide();
